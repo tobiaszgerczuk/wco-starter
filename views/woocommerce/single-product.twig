@@ -1,0 +1,21 @@
+{% extends "base.twig" %}
+
+{% block content %}
+<section class="single-product container">
+  <div class="single-product__grid">
+    <div class="single-product__gallery">
+      {{ fn('woocommerce_show_product_images') }}
+    </div>
+
+    <div class="single-product__summary">
+      <h1 class="product-title">{{ post.title }}</h1>
+      <div class="product-price">{{ fn('woocommerce_template_single_price') }}</div>
+      <div class="product-desc">{{ fn('the_content') }}</div>
+
+      <form class="product-form js-add-to-cart-form" data-product-id="{{ post.id }}">
+        {{ fn('woocommerce_template_single_add_to_cart') }}
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

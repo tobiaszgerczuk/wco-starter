@@ -31,7 +31,7 @@ class Theme
         add_action('acf/init', [BlocksRegistry::class, 'register_blocks']);
 
         // REST API
-        add_action('rest_api_init', [RestApi::class, 'register_routes'], 15);
+        RestApi::boot();
 
         add_action('init', function () {
             register_post_type('inwestycja', [
@@ -63,6 +63,13 @@ class Theme
             'main-menu' => __('Main Menu', 'wco-starter'),     // Header
             'footer-menu' => __('Footer Menu', 'wco-starter'),   // Stopka
         ]);
+
+        // WooCommerce support
+        add_theme_support('woocommerce');
+        add_theme_support('wc-product-gallery-zoom');
+        add_theme_support('wc-product-gallery-lightbox');
+        add_theme_support('wc-product-gallery-slider');
+
     }
 
 

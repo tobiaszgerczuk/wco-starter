@@ -25,6 +25,11 @@ class Templating
             };
         }
 
+        if (class_exists('WooCommerce')) {
+            $context['cart'] = WC()->cart;
+            $context['shop_url'] = wc_get_page_permalink('shop');
+        }
+
         return $context;
     }
 

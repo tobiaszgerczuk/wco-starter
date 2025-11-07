@@ -4,76 +4,100 @@ namespace WCO\Starter\Rest;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class Api {
+class Api
+{
+    /**
+     * Rejestracja endpointów REST dopiero PO załadowaniu WooCommerce.
+     */
+    public static function boot(): void
+    {
+        // Gwarantuje, że WooCommerce jest już zainicjalizowany
+        if (class_exists('WooCommerce')) {
+            add_action('rest_api_init', [__CLASS__, 'register_routes']);
+            error_log('✅ WooCommerce detected — WCO REST API routes ready to register');
+        } else {
+            add_action('woocommerce_init', function () {
+                add_action('rest_api_init', [__CLASS__, 'register_routes']);
+                error_log('🕐 Delayed WCO REST route registration until WooCommerce init');
+            });
+        }
+    }
+
     public static function register_routes(): void
     {
-        error_log('✅ WCO\\Starter\\Rest\\Api loaded and routes registered');
         // Testowy endpoint (ping)
         register_rest_route('wco-starter/v1', '/ping', [
             'methods'  => 'GET',
             'permission_callback' => '__return_true',
-            'callback' => function(WP_REST_Request $req) {
-                return new WP_REST_Response([ 'ok' => true, 'message' => 'pong' ], 200);
-            }
+            'callback' => fn() => new WP_REST_Response(['ok' => true, 'message' => 'pong'], 200),
         ]);
 
-        // 🔹 Endpoint: inwestycje
-        register_rest_route('wco-starter/v1', '/inwestycje', [
+        // Koszyk
+        register_rest_route('wco-starter/v1', '/cart', [
             'methods'  => 'GET',
             'permission_callback' => '__return_true',
-            'callback' => [__CLASS__, 'get_inwestycje'],
+            'callback' => [__CLASS__, 'get_cart'],
         ]);
 
-        add_action('rest_api_init', function() {
-            global $wp_rest_server;
-            $routes = array_keys($wp_rest_server->get_routes());
-            foreach ($routes as $route) {
-                if (strpos($route, 'wco-starter') !== false) {
-                    error_log('📡 ROUTE ZAREJESTROWANY: ' . $route);
-                }
-            }
-        }, 20);
     }
+
+
 
     /**
-     * Zwraca dane inwestycji (CPT + pola ACF)
+     * Zwraca zawartość koszyka WooCommerce
      */
-    public static function get_inwestycje(WP_REST_Request $req): WP_REST_Response
+    public static function get_cart(\WP_REST_Request $req): \WP_REST_Response
     {
-        error_log('🔥 get_inwestycje() uruchomione');
+        // 🔸 Upewniamy się, że WooCommerce istnieje
+        if (!function_exists('WC') || !WC()) {
+            return new WP_REST_Response([
+                'items' => [],
+                'total' => '0',
+                'count' => 0,
+                'error' => 'WooCommerce not initialized',
+            ], 200);
+        }
     
-        $posts = get_posts([
-            'post_type'      => 'inwestycja',
-            'posts_per_page' => -1,
-            'post_status'    => 'publish',
-        ]);
+        // 🔸 Ręczna inicjalizacja sesji i koszyka
+        if (null === WC()->session) {
+            WC()->initialize_session();
+        }
     
-        $data = array_map(function ($post) {
-            $polygon = get_field('polygon_points', $post->ID);
-            $points = implode(', ', [
-                $polygon['point_top_left'] ?? '',
-                $polygon['point_top_right'] ?? '',
-                $polygon['point_bottom_right'] ?? '',
-                $polygon['point_bottom_left'] ?? '',
-            ]);
+        if (null === WC()->cart) {
+            wc_load_cart();
+        }
     
-            // 🔹 Treść z edytora Gutenberga (przetworzona przez filtry WP)
-            $content = apply_filters('the_content', $post->post_content);
+        $cart = WC()->cart;
+        if (!$cart) {
+            return new WP_REST_Response([
+                'items' => [],
+                'total' => '0',
+                'count' => 0,
+                'error' => 'WooCommerce cart could not be loaded',
+            ], 200);
+        }
     
-            return [
-                'id'       => get_field('number', $post->ID),
-                'title'    => $post->post_title,
-                'status'   => get_field('status', $post->ID),
-                'points'   => trim($points, ', '),
-                'price'    => get_field('price', $post->ID),
-                'size'     => get_field('size', $post->ID),
-                'content'  => $content, // ✅ gotowy HTML opis działki
-                'desc'     => get_field('short_description', $post->ID),
-                'image'    => get_field('map_image', $post->ID)['url'] ?? null,
+        $items = [];
+        foreach ($cart->get_cart() as $item) {
+            $product = $item['data'];
+            if (!$product) continue;
+    
+            $items[] = [
+                'key'      => $item['key'],
+                'id'       => $product->get_id(),
+                'name'     => $product->get_name(),
+                'qty'      => $item['quantity'],
+                'price'    => wc_price($product->get_price()),
+                'subtotal' => wc_price($item['line_subtotal']),
+                'thumb'    => wp_get_attachment_image_url($product->get_image_id(), 'thumbnail'),
+                'link'     => get_permalink($product->get_id()),
             ];
-        }, $posts);
+        }
     
-        return new WP_REST_Response($data, 200);
-    }
-    
+        return new WP_REST_Response([
+            'items' => $items,
+            'total' => $cart->get_cart_total(),
+            'count' => $cart->get_cart_contents_count(),
+        ], 200);
+    }    
 }

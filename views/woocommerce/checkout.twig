@@ -1,0 +1,8 @@
+{% extends "base.twig" %}
+
+{% block content %}
+<section class="checkout container">
+  <h1>Finalizacja zamówienia</h1>
+  {{ fn('woocommerce_checkout') }}
+</section>
+{% endblock %}

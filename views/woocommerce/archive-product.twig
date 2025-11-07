@@ -1,0 +1,31 @@
+{% extends "base.twig" %}
+
+{% block content %}
+<section class="shop-archive container">
+  <header class="shop-header">
+    <h1>{{ title ?: 'Sklep' }}</h1>
+  </header>
+
+  {% if products %}
+    <div class="shop-grid">
+      {% for product in products %}
+        <article class="product-card">
+          <a href="{{ product.link }}" class="product-thumb">
+            <img src="{{ product.thumbnail.src }}" alt="{{ product.title }}">
+          </a>
+          <h2 class="product-title"><a href="{{ product.link }}">{{ product.title }}</a></h2>
+          <div class="product-price">{{ product.price_html|raw }}</div>
+
+          <button
+            class="btn btn--primary js-add-to-cart"
+            data-product-id="{{ product.id }}">
+            Dodaj do koszyka
+          </button>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="no-products">Brak produktów w sklepie.</p>
+  {% endif %}
+</section>
+{% endblock %}
