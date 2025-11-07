@@ -1,0 +1,14 @@
+.btn {
+  display: inline-block;
+  padding: 10px 25px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 400;
+  transition: all 0.4s;
+  background: $color-primary;
+  color: #fff;
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+}

@@ -1,0 +1,15 @@
+{% extends "base.twig" %}
+
+{% block content %}
+  <h1>{{ archive_title }}</h1>
+  <div class="posts">
+    {% for post in posts %}
+      <article>
+        <h2><a href="{{ post.link }}">{{ post.title }}</a></h2>
+        <p>{{ post.preview.length(30) }}</p>
+      </article>
+    {% else %}
+      <p>{{ __('No posts found.', 'wco-starter') }}</p>
+    {% endfor %}
+  </div>
+{% endblock %}

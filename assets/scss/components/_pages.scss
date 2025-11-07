@@ -1,0 +1,37 @@
+.subpage{
+
+ 
+}
+.subpage-hero {
+	position: relative;
+	background-size: cover;
+	background-position: bottom;
+	background-repeat: no-repeat;
+	padding: 10rem 0 8rem;
+	color: #000;
+	text-align: center;
+
+	// Gradient z bieli do przezroczystości
+	&__overlay {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
+		z-index: 1;
+	}
+
+	.container {
+		position: relative;
+		z-index: 2;
+	}
+
+	&__title {
+		font-size: 3rem;
+		font-weight: 700;
+		margin: 0;
+	}
+}
+
+.subpage-content {
+	padding: 4rem 0;
+}

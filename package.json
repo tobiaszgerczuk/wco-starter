@@ -1,0 +1,27 @@
+{
+  "name": "wco-starter",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "webpack --mode development --watch",
+    "build": "webpack --mode production"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "copy-webpack-plugin": "^13.0.1",
+    "css-loader": "^6.11.0",
+    "glob": "^11.0.3",
+    "mini-css-extract-plugin": "^2.9.4",
+    "postcss": "^8.4.35",
+    "postcss-loader": "^7.3.4",
+    "postcss-preset-env": "^10.4.0",
+    "sass": "^1.77.0",
+    "sass-loader": "^13.3.3",
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "aos": "^2.3.4",
+    "lucide": "^0.546.0"
+  }
+}

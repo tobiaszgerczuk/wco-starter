@@ -1,0 +1,43 @@
+
+.text-center{
+    text-align: center;
+}
+
+
+
+.section_title{
+    align-items: center;
+    max-width: fit-content;
+    margin-bottom: 3rem;
+    margin-left: auto;
+    margin-right: auto;
+    h2{
+      margin-bottom: 0;
+      font-weight: 100;
+      margin-top: -10px;
+      font-size: 1.8rem;
+    }
+    img{
+      max-width: 100px;
+      margin:0 auto;
+      display: block;
+    }
+    p{
+      max-width: 60%;
+      margin:0 auto;
+      text-align: center;
+      font-size: 1rem;
+      color: rgba(71, 71, 71, 0.867)ed;
+    }
+  }
+  .section_title.section_title__left{
+    margin-left: 0;
+    margin-right: auto;
+  }
+  .section_title.no_margin{
+    margin-bottom:1rem;
+  }
+  
+  div {
+  box-sizing: border-box;
+  }

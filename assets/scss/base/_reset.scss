@@ -1,0 +1,26 @@
+:root {
+    color-scheme: light;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: $color-bg;
+  }
+  img{
+    max-width: 100%;
+    height: auto;
+  }
+
+  .wpcf7-spinner{
+    display: none;
+  }
+
+  .wpcf7-response-output{
+    margin-top: 0;
+  }

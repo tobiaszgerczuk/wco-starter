@@ -1,0 +1,34 @@
+<section
+  id="{{ fields['block-hero-subtitle'] ?: 'hero' }}"
+  class="block-hero align{{ block.align ?? '' }}"
+  style="background-image:url({{ fields['block-hero-background'].url ?? template_url('public/images/sample.jpg') }})">
+
+  <div class="container">
+    <div class="hero-content">
+      <h2
+        data-aos="fade-in"
+        data-aos-duration="3000"
+        data-aos-delay="200">
+        {{ fields['block-hero-title'] ?: 'Nagłówek' }}
+      </h2>
+
+      <h3
+        data-aos="fade-in"
+        data-aos-duration="3000"
+        data-aos-delay="500">
+        {{ fields['block-hero-subtitle'] ?: 'Lorem iprusm dolor' }}
+      </h3>
+
+      {% if fields['block-hero-button-url'] %}
+        <a
+          data-aos="fade-in"
+          data-aos-duration="3000"
+          data-aos-delay="1000"
+          class="btn"
+          href="{{ fields['block-hero-button-url'] }}">
+          {{ fields['block-hero-button-label'] ?: 'Dowiedz się więcej' }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>

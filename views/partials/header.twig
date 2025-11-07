@@ -1,0 +1,32 @@
+<header class="site-header" data-sticky>
+	<div class="container header-inner">
+		<a class="brand" href="{{ site.url }}">
+			{% if acf.logo %}
+				<img src="{{ acf.logo.url }}" alt="{{ acf.logo.alt|default(site.name) }}">
+			{% else %}
+				{{ site.name }}
+			{% endif %}
+		</a>
+
+		<button class="hamburger" aria-label="Menu" data-toggle="menu">
+			<span></span>
+			<span></span>
+			<span></span>
+		</button>
+
+	<nav class="primary-nav" data-menu>
+  {% if function('has_nav_menu', 'main-menu') %}
+    {{ function('wp_nav_menu', {
+      'theme_location'  : 'main-menu',
+      'container'       : false,
+      'menu_class'      : 'menu-list',
+      'fallback_cb'     : false,
+      'echo'            : false,
+      'depth'           : 2
+    })|raw }}
+  {% endif %}
+</nav>
+
+	</div>
+</header>
+

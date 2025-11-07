@@ -1,0 +1,59 @@
+# === WordPress / Theme ===
+*.log
+*.tmp
+*.zip
+*.tar
+*.tar.gz
+*.DS_Store
+ehthumbs.db
+Thumbs.db
+
+# === Node / Webpack ===
+node_modules/
+public/js/*.map
+public/css/*.map
+public/css/*.hot-update.css
+public/js/*.hot-update.js
+public/js/*.hot-update.json
+public/js/*.hot-update.*
+/public/*.hot-update.json
+/.cache/
+/dist/
+.cache-loader/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === Composer / PHP ===
+vendor/
+composer.lock
+.idea/
+.vscode/
+.phpunit.result.cache
+
+# === OS & Editor junk ===
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# === Build artifacts ===
+/public/css/style.css
+/public/js/front.js
+/public/js/admin.js
+
+# === Environment / Secrets ===
+.env
+.env.local
+.env.*.local
+
+# === Misc ===
+*.bak
+*.old
+*.swp
+*.orig
+*~
+
+# === Optional: JetBrains / VSCode ===
+.vscode/
+.idea/

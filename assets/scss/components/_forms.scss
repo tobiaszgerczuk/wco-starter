@@ -1,0 +1,55 @@
+/* === Styl zgody CF7 (linia z checkboxem po lewej) === */
+.cf7-acceptance {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    .wpcf7-list-item{
+        margin-left: 0;
+    }
+    .wpcf7-list-item label{
+        display: flex;
+        align-items: center;
+    }
+  }
+  
+  /* Checkbox – większy i z akcentem w kolorze motywu */
+  .cf7-acceptance input[type="checkbox"] {
+    margin-top: 0;
+    margin-bottom: 0;
+    width: fit-content;
+    transform: scale(1.2);
+    accent-color: #006e55; /* dopasuj do koloru przycisku */
+    cursor: pointer;
+  }
+  
+  /* Link do polityki */
+  .cf7-acceptance a {
+    color: #006e55;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+  }
+  
+  .cf7-acceptance a:hover {
+    text-decoration: none;
+    color: #004d3c;
+  }
+  
+  /* Drobna korekta formularza */
+  .cf7-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+
+  .wpcf7{
+    p{
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+  }

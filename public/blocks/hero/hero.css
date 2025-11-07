@@ -1,0 +1,186 @@
+/*!*****************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[0].use[3]!./views/blocks/hero/_hero.scss ***!
+  \*****************************************************************************************************************************************************************************************************************************************************/
+@import url(https://fonts.googleapis.com/css2?family=Lavishly+Yours&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap);
+/*!*********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[0].use[3]!./views/blocks/hero/_hero.scss (1) ***!
+  \*********************************************************************************************************************************************************************************************************************************************************/
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.wpcf7-spinner {
+  display: none;
+}
+
+.wpcf7-response-output {
+  margin-top: 0;
+}
+
+body {
+  font-family: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #191919;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.5em;
+  color: #191919;
+}
+
+p {
+  margin-bottom: 1em;
+  color: #666;
+}
+
+a {
+  color: #5ab25e;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover {
+  color: rgb(69.0454545455, 147.9545454545, 72.632231405);
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 25px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 400;
+  transition: all 0.4s;
+  background: #5ab25e;
+  color: #fff;
+}
+.btn:hover {
+  filter: brightness(0.95);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.section_title {
+  align-items: center;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+  margin-bottom: 3rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+.section_title h2 {
+  margin-bottom: 0;
+  font-weight: 100;
+  margin-top: -10px;
+  font-size: 1.8rem;
+}
+.section_title img {
+  max-width: 100px;
+  margin: 0 auto;
+  display: block;
+}
+.section_title p {
+  max-width: 60%;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 1rem;
+  color: rgba(71, 71, 71, 0.867) ed;
+}
+
+.section_title.section_title__left {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.section_title.no_margin {
+  margin-bottom: 1rem;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+html :where(.wp-block) {
+  max-width: 80vw;
+}
+
+.block-hero {
+  padding: 64px 0;
+  background-size: cover;
+  min-height: 70vh;
+  background-position: bottom;
+}
+@media (max-width: 768px) {
+  .block-hero {
+    min-height: 40vh;
+    padding: 2rem 0;
+  }
+}
+.block-hero .hero-inner {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  grid-gap: 32px;
+  gap: 32px;
+}
+.block-hero .hero-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+.block-hero .hero-content {
+  text-align: center;
+}
+.block-hero .hero-content .btn {
+  margin-top: 1rem;
+  background-color: #ededed;
+  color: #000;
+}
+.block-hero .hero-content h2 {
+  font-size: clamp(28px, 5vw, 48px);
+  margin-bottom: 0.25em;
+  text-align: center;
+  margin-bottom: 0;
+  margin-top: 20vh;
+  font-weight: 100;
+  font-size: 5rem;
+}
+@media (max-width: 768px) {
+  .block-hero .hero-content h2 {
+    margin-top: 3rem;
+    font-size: 3rem;
+  }
+}
+.block-hero .hero-content h3 {
+  text-align: center;
+  font-weight: 400;
+}
+.block-hero .hero-content p {
+  font-size: 18px;
+}
+@media (max-width: 768px) {
+  .block-hero .hero-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+/*# sourceMappingURL=hero.css.map*/

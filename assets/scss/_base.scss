@@ -1,0 +1,46 @@
+:root {
+    color-scheme: light;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+
+    
+}
+
+body {
+    color: $color-text;
+    background: $color-bg;
+    line-height: 1.6;
+    transition: padding-top 0.3s ease;
+
+    // Po scrollu – zmniejsz padding
+    .site-header.is-scrolled~& {
+        padding-top: 60px; // mniejsza wysokość headera
+    }
+}
+
+
+.container {
+    @include container;
+}
+
+h1,
+h2,
+h3 {
+    line-height: 1.2;
+    margin: 0 0 0.5em;
+}
+
+p {
+    margin: 0 0 1em;
+    color: $color-muted;
+}
+

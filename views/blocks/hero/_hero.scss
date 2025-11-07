@@ -1,0 +1,58 @@
+.block-hero {
+  padding: 64px 0;
+  background-size: cover;
+  min-height: 70vh;
+  background-position: bottom;
+  @include mobile {
+   min-height: 40vh;
+   padding:2rem 0;
+  }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .hero-image {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+  }
+  .hero-content{
+    text-align: center;
+    .btn{
+      margin-top:1rem;
+      background-color: #ededed;
+      color: #000;
+    }
+  }
+  .hero-content h2 {
+    font-size: clamp(28px, 5vw, 48px);
+    margin-bottom: .25em;
+    text-align: center;
+    margin-bottom: 0;
+    margin-top: 20vh;
+    font-weight: 100;
+    font-size: 5rem;
+    @include mobile {
+      margin-top:3rem;
+      font-size: 3rem;
+     }
+  }
+  .hero-content h3{
+    text-align: center;
+    font-weight: 400;
+  }
+
+  .hero-content p {
+    font-size: 18px;
+  }
+
+  @include mobile {
+    .hero-inner {
+      grid-template-columns: 1fr;
+    }
+  }
+}

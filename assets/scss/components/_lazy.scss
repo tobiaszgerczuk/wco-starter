@@ -1,0 +1,11 @@
+img.lazy {
+    opacity: 0;
+    filter: blur(6px);
+    transition: opacity 0.4s ease, filter 0.4s ease;
+  }
+  
+  img.loaded.visible {
+    opacity: 1;
+    filter: blur(0);
+  }
+  

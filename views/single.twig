@@ -1,0 +1,8 @@
+{% extends "base.twig" %}
+{% block content %}
+  <article>
+    <h1>{{ post.title }}</h1>
+    {% if post.thumbnail %}<img src="{{ post.thumbnail.src('large') }}" alt="{{ post.title }}">{% endif %}
+    <div class="content">{{ post.content }}</div>
+  </article>
+{% endblock %}

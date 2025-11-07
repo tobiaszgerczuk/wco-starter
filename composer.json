@@ -1,0 +1,13 @@
+{
+  "name": "wco/wp-starter",
+  "type": "wordpress-theme",
+  "license": "MIT",
+  "require": {
+    "timber/timber": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "WCO\\Starter\\": "app/"
+    }
+  }
+}

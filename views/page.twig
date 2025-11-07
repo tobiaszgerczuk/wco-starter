@@ -1,0 +1,29 @@
+{% set subpage = true %}
+{% extends "base.twig" %}
+
+{% block content %}
+	<article class="subpage">
+
+		{# 🔹 Hero sekcja dla podstron #}
+		<section class="subpage-hero" style="
+			{% if post.thumbnail %}
+				background-image: url('{{ post.thumbnail.src }}');
+			{% endif %}
+		">
+			<div class="subpage-hero__overlay"></div>
+			<div class="container">
+				<h1 class="subpage-hero__title" data-aos="fade-down">{{ post.title }}</h1>
+			</div>
+		</section>
+
+		{# 🔹 Główna treść podstrony #}
+		<section class="subpage-content">
+			<div class="container">
+				<div class="content" data-aos="fade-up">
+					{{ post.content }}
+				</div>
+			</div>
+		</section>
+
+	</article>
+{% endblock %}

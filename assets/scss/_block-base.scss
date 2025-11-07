@@ -1,0 +1,11 @@
+@import "base/variables";
+@import "base/mixins";
+@import "base/reset";
+@import "base/typography";
+@import "components/buttons";
+@import "components/custom";
+
+
+html :where(.wp-block){
+    max-width: 80vw;
+}
