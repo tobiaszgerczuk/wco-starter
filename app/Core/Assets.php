@@ -62,9 +62,13 @@ class Assets {
         wp_enqueue_style('wco-starter-style');
         wp_enqueue_script('wco-starter-front');
 
+        $wooActive = class_exists('WooCommerce');
+
         wp_localize_script('wco-starter-front', 'WCO', [
             'restUrl' => esc_url_raw(rest_url('wco-starter/v1')),
-            'nonce'   => wp_create_nonce('wp_rest')
+            'nonce'   => wp_create_nonce('wp_rest'),
+            'wooActive' => $wooActive,
+            'cartUrl' => $wooActive && function_exists('wc_get_cart_url') ? esc_url_raw(wc_get_cart_url()) : null,
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace WCO\Starter\Core;
 
 use Timber\Timber;
+use WCO\Starter\Core\Acf;
 use WCO\Starter\Core\Assets;
 use WCO\Starter\Core\Templating;
 use WCO\Starter\Blocks\Registry as BlocksRegistry;
@@ -26,6 +27,10 @@ class Theme
         // Timber/Twig
         add_filter('timber/context', [Templating::class, 'add_to_context']);
         add_filter('timber/twig', [Templating::class, 'extend_twig']);
+
+        // ACF Local JSON
+        add_filter('acf/settings/save_json', [Acf::class, 'save_json']);
+        add_filter('acf/settings/load_json', [Acf::class, 'load_json']);
 
         // ACF Blocks
         add_action('acf/init', [BlocksRegistry::class, 'register_blocks']);

@@ -48,3 +48,36 @@ Opcje pomocnicze:
 npm run rename-theme -- "Nazwa Projektu" nazwa-projektu --dry-run
 npm run rename-theme -- "Nazwa Projektu" nazwa-projektu --no-rename-dir
 ```
+
+## 🧱 Tworzenie bloków
+
+Starter obsługuje ACF Blocks renderowane przez Twig i zapisuje field groups do lokalnego `acf-json`.
+
+Aby wygenerować nowy blok:
+
+```bash
+npm run create-block -- hero-banner "Hero Banner"
+```
+
+To polecenie utworzy:
+- `views/blocks/hero-banner/block.json`
+- `views/blocks/hero-banner/hero-banner.twig`
+- `views/blocks/hero-banner/_hero-banner.scss`
+- `views/blocks/hero-banner/hero-banner.js`
+- `views/blocks/hero-banner/hero-banner.include.php`
+- `acf-json/group_block_hero-banner.json`
+
+Style bloku będą ładowane automatycznie dla tego konkretnego bloku, bez ręcznego dopisywania importu do głównego `style.scss`.
+Klasa JS bloku będzie ładowana przez `front.js` automatycznie i zainicjalizuje się tylko wtedy, gdy `.block-hero-banner` istnieje na stronie.
+
+Potem:
+
+```bash
+npm run build
+```
+
+Opcjonalnie możesz najpierw zobaczyć dry-run:
+
+```bash
+npm run create-block -- hero-banner "Hero Banner" --dry-run
+```

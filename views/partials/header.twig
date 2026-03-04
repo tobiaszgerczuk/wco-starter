@@ -26,27 +26,28 @@
     })|raw }}
 			{% endif %}
 		</nav>
-		<div class="mini-cart" id="mini-cart">
-			<button class="mini-cart__toggle" id="mini-cart-toggle" aria-label="Koszyk">
-				🛒
-				<span id="mini-cart-count">0</span>
-			</button>
+		{% if woo_active %}
+			<div class="mini-cart" id="mini-cart">
+				<button class="mini-cart__toggle" id="mini-cart-toggle" aria-label="Koszyk">
+					🛒
+					<span id="mini-cart-count">0</span>
+				</button>
 
-			<div class="mini-cart__sidebar" id="mini-cart-sidebar">
-				<div class="mini-cart__header">
-					<h3>Koszyk</h3>
-					<button class="mini-cart__close" id="mini-cart-close">&times;</button>
+				<div class="mini-cart__sidebar" id="mini-cart-sidebar">
+					<div class="mini-cart__header">
+						<h3>Koszyk</h3>
+						<button class="mini-cart__close" id="mini-cart-close">&times;</button>
+					</div>
+					<div class="mini-cart__content" id="mini-cart-content">
+						<p class="mini-cart__empty">Koszyk jest pusty.</p>
+					</div>
+					<div class="mini-cart__footer">
+						<a href="{{ cart_url ?: '#' }}" class="btn btn--primary">Przejdź do koszyka</a>
+					</div>
 				</div>
-				<div class="mini-cart__content" id="mini-cart-content">
-					<p class="mini-cart__empty">Koszyk jest pusty.</p>
-				</div>
-				<div class="mini-cart__footer">
-					<a href="{{ fn('wc_get_cart_url') }}" class="btn btn--primary">Przejdź do koszyka</a>
-				</div>
+				<div class="mini-cart__overlay" id="mini-cart-overlay"></div>
 			</div>
-			<div class="mini-cart__overlay" id="mini-cart-overlay"></div>
-		</div>
+		{% endif %}
 
 	</div>
 </header>
-

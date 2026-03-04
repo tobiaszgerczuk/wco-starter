@@ -25,9 +25,15 @@ class Templating
             };
         }
 
-        if (class_exists('WooCommerce')) {
-            $context['cart'] = WC()->cart;
-            $context['shop_url'] = wc_get_page_permalink('shop');
+        $context['woo_active'] = class_exists('WooCommerce');
+        $context['cart'] = null;
+        $context['shop_url'] = null;
+        $context['cart_url'] = null;
+
+        if ($context['woo_active']) {
+            $context['cart'] = function_exists('WC') ? WC()->cart : null;
+            $context['shop_url'] = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : null;
+            $context['cart_url'] = function_exists('wc_get_cart_url') ? wc_get_cart_url() : null;
         }
 
         return $context;

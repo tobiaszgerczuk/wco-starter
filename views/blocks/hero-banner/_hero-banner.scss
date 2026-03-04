@@ -1,0 +1,19 @@
+.block-hero-banner {
+  padding: 4rem 0;
+
+  &__inner {
+    @include container;
+  }
+
+  &__title {
+    margin: 0 0 1rem;
+  }
+
+  &__content {
+    max-width: 60ch;
+  }
+
+  &__placeholder {
+    color: $color-muted;
+  }
+}

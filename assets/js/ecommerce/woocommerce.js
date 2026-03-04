@@ -1,6 +1,6 @@
 export default class WcoShop {
     constructor() {
-      this.cartUrl = `${WCO.restUrl}/cart`;
+      this.config = window.WCO || {};
       this.cart = document.getElementById('mini-cart');
       this.toggleBtn = document.getElementById('mini-cart-toggle');
       this.closeBtn = document.getElementById('mini-cart-close');
@@ -8,6 +8,11 @@ export default class WcoShop {
       this.content = document.getElementById('mini-cart-content');
       this.countEl = document.getElementById('mini-cart-count');
       this.sidebar = document.getElementById('mini-cart-sidebar');
+      this.cartUrl = this.config.restUrl ? `${this.config.restUrl}/cart` : null;
+
+      if (!this.config.wooActive || !this.cart || !this.content || !this.countEl || !this.cartUrl) {
+        return;
+      }
   
       this.init();
     }

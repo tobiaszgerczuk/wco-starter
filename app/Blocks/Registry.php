@@ -65,14 +65,15 @@ class Registry
         $title = ucfirst(str_replace(['-', '_'], ' ', $slug));
         $include_file = $dir . '/' . $slug . '.include.php';
         $has_include = file_exists($include_file);
+        $metadata = self::get_block_metadata($dir);
     
         $args = [
             'name'        => $slug,
-            'title'       => $title,
-            'description' => __("Block: {$title}", 'wco-starter'),
-            'category'    => 'layout',
-            'icon'        => 'layout',
-            'keywords'    => [$slug],
+            'title'       => $metadata['title'] ?? $title,
+            'description' => $metadata['description'] ?? __("Block: {$title}", 'wco-starter'),
+            'category'    => $metadata['category'] ?? 'layout',
+            'icon'        => $metadata['icon'] ?? 'layout',
+            'keywords'    => $metadata['keywords'] ?? [$slug],
             'supports'    => ['align' => ['full', 'wide']],
             'mode'        => 'preview',
         ];
@@ -84,21 +85,31 @@ class Registry
             $args['slug'] = $slug;
         }
     
-        // === CSS Z PUBLIC/BLOCKS ===
         $css_path = get_template_directory() . "/public/blocks/{$slug}/{$slug}.css";
         if (file_exists($css_path)) {
-            add_action('enqueue_block_editor_assets', function() use ($slug, $css_path) {
+            $args['enqueue_assets'] = function () use ($slug, $css_path) {
                 wp_enqueue_style(
                     "acf-block-{$slug}",
                     get_template_directory_uri() . "/public/blocks/{$slug}/{$slug}.css",
                     [],
                     filemtime($css_path)
                 );
-            });
+            };
         }
-        
-    
+
         return $args;
+    }
+
+    private static function get_block_metadata(string $dir): array
+    {
+        $metadataPath = $dir . '/block.json';
+        if (!file_exists($metadataPath)) {
+            return [];
+        }
+
+        $metadata = json_decode((string) file_get_contents($metadataPath), true);
+
+        return is_array($metadata) ? $metadata : [];
     }
 
     public static function render_simple_block($block, $content = '', $is_preview = false, $post_id = 0): void
