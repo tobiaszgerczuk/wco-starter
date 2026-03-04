@@ -40,16 +40,23 @@
   }
   
   /* Drobna korekta formularza */
-  .cf7-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
+.cf7-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-  .wpcf7{
-    p{
-        margin-bottom: 0;
-        margin-top: 0;
-    }
+.wpcf7 {
+  p {
+    margin-bottom: 0;
+    margin-top: 0;
   }
+
+  &-spinner {
+    display: none;
+  }
+
+  &-response-output {
+    margin-top: 0;
+  }
+}
