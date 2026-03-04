@@ -2,6 +2,7 @@
 
 namespace WCO\Starter\Rest\Routes;
 
+use WCO\Starter\Content\PostCard;
 use WCO\Starter\Rest\BaseRoute;
 use WCO\Starter\Rest\Contracts\RouteInterface;
 use WP_Query;
@@ -33,6 +34,14 @@ class PostsRoute extends BaseRoute implements RouteInterface
                     'sanitize_callback' => [self::class, 'sanitize_ids'],
                     'default' => [],
                 ],
+                'read_more_label' => [
+                    'sanitize_callback' => 'sanitize_text_field',
+                    'default' => 'Read more',
+                ],
+                'no_image_label' => [
+                    'sanitize_callback' => 'sanitize_text_field',
+                    'default' => 'No image',
+                ],
             ],
         ]);
     }
@@ -43,6 +52,8 @@ class PostsRoute extends BaseRoute implements RouteInterface
         $per_page = max(1, min(24, (int) $request->get_param('per_page')));
         $post_type = sanitize_key((string) $request->get_param('post_type')) ?: 'post';
         $exclude_ids = self::sanitize_ids($request->get_param('exclude_ids'));
+        $read_more_label = sanitize_text_field((string) $request->get_param('read_more_label')) ?: 'Read more';
+        $no_image_label = sanitize_text_field((string) $request->get_param('no_image_label')) ?: 'No image';
 
         $query = new WP_Query([
             'post_type' => $post_type,
@@ -53,7 +64,10 @@ class PostsRoute extends BaseRoute implements RouteInterface
             'ignore_sticky_posts' => true,
         ]);
 
-        $posts = array_map([self::class, 'map_post'], $query->posts);
+        $posts = array_map(
+            static fn (\WP_Post $post): array => self::map_post($post, $read_more_label, $no_image_label),
+            $query->posts
+        );
 
         return new WP_REST_Response([
             'posts' => $posts,
@@ -80,17 +94,14 @@ class PostsRoute extends BaseRoute implements RouteInterface
         return array_values(array_filter(array_map('absint', $value)));
     }
 
-    private static function map_post(\WP_Post $post): array
+    private static function map_post(\WP_Post $post, string $read_more_label, string $no_image_label): array
     {
-        return [
-            'id' => $post->ID,
-            'title' => get_the_title($post),
-            'excerpt' => get_the_excerpt($post),
-            'permalink' => get_permalink($post),
-            'date' => get_the_date('', $post),
-            'author' => get_the_author_meta('display_name', (int) $post->post_author),
-            'image' => get_the_post_thumbnail_url($post, 'large'),
-            'imageAlt' => get_post_meta((int) get_post_thumbnail_id($post), '_wp_attachment_image_alt', true),
-        ];
+        $mapped_post = PostCard::from_post($post);
+        $mapped_post['html'] = PostCard::render($mapped_post, [
+            'read_more_label' => $read_more_label,
+            'placeholder' => $no_image_label,
+        ]);
+
+        return $mapped_post;
     }
 }

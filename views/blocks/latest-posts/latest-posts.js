@@ -65,6 +65,8 @@ export default class LatestPosts {
       const url = new URL(this.restUrl, window.location.origin);
       url.searchParams.set('page', String(nextPage));
       url.searchParams.set('per_page', this.root.dataset.perPage || '3');
+      url.searchParams.set('read_more_label', this.root.dataset.readMoreLabel || 'Read more');
+      url.searchParams.set('no_image_label', this.root.dataset.noImageLabel || 'No image');
 
       const response = await fetch(url.toString(), {
         headers: {
@@ -85,7 +87,7 @@ export default class LatestPosts {
         return;
       }
 
-      this.grid.insertAdjacentHTML('beforeend', posts.map((post) => this.renderPost(post)).join(''));
+      this.grid.insertAdjacentHTML('beforeend', posts.map((post) => post.html || this.renderPost(post)).join(''));
       this.page = nextPage;
 
       if (!data.pagination?.hasMore) {

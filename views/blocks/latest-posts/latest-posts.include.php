@@ -2,6 +2,7 @@
 
 use Timber\Timber;
 use WCO\Starter\Blocks\SectionSettings;
+use WCO\Starter\Content\PostCard;
 
 $fields = get_fields() ?: [];
 $per_page = max(1, (int) ($fields['latest_posts_posts_per_page'] ?? 3));
@@ -13,18 +14,7 @@ $query = new WP_Query([
     'ignore_sticky_posts' => true,
 ]);
 
-$posts = array_map(static function (WP_Post $post): array {
-    return [
-        'id' => $post->ID,
-        'title' => get_the_title($post),
-        'excerpt' => get_the_excerpt($post),
-        'permalink' => get_permalink($post),
-        'date' => get_the_date('', $post),
-        'author' => get_the_author_meta('display_name', (int) $post->post_author),
-        'image' => get_the_post_thumbnail_url($post, 'large'),
-        'imageAlt' => get_post_meta((int) get_post_thumbnail_id($post), '_wp_attachment_image_alt', true),
-    ];
-}, $query->posts);
+$posts = array_map(static fn (WP_Post $post): array => PostCard::from_post($post), $query->posts);
 
 $context = Timber::context();
 $context['fields'] = $fields;
