@@ -1,8 +1,43 @@
 {% extends "base.twig" %}
 {% block content %}
-  <article>
-    <h1>{{ post.title }}</h1>
-    {% if post.thumbnail %}<img src="{{ post.thumbnail.src('large') }}" alt="{{ post.title }}">{% endif %}
-    <div class="content">{{ post.content }}</div>
+  <article class="single-post">
+    <header class="single-post__hero">
+      <div class="container-medium">
+        <div class="single-post__meta">
+          <time datetime="{{ post.date('c') }}">{{ post.date('d.m.Y') }}</time>
+          {% if post.terms('category') %}
+            <span>{{ post.terms('category')|first.name }}</span>
+          {% endif %}
+        </div>
+
+        <h1 class="single-post__title">{{ post.title }}</h1>
+
+        {% if post.preview %}
+          <p class="single-post__lead">{{ post.preview.length(36) }}</p>
+        {% endif %}
+      </div>
+    </header>
+
+    {% if post.thumbnail %}
+      <div class="single-post__featured">
+        <div class="container">
+          <img src="{{ post.thumbnail.src('large') }}" alt="{{ post.thumbnail.alt ?: post.title }}">
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="single-post__content-wrap">
+      <div class="container-medium">
+        <div class="single-post__content content">{{ post.content }}</div>
+      </div>
+    </div>
+
+    <footer class="single-post__footer">
+      <div class="container-medium">
+        <div class="single-post__back">
+          <a href="{{ function('get_post_type_archive_link', post.post_type) ?: function('home_url', '/') }}">{{ __('Back to archive', 'wco-starter') }}</a>
+        </div>
+      </div>
+    </footer>
   </article>
 {% endblock %}

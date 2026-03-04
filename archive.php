@@ -1,5 +1,6 @@
 <?php
 use Timber\Timber;
+use Timber\PostQuery;
 
 $context = Timber::context();
 
@@ -18,6 +19,7 @@ if (is_category()) {
     $context['archive_title'] = __('Archiwum', 'wco-starter');
 }
 
-$context['posts'] = Timber::get_posts();
+$context['archive_description'] = get_the_archive_description();
+$context['posts'] = new PostQuery($GLOBALS['wp_query']);
 
 Timber::render('archive.twig', $context);
