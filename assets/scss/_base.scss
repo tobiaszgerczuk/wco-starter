@@ -1,5 +1,34 @@
 :root {
     color-scheme: light;
+    --font-family-base: #{$font-family-base};
+    --font-family-heading: #{$font-family-heading};
+    --font-family-accent: #{$font-family-accent};
+
+    --font-size-base: #{$font-size-base};
+    --line-height-base: #{$line-height-base};
+    --line-height-heading: #{$line-height-heading};
+
+    --color-text: #{$color-text};
+    --color-bg: #{$color-bg};
+    --color-surface: #{$color-surface};
+    --color-surface-strong: #{$color-surface-strong};
+    --color-border: #{$color-border};
+    --color-muted: #{$color-muted};
+    --color-primary: #{$color-primary};
+    --color-primary-hover: #{$color-primary-hover};
+    --color-secondary: #{$color-secondary};
+    --color-accent: #{$color-accent};
+    --color-black: #{$color-black};
+    --color-white: #{$color-white};
+
+    --container-default: #{$container-default};
+    --container-wide: #{$container-wide};
+    --container-medium: #{$container-medium};
+    --container-narrow: #{$container-narrow};
+
+    --container-gutter-desktop: #{$container-gutter-desktop};
+    --container-gutter-tablet: #{$container-gutter-tablet};
+    --container-gutter-mobile: #{$container-gutter-mobile};
 }
 
 * {
@@ -16,9 +45,9 @@ body {
 }
 
 body {
-    color: $color-text;
-    background: $color-bg;
-    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-bg);
+    line-height: var(--line-height-base);
     transition: padding-top 0.3s ease;
 
     // Po scrollu – zmniejsz padding
@@ -32,6 +61,18 @@ body {
     @include container;
 }
 
+.container-wide {
+    @include container(wide);
+}
+
+.container-medium {
+    @include container(medium);
+}
+
+.container-narrow {
+    @include container(narrow);
+}
+
 h1,
 h2,
 h3 {
@@ -41,6 +82,5 @@ h3 {
 
 p {
     margin: 0 0 1em;
-    color: $color-muted;
+    color: var(--color-muted);
 }
-

@@ -1,29 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Lavishly+Yours&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 body {
-  font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
-  color: $color-text;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: var(--line-height-heading);
   margin-bottom: 0.5em;
-  color: $color-text;
+  color: var(--color-text);
 }
 
 p {
   margin-bottom: 1em;
-  color: $color-muted;
+  color: var(--color-muted);
 }
 
 a {
-  color: $color-primary;
+  color: var(--color-primary);
   text-decoration: none;
-  transition: color 0.2s;
+  transition: color $transition-fast;
 
   &:hover {
-    color: darken($color-primary, 10%);
+    color: var(--color-primary-hover);
   }
 }

@@ -1,35 +1,105 @@
-@mixin container {
-  width: 100%;
-  max-width: $container-max;
-  margin-left: auto;
-  margin-right: auto;
-  
-  @media only screen and (max-width: calc($container-max + $container-padding-desktop * 2)) {
-    max-width: calc(100% - ($container-padding-desktop * 2) );
+@function container-size($size) {
+  @if $size == wide {
+    @return $container-wide;
   }
 
-  @include tablet {
-    max-width: calc(100% - ($container-padding-tablet * 2) );
-    padding-left: 0;
-    padding-right: 0;
+  @if $size == medium {
+    @return $container-medium;
   }
 
-  @include mobile {
-    max-width: calc(100% - ($container-padding-mobile * 2) );
-    padding-left: 0;
-    padding-right: 0;
+  @if $size == narrow {
+    @return $container-narrow;
+  }
+
+  @return $container-default;
+}
+
+@function breakpoint($name) {
+  @if $name == mobile {
+    @return $breakpoint-mobile;
+  }
+
+  @if $name == tablet {
+    @return $breakpoint-tablet;
+  }
+
+  @if $name == laptop {
+    @return $breakpoint-laptop;
+  }
+
+  @if $name == desktop {
+    @return $breakpoint-desktop;
+  }
+
+  @error "Unknown breakpoint `#{$name}`.";
+}
+
+@mixin respond-down($name) {
+  @media (max-width: breakpoint($name)) {
+    @content;
   }
 }
 
+@mixin respond-up($name) {
+  @media (min-width: breakpoint($name) + 1px) {
+    @content;
+  }
+}
+
+@mixin respond-between($from, $to) {
+  @media (min-width: breakpoint($from) + 1px) and (max-width: breakpoint($to)) {
+    @content;
+  }
+}
 
 @mixin mobile {
-  @media (max-width: $break-mobile) {
+  @include respond-down(mobile) {
     @content;
   }
 }
 
 @mixin tablet {
-  @media (max-width: $break-tablet) {
+  @include respond-down(tablet) {
     @content;
   }
+}
+
+@mixin laptop {
+  @include respond-down(laptop) {
+    @content;
+  }
+}
+
+@mixin desktop-up {
+  @include respond-up(desktop) {
+    @content;
+  }
+}
+
+@mixin container($size: default) {
+  width: 100%;
+  max-width: calc(#{container-size($size)} + (#{$container-gutter-desktop} * 2));
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $container-gutter-desktop;
+  padding-right: $container-gutter-desktop;
+
+  @include tablet {
+    max-width: calc(#{container-size($size)} + (#{$container-gutter-tablet} * 2));
+    padding-left: $container-gutter-tablet;
+    padding-right: $container-gutter-tablet;
+  }
+
+  @include mobile {
+    max-width: calc(#{container-size($size)} + (#{$container-gutter-mobile} * 2));
+    padding-left: $container-gutter-mobile;
+    padding-right: $container-gutter-mobile;
+  }
+}
+
+@mixin text-style($size, $line-height: $line-height-base, $weight: 400, $family: $font-family-base) {
+  font-family: $family;
+  font-size: $size;
+  line-height: $line-height;
+  font-weight: $weight;
 }
