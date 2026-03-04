@@ -40,6 +40,13 @@ $radius-lg: 16px;
 $transition-fast: 0.2s ease;
 $transition-base: 0.3s ease;
 
+$section-space-none: 0;
+$section-space-xs: 1.5rem;
+$section-space-sm: 2.5rem;
+$section-space-md: 4rem;
+$section-space-lg: 6rem;
+$section-space-xl: 8rem;
+
 // Backward compatibility aliases
 $container-max: $container-default;
 $container-padding: 16px;

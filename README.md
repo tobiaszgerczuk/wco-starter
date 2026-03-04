@@ -149,7 +149,7 @@ Główne pliki:
 - `assets/scss/base/_mixins.scss` — mixiny kontenerów i breakpointów
 - `assets/scss/base/_reset.scss` — lekki reset globalny
 - `assets/scss/base/_typography.scss` — baza typografii
-- `assets/scss/_base.scss` — CSS variables i klasy kontenerów
+- `assets/scss/_base.scss` — CSS variables, klasy kontenerów i utilities sekcji
 
 ## Kontenery
 
@@ -175,6 +175,41 @@ Przykład:
   @include container(medium);
 }
 ```
+
+## Sekcje i odstępy
+
+Starter ma też prosty system sekcji, jeśli chcesz szybko sterować:
+- odstępem od poprzedniej sekcji
+- paddingiem wewnątrz sekcji
+- tłem sekcji
+
+Bazowe klasy:
+- `.section`
+- `.section__inner`
+- `.section-bg`
+
+Klasy odstępów zewnętrznych:
+- `.section-gap-top-none|xs|sm|md|lg|xl`
+- `.section-gap-bottom-none|xs|sm|md|lg|xl`
+
+Klasy spacingu wewnętrznego:
+- `.section-space-top-none|xs|sm|md|lg|xl`
+- `.section-space-bottom-none|xs|sm|md|lg|xl`
+
+Przykład:
+
+```html
+<section class="section section-bg section-gap-top-md section-space-top-lg section-space-bottom-lg">
+  <div class="section__inner">
+    ...
+  </div>
+</section>
+```
+
+Semantyka:
+- `section-gap-*` = `margin`
+- `section-space-*` = `padding`
+- `section-bg` = tło sekcji
 
 ## Breakpointy
 
