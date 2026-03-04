@@ -1,0 +1,11 @@
+{
+    "title": "Latest Posts",
+    "description": "Latest blog posts block with REST pagination.",
+    "category": "wco-blocks",
+    "icon": "admin-post",
+    "keywords": [
+        "posts",
+        "blog",
+        "news"
+    ]
+}

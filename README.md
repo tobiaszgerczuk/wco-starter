@@ -176,8 +176,10 @@ W starterze są już przygotowane przykładowe bloki:
 - `faq-accordion`
 - `services`
 - `testimonials-slider`
+- `latest-posts`
 
 `testimonials-slider` jest spięty z registry swiperów i ma już gotowy JS, Twig, SCSS i ACF JSON.
+`latest-posts` ma bazę pod infinite pagination przez REST API.
 
 ## Swiper
 
@@ -207,6 +209,37 @@ swipers.register({
   },
 });
 ```
+
+## REST API
+
+Warstwa REST jest rozbita na klasy i centralny rejestr:
+- `app/Rest/Api.php` — zbiera klasy endpointów
+- `app/Rest/BaseRoute.php` — helper bazowy
+- `app/Rest/Contracts/RouteInterface.php` — kontrakt dla endpointów
+- `app/Rest/Routes/*` — osobne klasy route
+
+Obecnie są przygotowane:
+- `PingRoute`
+- `CartRoute`
+- `PostsRoute`
+
+Jeśli chcesz dodać nowy endpoint:
+1. tworzysz klasę w `app/Rest/Routes/`
+2. implementujesz `RouteInterface`
+3. dopisujesz klasę do listy w `app/Rest/Api.php`
+
+`PostsRoute` jest używany przez blok `latest-posts` jako baza pod ładowanie kolejnych wpisów.
+
+## CF7
+
+Starter ma też bazowe style pod Contact Form 7 w:
+- `assets/scss/components/_forms.scss`
+
+To nie jest pełny design formularza projektu, tylko sensowny reset/starter:
+- inputy i textarea mają normalne border, padding i focus
+- submit dziedziczy styl `.btn`
+- walidacja i komunikaty mają podstawowe style
+- zgody/checkboxy są uporządkowane
 
 ## System styli
 

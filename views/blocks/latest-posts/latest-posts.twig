@@ -1,0 +1,45 @@
+<section class="{{ section_classes }}">
+  <div class="container">
+    {% include 'modules/section-header.twig' with {
+      eyebrow: fields['latest_posts_eyebrow'],
+      title: fields['latest_posts_title'] ?: 'Latest posts',
+      intro: fields['latest_posts_intro'] ? fields['latest_posts_intro']|wpautop : null,
+      class: 'block-latest-posts__header'
+    } only %}
+
+    <div
+      class="block-latest-posts__inner"
+      data-latest-posts
+      data-rest-url="{{ latest_posts_rest_url }}"
+      data-page="{{ posts_query.page }}"
+      data-per-page="{{ posts_query.perPage }}"
+      data-total-pages="{{ posts_query.totalPages }}"
+      data-loading-label="{{ fields['latest_posts_loading_label'] ?: 'Loading...' }}"
+      data-read-more-label="{{ fields['latest_posts_read_more_label'] ?: 'Read more' }}"
+      data-no-image-label="{{ fields['latest_posts_no_image_label'] ?: 'No image' }}"
+      data-empty-label="{{ fields['latest_posts_empty_label'] ?: 'No posts found.' }}"
+    >
+      <div class="block-latest-posts__grid" data-latest-posts-grid>
+        {% for post in posts %}
+          {% include 'modules/post-card.twig' with {
+            post: post,
+            read_more_label: fields['latest_posts_read_more_label'] ?: 'Read more',
+            placeholder: fields['latest_posts_no_image_label'] ?: 'No image'
+          } only %}
+        {% endfor %}
+      </div>
+
+      {% if posts_query.hasMore %}
+        <div class="block-latest-posts__actions">
+          <button class="btn block-latest-posts__button" type="button" data-latest-posts-button>
+            {{ fields['latest_posts_button_label'] ?: 'Load more posts' }}
+          </button>
+        </div>
+      {% elseif posts is empty %}
+        <p class="block-latest-posts__empty" data-latest-posts-empty>
+          {{ fields['latest_posts_empty_label'] ?: 'No posts found.' }}
+        </p>
+      {% endif %}
+    </div>
+  </div>
+</section>

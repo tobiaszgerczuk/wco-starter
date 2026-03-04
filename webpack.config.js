@@ -29,6 +29,7 @@ module.exports = (env, argv) => {
   return {
     entry: {
       front: './assets/js/front.js',
+      editor_blocks: './assets/js/editor-blocks.js',
       admin: './assets/js/admin.js',
       style: './assets/scss/style.scss',
       admin_style: './assets/scss/admin.scss',

@@ -75,12 +75,13 @@ class Registry
             );
         }
     
-        $js_url = get_template_directory_uri() . '/public/js/front.js';
+        $editor_js_path = get_template_directory() . '/public/js/editor_blocks.js';
+        $js_url = get_template_directory_uri() . '/public/js/editor_blocks.js';
         wp_enqueue_script(
             'wco-blocks-editor',
             $js_url,
             ['wp-blocks', 'wp-dom', 'wp-element'],
-            filemtime(get_template_directory() . '/public/js/front.js'),
+            file_exists($editor_js_path) ? filemtime($editor_js_path) : null,
             true
         );
     }

@@ -1,62 +1,143 @@
-/* === Styl zgody CF7 (linia z checkboxem po lewej) === */
-.cf7-acceptance {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 14px;
-    line-height: 1.5;
-    color: #333;
-    margin-top: 10px;
-    margin-bottom: 0px;
-    .wpcf7-list-item{
-        margin-left: 0;
+.wpcf7 {
+  .wpcf7-form {
+    display: grid;
+    gap: 1rem;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  input:not([type='checkbox']):not([type='radio']):not([type='submit']),
+  input[type='email'],
+  input[type='tel'],
+  input[type='text'],
+  input[type='url'],
+  input[type='number'],
+  select,
+  textarea {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: $radius-md;
+    background: var(--color-white);
+    color: var(--color-text);
+    appearance: none;
+    box-shadow: none;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+
+    &::placeholder {
+      color: var(--color-muted);
     }
-    .wpcf7-list-item label{
-        display: flex;
-        align-items: center;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.15);
     }
   }
-  
-  /* Checkbox – większy i z akcentem w kolorze motywu */
-  .cf7-acceptance input[type="checkbox"] {
-    margin-top: 0;
-    margin-bottom: 0;
-    width: fit-content;
-    transform: scale(1.2);
-    accent-color: #006e55; /* dopasuj do koloru przycisku */
+
+  textarea {
+    min-height: 9rem;
+  }
+
+  input[type='submit'],
+  button[type='submit'] {
+    @extend .btn;
+    border: 0;
     cursor: pointer;
   }
-  
-  /* Link do polityki */
-  .cf7-acceptance a {
-    color: #006e55;
-    text-decoration: underline;
-    transition: color 0.2s ease;
-  }
-  
-  .cf7-acceptance a:hover {
-    text-decoration: none;
-    color: #004d3c;
-  }
-  
-  /* Drobna korekta formularza */
-.cf7-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
 
-.wpcf7 {
-  p {
-    margin-bottom: 0;
-    margin-top: 0;
+  .wpcf7-form-control-wrap {
+    display: block;
   }
 
-  &-spinner {
+  .wpcf7-not-valid-tip {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #b42318;
+  }
+
+  .wpcf7-spinner {
     display: none;
   }
 
-  &-response-output {
-    margin-top: 0;
+  .wpcf7-response-output {
+    margin: 0;
+    padding: 0.875rem 1rem;
+    border-radius: $radius-md;
+    font-size: 0.9375rem;
+  }
+
+  form.init .wpcf7-response-output,
+  form.resetting .wpcf7-response-output,
+  form.submitting .wpcf7-response-output {
+    display: none;
+  }
+
+  form.sent .wpcf7-response-output {
+    border: 1px solid #067647;
+    background: #ecfdf3;
+    color: #067647;
+  }
+
+  form.invalid .wpcf7-response-output,
+  form.failed .wpcf7-response-output,
+  form.aborted .wpcf7-response-output,
+  form.spam .wpcf7-response-output {
+    border: 1px solid #b42318;
+    background: #fef3f2;
+    color: #b42318;
+  }
+}
+
+.cf7-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.cf7-acceptance {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-text);
+
+  .wpcf7-list-item {
+    margin-left: 0;
+  }
+
+  .wpcf7-list-item label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-weight: 400;
+  }
+
+  input[type='checkbox'] {
+    flex: 0 0 auto;
+    width: 1rem;
+    height: 1rem;
+    margin: 0.2rem 0 0;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: underline;
+
+    &:hover {
+      color: var(--color-primary-hover);
+      text-decoration: none;
+    }
   }
 }
