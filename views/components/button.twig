@@ -1,0 +1,13 @@
+{% set button_variant = variant|default('primary') %}
+{% set button_target = target|default(link.target|default('')) %}
+
+{% if link %}
+  <a
+    class="btn btn--{{ button_variant }}{{ class ? ' ' ~ class : '' }}"
+    href="{{ link.url }}"
+    {% if button_target %}target="{{ button_target }}"{% endif %}
+    {% if button_target == '_blank' %}rel="noopener noreferrer"{% endif %}
+  >
+    {{ label|default(link.title|default('Learn more')) }}
+  </a>
+{% endif %}

@@ -1,0 +1,15 @@
+<div class="section-header{{ class ? ' ' ~ class : '' }}">
+  {% if eyebrow %}
+    <p class="section-header__eyebrow">{{ eyebrow }}</p>
+  {% endif %}
+
+  {% if title %}
+    <h2 class="section-header__title">{{ title }}</h2>
+  {% endif %}
+
+  {% if intro %}
+    <div class="section-header__intro">
+      {{ intro }}
+    </div>
+  {% endif %}
+</div>

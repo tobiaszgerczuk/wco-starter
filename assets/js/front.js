@@ -2,6 +2,7 @@ import CustomBehaviors from './components/CustomBehaviors.js';
 import LazyLoader from './components/lazyload.js';
 import Parallax from './components/parralax.js';
 import Header from './modules/header.js';
+import swipers from './modules/swipers.js';
 import WcoShop from './ecommerce/woocommerce.js';
 
 // import AOS from 'aos';
@@ -46,9 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
   //   once: true,
   // });
 
-  // const slider = document.querySelector('.swiper');
-  // if (slider) {
-  //   new Swiper(slider, {
+  // If you install Swiper from npm, uncomment imports above and set the engine here.
+  // swipers.setEngine(Swiper);
+  //
+  // Example registration:
+  // swipers.register({
+  //   name: 'testimonials',
+  //   selector: '.js-swiper-testimonials',
+  //   options: {
   //     modules: [Navigation, Pagination, Autoplay],
   //     slidesPerView: 1,
   //     spaceBetween: 24,
@@ -60,6 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
   //       el: '.swiper-pagination',
   //       clickable: true,
   //     },
-  //   });
-  // }
+  //   },
+  // });
+  //
+  // You can also load Swiper globally and skip setEngine() if window.Swiper exists.
+  swipers.init();
 });

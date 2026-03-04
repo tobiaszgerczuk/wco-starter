@@ -1,0 +1,9 @@
+{% if label %}
+  <button
+    class="btn{{ class ? ' ' ~ class : '' }}"
+    type="button"
+    data-modal-trigger="{{ target }}"
+  >
+    {{ label }}
+  </button>
+{% endif %}

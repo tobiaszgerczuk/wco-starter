@@ -29,6 +29,7 @@ class Theme
         add_filter('timber/twig', [Templating::class, 'extend_twig']);
 
         // ACF Local JSON
+        Acf::boot();
         add_filter('acf/settings/save_json', [Acf::class, 'save_json']);
         add_filter('acf/settings/load_json', [Acf::class, 'load_json']);
 

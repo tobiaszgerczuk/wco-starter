@@ -1,8 +1,6 @@
 .block-hero-banner {
-background-color: rgb(71, 154, 237);
-
   &__inner {
-    @include container;
+    max-width: 60rem;
   }
 
   &__title {
@@ -11,6 +9,10 @@ background-color: rgb(71, 154, 237);
 
   &__content {
     max-width: 60ch;
+  }
+
+  &__button {
+    margin-top: 1rem;
   }
 
   &__placeholder {

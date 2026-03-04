@@ -1,0 +1,20 @@
+{% set modal_id = id|default('modal-' ~ random()) %}
+
+<div class="modal{{ class ? ' ' ~ class : '' }}" id="{{ modal_id }}" aria-hidden="true" data-modal>
+  <div class="modal__overlay" data-modal-close></div>
+  <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="{{ modal_id }}-title">
+    <button class="modal__close" type="button" aria-label="{{ close_label|default('Close modal') }}" data-modal-close>
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+    {% if title %}
+      <h2 class="modal__title" id="{{ modal_id }}-title">{{ title }}</h2>
+    {% endif %}
+
+    <div class="modal__content">
+      {% block modal_content %}
+        {{ content|default('') }}
+      {% endblock %}
+    </div>
+  </div>
+</div>

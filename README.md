@@ -82,6 +82,18 @@ npm run rename-theme -- "Nazwa Projektu" nazwa-projektu
 npm run create-block -- hero-banner "Hero Banner"
 ```
 
+## Ustawienia motywu
+
+Jeśli aktywne jest `ACF Pro`, w panelu pojawi się strona:
+- `Ustawienia motywu`, gdy locale strony jest polskie
+- `Theme settings`, gdy locale strony jest inne niż polskie
+
+Na tej stronie możesz wkleić:
+- własny kod do `<head>`
+- własny kod przed `</body>`
+
+Ten kod renderuje się automatycznie przez `wp_head` i `wp_footer`.
+
 ## Tworzenie bloków
 
 Nowy blok generujesz komendą:
@@ -140,6 +152,61 @@ To jest celowy układ:
 - `js` = klasa OOP z vanilla JS
 - `include.php` = render Timbera
 - `block.json` = metadane bloku do rejestracji
+
+Dodatkowo w `views` masz też miejsce na reużywalne partiale:
+
+```text
+views/components/
+  button.twig
+  modal.twig
+
+views/modules/
+  modal-trigger.twig
+  section-header.twig
+```
+
+Przykłady użycia:
+- `components` = małe, wielokrotnego użytku elementy UI
+- `modules` = większe fragmenty sekcji lub powtarzalne układy
+
+## Gotowe bloki startowe
+
+W starterze są już przygotowane przykładowe bloki:
+- `text-image`
+- `faq-accordion`
+- `services`
+- `testimonials-slider`
+
+`testimonials-slider` jest spięty z registry swiperów i ma już gotowy JS, Twig, SCSS i ACF JSON.
+
+## Swiper
+
+Starter ma przygotowane miejsce na rejestrację sliderów swiperowych:
+- `assets/js/modules/SwiperRegistry.js`
+- `assets/js/modules/swipers.js`
+- `assets/js/front.js`
+
+Workflow:
+- `swiper` jest już wpisany do `package.json`
+- po `npm install` możesz z niego korzystać od razu
+- odkomentowujesz importy w `front.js`
+- rejestrujesz slider przez `swipers.register({...})`
+
+Przykład:
+
+```js
+swipers.setEngine(Swiper);
+
+swipers.register({
+  name: 'testimonials',
+  selector: '.js-swiper-testimonials',
+  options: {
+    modules: [Navigation, Pagination],
+    slidesPerView: 1,
+    spaceBetween: 24,
+  },
+});
+```
 
 ## System styli
 

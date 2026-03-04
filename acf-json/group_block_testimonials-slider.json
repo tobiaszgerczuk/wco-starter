@@ -1,34 +1,41 @@
 {
-    "key": "group_block_hero-banner",
-    "title": "Hero Banner Block",
+    "key": "group_block_testimonials-slider",
+    "title": "Testimonials Slider Block",
     "fields": [
         {
-            "key": "field_hero_banner_title",
-            "label": "Title",
-            "name": "hero_banner_title",
+            "key": "field_testimonials_slider_eyebrow",
+            "label": "Eyebrow",
+            "name": "testimonials_slider_eyebrow",
             "aria-label": "",
             "type": "text",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "",
+                "width": "50",
                 "class": "",
                 "id": ""
-            },
-            "default_value": "",
-            "maxlength": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
+            }
         },
         {
-            "key": "field_hero_banner_content",
-            "label": "Content",
-            "name": "hero_banner_content",
+            "key": "field_testimonials_slider_title",
+            "label": "Title",
+            "name": "testimonials_slider_title",
+            "aria-label": "",
+            "type": "text",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            }
+        },
+        {
+            "key": "field_testimonials_slider_intro",
+            "label": "Intro",
+            "name": "testimonials_slider_intro",
             "aria-label": "",
             "type": "textarea",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -36,19 +43,15 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": "",
-            "maxlength": "",
             "rows": 4,
-            "placeholder": "",
             "new_lines": "wpautop"
         },
         {
-            "key": "field_hero_banner_link",
-            "label": "Link",
-            "name": "hero_banner_link",
+            "key": "field_testimonials_slider_items",
+            "label": "Testimonials",
+            "name": "testimonials_slider_items",
             "aria-label": "",
-            "type": "link",
-            "instructions": "",
+            "type": "repeater",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -56,15 +59,64 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array"
+            "layout": "block",
+            "button_label": "Add testimonial",
+            "sub_fields": [
+                {
+                    "key": "field_testimonials_slider_items_quote",
+                    "label": "Quote",
+                    "name": "quote",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "rows": 4,
+                    "new_lines": "wpautop"
+                },
+                {
+                    "key": "field_testimonials_slider_items_author_name",
+                    "label": "Author name",
+                    "name": "author_name",
+                    "aria-label": "",
+                    "type": "text",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    }
+                },
+                {
+                    "key": "field_testimonials_slider_items_author_role",
+                    "label": "Author role",
+                    "name": "author_role",
+                    "aria-label": "",
+                    "type": "text",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    }
+                }
+            ],
+            "min": 0,
+            "max": 0,
+            "collapsed": "field_testimonials_slider_items_author_name"
         },
         {
-            "key": "field_hero_banner_section_tab",
+            "key": "field_testimonials_slider_section_tab",
             "label": "Section settings",
             "name": "",
             "aria-label": "",
             "type": "tab",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -76,7 +128,7 @@
             "endpoint": 0
         },
         {
-            "key": "field_hero_banner_section_has_background",
+            "key": "field_testimonials_slider_section_has_background",
             "label": "Section background",
             "name": "section_has_background",
             "aria-label": "",
@@ -96,12 +148,11 @@
             "ui_off_text": "Off"
         },
         {
-            "key": "field_hero_banner_section_gap_top",
+            "key": "field_testimonials_slider_section_gap_top",
             "label": "Gap top",
             "name": "section_gap_top",
             "aria-label": "",
             "type": "select",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -126,12 +177,11 @@
             "placeholder": ""
         },
         {
-            "key": "field_hero_banner_section_gap_bottom",
+            "key": "field_testimonials_slider_section_gap_bottom",
             "label": "Gap bottom",
             "name": "section_gap_bottom",
             "aria-label": "",
             "type": "select",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -156,12 +206,11 @@
             "placeholder": ""
         },
         {
-            "key": "field_hero_banner_section_space_top",
+            "key": "field_testimonials_slider_section_space_top",
             "label": "Space top",
             "name": "section_space_top",
             "aria-label": "",
             "type": "select",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -186,12 +235,11 @@
             "placeholder": ""
         },
         {
-            "key": "field_hero_banner_section_space_bottom",
+            "key": "field_testimonials_slider_section_space_bottom",
             "label": "Space bottom",
             "name": "section_space_bottom",
             "aria-label": "",
             "type": "select",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -221,7 +269,7 @@
             {
                 "param": "block",
                 "operator": "==",
-                "value": "acf/hero-banner"
+                "value": "acf/testimonials-slider"
             }
         ]
     ],
@@ -232,12 +280,12 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "Generated for the Hero Banner block.",
+    "description": "Generated for the Testimonials Slider block.",
     "show_in_rest": 0,
-    "modified": 1772619145,
+    "modified": 1772630200,
     "wco_metadata": {
-        "block_name": "hero-banner",
-        "icon": "layout",
+        "block_name": "testimonials-slider",
+        "icon": "format-quote",
         "category": "wco-blocks",
         "text_domain": "wco-starter"
     }

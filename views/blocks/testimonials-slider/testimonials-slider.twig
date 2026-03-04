@@ -1,0 +1,44 @@
+<section class="{{ section_classes }}">
+  <div class="container">
+    {% include 'modules/section-header.twig' with {
+      eyebrow: fields['testimonials_slider_eyebrow'],
+      title: fields['testimonials_slider_title'] ?: 'Testimonials',
+      intro: fields['testimonials_slider_intro'] ? fields['testimonials_slider_intro']|wpautop : null,
+      class: 'block-testimonials-slider__header'
+    } only %}
+
+    {% if fields['testimonials_slider_items'] %}
+      <div class="block-testimonials-slider__slider swiper js-swiper-testimonials">
+        <div class="swiper-wrapper">
+          {% for item in fields['testimonials_slider_items'] %}
+            <article class="block-testimonials-slider__slide swiper-slide">
+              <div class="block-testimonials-slider__card">
+                {% if item.quote %}
+                  <blockquote class="block-testimonials-slider__quote">
+                    {{ item.quote|wpautop }}
+                  </blockquote>
+                {% endif %}
+
+                <div class="block-testimonials-slider__meta">
+                  <strong class="block-testimonials-slider__name">{{ item.author_name }}</strong>
+
+                  {% if item.author_role %}
+                    <span class="block-testimonials-slider__role">{{ item.author_role }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+
+        <div class="block-testimonials-slider__controls">
+          <button class="block-testimonials-slider__nav block-testimonials-slider__nav--prev swiper-button-prev" type="button" aria-label="Previous slide"></button>
+          <div class="block-testimonials-slider__pagination swiper-pagination"></div>
+          <button class="block-testimonials-slider__nav block-testimonials-slider__nav--next swiper-button-next" type="button" aria-label="Next slide"></button>
+        </div>
+      </div>
+    {% elseif is_preview %}
+      <p class="block-testimonials-slider__placeholder">Add testimonials in ACF to preview the slider.</p>
+    {% endif %}
+  </div>
+</section>
