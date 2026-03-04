@@ -13,7 +13,7 @@ array_shift($args);
 
 $dryRun = false;
 $icon = 'layout';
-$category = 'layout';
+$category = 'wco-blocks';
 $positional = [];
 
 foreach ($args as $arg) {
@@ -38,7 +38,7 @@ foreach ($args as $arg) {
 if (count($positional) < 1) {
     $usage = <<<TXT
 Usage:
-  php scripts/create-block.php block-slug ["Block Title"] [--icon=layout] [--category=layout] [--dry-run]
+  php scripts/create-block.php block-slug ["Block Title"] [--icon=layout] [--category=wco-blocks] [--dry-run]
 
 Examples:
   php scripts/create-block.php hero-banner "Hero Banner"

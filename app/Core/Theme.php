@@ -33,6 +33,7 @@ class Theme
         add_filter('acf/settings/load_json', [Acf::class, 'load_json']);
 
         // ACF Blocks
+        BlocksRegistry::boot();
         add_action('acf/init', [BlocksRegistry::class, 'register_blocks']);
 
         // REST API

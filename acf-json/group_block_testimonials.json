@@ -65,7 +65,7 @@
     "wco_metadata": {
         "block_name": "testimonials",
         "icon": "layout",
-        "category": "layout",
+        "category": "wco-blocks",
         "text_domain": "wco-starter"
     }
 }

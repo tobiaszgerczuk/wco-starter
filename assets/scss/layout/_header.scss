@@ -56,6 +56,7 @@
   .hamburger {
     display: none;
     position: relative;
+    z-index: 1101;
     width: 28px;
     height: 24px;
     background: none;
@@ -123,14 +124,19 @@
 
     .primary-nav {
       position: fixed;
+      top: 0;
+      bottom: 0;
       left: 0;
       right: 0;
+      z-index: 1100;
+      min-height: 100dvh;
       background: #fff;
-      border-bottom: 1px solid rgba(0, 0, 0, .06);
+      padding: 96px 20px 32px;
       transform: scaleY(0);
       transform-origin: top;
       transition: transform .25s ease;
       box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+      overflow-y: auto;
     }
 
     .primary-nav.is-open {
@@ -139,8 +145,16 @@
 
     .primary-nav ul {
       flex-direction: column;
-      padding: 12px;
-      gap: 4px;
+      padding: 0;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .primary-nav a {
+      display: block;
+      width: 100%;
+      padding: 10px 0;
+      font-size: 1.25rem;
     }
   }
 }
