@@ -113,6 +113,7 @@ Ważne:
 - style bloku ładują się automatycznie tylko dla danego bloku
 - JS bloku ładuje się automatycznie tylko wtedy, gdy blok istnieje w DOM
 - field group zapisuje się lokalnie do `acf-json`
+- generator dodaje też domyślne pola sekcji: `section_has_background`, `section_gap_top`, `section_gap_bottom`, `section_space_top`, `section_space_bottom`
 
 Dry run:
 
@@ -185,7 +186,7 @@ Starter ma też prosty system sekcji, jeśli chcesz szybko sterować:
 
 Bazowe klasy:
 - `.section`
-- `.section__inner`
+- `.container`
 - `.section-bg`
 
 Klasy odstępów zewnętrznych:
@@ -200,7 +201,7 @@ Przykład:
 
 ```html
 <section class="section section-bg section-gap-top-md section-space-top-lg section-space-bottom-lg">
-  <div class="section__inner">
+  <div class="container">
     ...
   </div>
 </section>
@@ -210,6 +211,8 @@ Semantyka:
 - `section-gap-*` = `margin`
 - `section-space-*` = `padding`
 - `section-bg` = tło sekcji
+
+W blokach generowanych przez `create-block` te ustawienia są od razu dostępne w ACF, więc możesz sterować sekcją z poziomu edytora bez ręcznego dopisywania klas.
 
 ## Breakpointy
 

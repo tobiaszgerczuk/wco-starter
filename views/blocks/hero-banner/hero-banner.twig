@@ -1,15 +1,16 @@
-<section class="block-hero-banner align{{ block.align ?? '' }}">
-  <div class="container">
-    <div class="block-hero-banner__inner">
-      <h2 class="block-hero-banner__title">{{ fields['hero_banner_title'] ?: 'Hero Banner' }}</h2>
+<section class="{{ section_classes }}">
+	<div class="container">
 
-      {% if fields['hero_banner_content'] %}
-        <div class="block-hero-banner__content">
-          {{ fields['hero_banner_content']|wpautop }}
-        </div>
-      {% elseif is_preview %}
-        <p class="block-hero-banner__placeholder">Add fields for the hero-banner block in ACF.</p>
-      {% endif %}
-    </div>
-  </div>
+		<h2 class="block-hero-banner__title">{{ fields['hero_banner_title'] ?: 'Hero Banner' }}</h2>
+
+		{% if fields['hero_banner_content'] %}
+			<div class="block-hero-banner__content">
+				{{ fields['hero_banner_content']|wpautop }}
+			</div>
+		{% elseif is_preview %}
+			<p class="block-hero-banner__placeholder">Add fields for the hero-banner block in ACF.</p>
+		{% endif %}
+
+	</div>
 </section>
+

@@ -1,0 +1,48 @@
+<section class="{{ section_classes }}">
+  <div class="container">
+    <div class="block-faq-accordion__header">
+      {% if fields['faq_accordion_eyebrow'] %}
+        <p class="block-faq-accordion__eyebrow">{{ fields['faq_accordion_eyebrow'] }}</p>
+      {% endif %}
+
+      <h2 class="block-faq-accordion__title">{{ fields['faq_accordion_title'] ?: 'FAQ' }}</h2>
+
+      {% if fields['faq_accordion_intro'] %}
+        <div class="block-faq-accordion__intro">
+          {{ fields['faq_accordion_intro']|wpautop }}
+        </div>
+      {% endif %}
+    </div>
+
+    {% if fields['faq_accordion_items'] %}
+      <div class="block-faq-accordion__items" data-accordion>
+        {% for item in fields['faq_accordion_items'] %}
+          {% set item_id = 'faq-item-' ~ block.id ~ '-' ~ loop.index %}
+          <article class="block-faq-accordion__item" data-accordion-item>
+            <button
+              class="block-faq-accordion__trigger"
+              type="button"
+              aria-expanded="false"
+              aria-controls="{{ item_id }}"
+              data-accordion-trigger
+            >
+              <span>{{ item.question }}</span>
+              <span class="block-faq-accordion__icon" aria-hidden="true"></span>
+            </button>
+
+            <div
+              id="{{ item_id }}"
+              class="block-faq-accordion__panel"
+              hidden
+              data-accordion-panel
+            >
+              {{ item.answer|wpautop }}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% elseif is_preview %}
+      <p class="block-faq-accordion__placeholder">Add FAQ items in ACF to preview the accordion.</p>
+    {% endif %}
+  </div>
+</section>

@@ -1,18 +1,17 @@
 {
-    "key": "group_block_hero-banner",
-    "title": "Hero Banner Block",
+    "key": "group_block_faq-accordion",
+    "title": "FAQ Accordion Block",
     "fields": [
         {
-            "key": "field_hero_banner_title",
-            "label": "Title",
-            "name": "hero_banner_title",
+            "key": "field_faq_accordion_eyebrow",
+            "label": "Eyebrow",
+            "name": "faq_accordion_eyebrow",
             "aria-label": "",
             "type": "text",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "",
+                "width": "50",
                 "class": "",
                 "id": ""
             },
@@ -23,12 +22,30 @@
             "append": ""
         },
         {
-            "key": "field_hero_banner_content",
-            "label": "Content",
-            "name": "hero_banner_content",
+            "key": "field_faq_accordion_title",
+            "label": "Title",
+            "name": "faq_accordion_title",
+            "aria-label": "",
+            "type": "text",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_faq_accordion_intro",
+            "label": "Intro",
+            "name": "faq_accordion_intro",
             "aria-label": "",
             "type": "textarea",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -43,12 +60,70 @@
             "new_lines": "wpautop"
         },
         {
-            "key": "field_hero_banner_section_tab",
+            "key": "field_faq_accordion_items",
+            "label": "FAQ items",
+            "name": "faq_accordion_items",
+            "aria-label": "",
+            "type": "repeater",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "row",
+            "button_label": "Add item",
+            "sub_fields": [
+                {
+                    "key": "field_faq_accordion_items_question",
+                    "label": "Question",
+                    "name": "question",
+                    "aria-label": "",
+                    "type": "text",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "40",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_faq_accordion_items_answer",
+                    "label": "Answer",
+                    "name": "answer",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "60",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "rows": 4,
+                    "placeholder": "",
+                    "new_lines": "wpautop"
+                }
+            ],
+            "min": 0,
+            "max": 0,
+            "collapsed": "field_faq_accordion_items_question"
+        },
+        {
+            "key": "field_faq_accordion_section_tab",
             "label": "Section settings",
             "name": "",
             "aria-label": "",
             "type": "tab",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -60,7 +135,7 @@
             "endpoint": 0
         },
         {
-            "key": "field_hero_banner_section_has_background",
+            "key": "field_faq_accordion_section_has_background",
             "label": "Section background",
             "name": "section_has_background",
             "aria-label": "",
@@ -80,12 +155,11 @@
             "ui_off_text": "Off"
         },
         {
-            "key": "field_hero_banner_section_gap_top",
+            "key": "field_faq_accordion_section_gap_top",
             "label": "Gap top",
             "name": "section_gap_top",
             "aria-label": "",
             "type": "select",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -110,12 +184,11 @@
             "placeholder": ""
         },
         {
-            "key": "field_hero_banner_section_gap_bottom",
+            "key": "field_faq_accordion_section_gap_bottom",
             "label": "Gap bottom",
             "name": "section_gap_bottom",
             "aria-label": "",
             "type": "select",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -140,12 +213,11 @@
             "placeholder": ""
         },
         {
-            "key": "field_hero_banner_section_space_top",
+            "key": "field_faq_accordion_section_space_top",
             "label": "Space top",
             "name": "section_space_top",
             "aria-label": "",
             "type": "select",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -170,12 +242,11 @@
             "placeholder": ""
         },
         {
-            "key": "field_hero_banner_section_space_bottom",
+            "key": "field_faq_accordion_section_space_bottom",
             "label": "Space bottom",
             "name": "section_space_bottom",
             "aria-label": "",
             "type": "select",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -205,7 +276,7 @@
             {
                 "param": "block",
                 "operator": "==",
-                "value": "acf/hero-banner"
+                "value": "acf/faq-accordion"
             }
         ]
     ],
@@ -216,12 +287,12 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "Generated for the Hero Banner block.",
+    "description": "Generated for the FAQ Accordion block.",
     "show_in_rest": 0,
-    "modified": 1772619145,
+    "modified": 1772629000,
     "wco_metadata": {
-        "block_name": "hero-banner",
-        "icon": "layout",
+        "block_name": "faq-accordion",
+        "icon": "editor-help",
         "category": "wco-blocks",
         "text_domain": "wco-starter"
     }

@@ -1,0 +1,11 @@
+{
+    "title": "FAQ Accordion",
+    "description": "Accordion FAQ block.",
+    "category": "wco-blocks",
+    "icon": "editor-help",
+    "keywords": [
+        "faq",
+        "accordion",
+        "questions"
+    ]
+}

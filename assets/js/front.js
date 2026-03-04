@@ -6,6 +6,12 @@ import WcoShop from './ecommerce/woocommerce.js';
 
 // import AOS from 'aos';
 // import 'aos/dist/aos.css';
+// Optional: uncomment when a block needs Swiper.
+// import Swiper from 'swiper';
+// import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+// import 'swiper/css';
+// import 'swiper/css/navigation';
+// import 'swiper/css/pagination';
 
 function initBlockModules() {
   const context = require.context('../../views/blocks', true, /\/[^/]+\.js$/);
@@ -39,4 +45,21 @@ document.addEventListener('DOMContentLoaded', () => {
   //   duration: 800,
   //   once: true,
   // });
+
+  // const slider = document.querySelector('.swiper');
+  // if (slider) {
+  //   new Swiper(slider, {
+  //     modules: [Navigation, Pagination, Autoplay],
+  //     slidesPerView: 1,
+  //     spaceBetween: 24,
+  //     navigation: {
+  //       nextEl: '.swiper-button-next',
+  //       prevEl: '.swiper-button-prev',
+  //     },
+  //     pagination: {
+  //       el: '.swiper-pagination',
+  //       clickable: true,
+  //     },
+  //   });
+  // }
 });

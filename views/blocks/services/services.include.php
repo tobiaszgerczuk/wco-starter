@@ -10,7 +10,7 @@ $context['is_preview'] = $is_preview ?? false;
 $context['post_id'] = $post_id ?? 0;
 $context['section_classes'] = SectionSettings::build_classes(
     $context['fields'],
-    ['block-hero-banner', !empty($context['block']['align']) ? 'align' . $context['block']['align'] : '']
+    ['block-services', !empty($context['block']['align']) ? 'align' . $context['block']['align'] : '']
 );
 
-Timber::render('blocks/hero-banner/hero-banner.twig', $context);
+Timber::render('blocks/services/services.twig', $context);

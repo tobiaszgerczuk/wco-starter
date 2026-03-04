@@ -124,7 +124,7 @@ function build_twig_template(string $slug, string $title, string $fieldPrefix): 
     $fallback = addslashes($title);
 
     return <<<TWIG
-<section class="block-{$slug} align{{ block.align ?? '' }}">
+<section class="{{ section_classes }}">
   <div class="container">
     <div class="block-{$slug}__inner">
       <h2 class="block-{$slug}__title">{{ fields['{$fieldPrefix}_title'] ?: '{$fallback}' }}</h2>
@@ -177,12 +177,17 @@ function build_include_template(string $slug): string
 <?php
 
 use Timber\Timber;
+use WCO\Starter\Blocks\SectionSettings;
 
 \$context = Timber::context();
 \$context['fields'] = get_fields() ?: [];
 \$context['block'] = \$block ?? [];
 \$context['is_preview'] = \$is_preview ?? false;
 \$context['post_id'] = \$post_id ?? 0;
+\$context['section_classes'] = SectionSettings::build_classes(
+    \$context['fields'],
+    ['block-{$slug}', !empty(\$context['block']['align']) ? 'align' . \$context['block']['align'] : '']
+);
 
 Timber::render('blocks/{$slug}/{$slug}.twig', \$context);
 
@@ -207,7 +212,7 @@ function build_field_group_json(string $slug, string $title, string $fieldPrefix
     $group = [
         'key' => 'group_block_' . $slug,
         'title' => $title . ' Block',
-        'fields' => [
+        'fields' => array_merge([
             [
                 'key' => 'field_' . $fieldPrefix . '_title',
                 'label' => 'Title',
@@ -248,7 +253,7 @@ function build_field_group_json(string $slug, string $title, string $fieldPrefix
                 'placeholder' => '',
                 'new_lines' => 'wpautop',
             ],
-        ],
+        ], build_section_fields($fieldPrefix)),
         'location' => [
             [
                 [
@@ -277,6 +282,89 @@ function build_field_group_json(string $slug, string $title, string $fieldPrefix
     ];
 
     return json_encode($group, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
+}
+
+function build_section_fields(string $fieldPrefix): array
+{
+    $choices = [
+        'none' => 'None',
+        'xs' => 'XS',
+        'sm' => 'SM',
+        'md' => 'MD',
+        'lg' => 'LG',
+        'xl' => 'XL',
+    ];
+
+    return [
+        [
+            'key' => 'field_' . $fieldPrefix . '_section_tab',
+            'label' => 'Section settings',
+            'name' => '',
+            'aria-label' => '',
+            'type' => 'tab',
+            'instructions' => '',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => [
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ],
+            'placement' => 'top',
+            'endpoint' => 0,
+        ],
+        [
+            'key' => 'field_' . $fieldPrefix . '_section_has_background',
+            'label' => 'Section background',
+            'name' => 'section_has_background',
+            'aria-label' => '',
+            'type' => 'true_false',
+            'instructions' => 'Adds the section background helper class.',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => [
+                'width' => '50',
+                'class' => '',
+                'id' => '',
+            ],
+            'message' => 'Use .section-bg on this block',
+            'default_value' => 0,
+            'ui' => 1,
+            'ui_on_text' => 'On',
+            'ui_off_text' => 'Off',
+        ],
+        build_spacing_select($fieldPrefix, 'section_gap_top', 'Gap top', '50', 'none', $choices),
+        build_spacing_select($fieldPrefix, 'section_gap_bottom', 'Gap bottom', '50', 'none', $choices),
+        build_spacing_select($fieldPrefix, 'section_space_top', 'Space top', '50', 'md', $choices),
+        build_spacing_select($fieldPrefix, 'section_space_bottom', 'Space bottom', '50', 'md', $choices),
+    ];
+}
+
+function build_spacing_select(string $fieldPrefix, string $name, string $label, string $width, string $defaultValue, array $choices): array
+{
+    return [
+        'key' => 'field_' . $fieldPrefix . '_' . $name,
+        'label' => $label,
+        'name' => $name,
+        'aria-label' => '',
+        'type' => 'select',
+        'instructions' => '',
+        'required' => 0,
+        'conditional_logic' => 0,
+        'wrapper' => [
+            'width' => $width,
+            'class' => '',
+            'id' => '',
+        ],
+        'choices' => $choices,
+        'default_value' => $defaultValue,
+        'return_format' => 'value',
+        'multiple' => 0,
+        'allow_null' => 0,
+        'ui' => 0,
+        'ajax' => 0,
+        'placeholder' => '',
+    ];
 }
 
 function build_javascript_template(string $slug): string

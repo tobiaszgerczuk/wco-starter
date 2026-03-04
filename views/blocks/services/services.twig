@@ -1,0 +1,52 @@
+<section class="{{ section_classes }}">
+  <div class="container">
+    <div class="block-services__header">
+      {% if fields['services_eyebrow'] %}
+        <p class="block-services__eyebrow">{{ fields['services_eyebrow'] }}</p>
+      {% endif %}
+
+      <h2 class="block-services__title">{{ fields['services_title'] ?: 'Services' }}</h2>
+
+      {% if fields['services_intro'] %}
+        <div class="block-services__intro">
+          {{ fields['services_intro']|wpautop }}
+        </div>
+      {% endif %}
+    </div>
+
+    {% if fields['services_items'] %}
+      <div class="block-services__grid">
+        {% for item in fields['services_items'] %}
+          <article class="block-services__card">
+            {% if item.icon %}
+              <div class="block-services__icon">
+                {{ fn('wp_get_attachment_image', item.icon, 'thumbnail', false, { class: 'block-services__icon-image' }) }}
+              </div>
+            {% endif %}
+
+            <h3 class="block-services__card-title">{{ item.title }}</h3>
+
+            {% if item.content %}
+              <div class="block-services__card-content">
+                {{ item.content|wpautop }}
+              </div>
+            {% endif %}
+
+            {% if item.link %}
+              <a
+                class="block-services__card-link"
+                href="{{ item.link.url }}"
+                {% if item.link.target %}target="{{ item.link.target }}"{% endif %}
+                {% if item.link.target == '_blank' %}rel="noopener noreferrer"{% endif %}
+              >
+                {{ item.link.title ?: 'Learn more' }}
+              </a>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    {% elseif is_preview %}
+      <p class="block-services__placeholder">Add service items in ACF to preview the cards.</p>
+    {% endif %}
+  </div>
+</section>

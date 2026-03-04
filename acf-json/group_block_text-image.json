@@ -1,18 +1,17 @@
 {
-    "key": "group_block_hero-banner",
-    "title": "Hero Banner Block",
+    "key": "group_block_text-image",
+    "title": "Text image Block",
     "fields": [
         {
-            "key": "field_hero_banner_title",
-            "label": "Title",
-            "name": "hero_banner_title",
+            "key": "field_text_image_eyebrow",
+            "label": "Eyebrow",
+            "name": "text_image_eyebrow",
             "aria-label": "",
             "type": "text",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "",
+                "width": "50",
                 "class": "",
                 "id": ""
             },
@@ -23,12 +22,30 @@
             "append": ""
         },
         {
-            "key": "field_hero_banner_content",
+            "key": "field_text_image_title",
+            "label": "Title",
+            "name": "text_image_title",
+            "aria-label": "",
+            "type": "text",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_text_image_content",
             "label": "Content",
-            "name": "hero_banner_content",
+            "name": "text_image_content",
             "aria-label": "",
             "type": "textarea",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -38,17 +55,80 @@
             },
             "default_value": "",
             "maxlength": "",
-            "rows": 4,
+            "rows": 5,
             "placeholder": "",
             "new_lines": "wpautop"
         },
         {
-            "key": "field_hero_banner_section_tab",
+            "key": "field_text_image_image",
+            "label": "Image",
+            "name": "text_image_image",
+            "aria-label": "",
+            "type": "image",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "preview_size": "medium",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_text_image_image_position",
+            "label": "Image position",
+            "name": "text_image_image_position",
+            "aria-label": "",
+            "type": "select",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "right": "Right",
+                "left": "Left"
+            },
+            "default_value": "right",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_text_image_link",
+            "label": "Link",
+            "name": "text_image_link",
+            "aria-label": "",
+            "type": "link",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array"
+        },
+        {
+            "key": "field_text_image_section_tab",
             "label": "Section settings",
             "name": "",
             "aria-label": "",
             "type": "tab",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -60,7 +140,7 @@
             "endpoint": 0
         },
         {
-            "key": "field_hero_banner_section_has_background",
+            "key": "field_text_image_section_has_background",
             "label": "Section background",
             "name": "section_has_background",
             "aria-label": "",
@@ -80,12 +160,11 @@
             "ui_off_text": "Off"
         },
         {
-            "key": "field_hero_banner_section_gap_top",
+            "key": "field_text_image_section_gap_top",
             "label": "Gap top",
             "name": "section_gap_top",
             "aria-label": "",
             "type": "select",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -110,12 +189,11 @@
             "placeholder": ""
         },
         {
-            "key": "field_hero_banner_section_gap_bottom",
+            "key": "field_text_image_section_gap_bottom",
             "label": "Gap bottom",
             "name": "section_gap_bottom",
             "aria-label": "",
             "type": "select",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -140,12 +218,11 @@
             "placeholder": ""
         },
         {
-            "key": "field_hero_banner_section_space_top",
+            "key": "field_text_image_section_space_top",
             "label": "Space top",
             "name": "section_space_top",
             "aria-label": "",
             "type": "select",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -170,12 +247,11 @@
             "placeholder": ""
         },
         {
-            "key": "field_hero_banner_section_space_bottom",
+            "key": "field_text_image_section_space_bottom",
             "label": "Space bottom",
             "name": "section_space_bottom",
             "aria-label": "",
             "type": "select",
-            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -205,7 +281,7 @@
             {
                 "param": "block",
                 "operator": "==",
-                "value": "acf/hero-banner"
+                "value": "acf/text-image"
             }
         ]
     ],
@@ -216,11 +292,11 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "Generated for the Hero Banner block.",
+    "description": "Generated for the Text image block.",
     "show_in_rest": 0,
-    "modified": 1772619145,
+    "modified": 1772629002,
     "wco_metadata": {
-        "block_name": "hero-banner",
+        "block_name": "text-image",
         "icon": "layout",
         "category": "wco-blocks",
         "text_domain": "wco-starter"
