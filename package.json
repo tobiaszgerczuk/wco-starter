@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "rename-theme": "php scripts/rename-theme.php",
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production"
   },
