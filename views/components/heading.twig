@@ -1,0 +1,16 @@
+<div class="heading{{ class ? ' ' ~ class : '' }}">
+  {% if eyebrow %}
+    <p class="heading__eyebrow">{{ eyebrow }}</p>
+  {% endif %}
+
+  {% if title %}
+    {% set heading_tag = tag|default('h2') %}
+    <{{ heading_tag }} class="heading__title">{{ title }}</{{ heading_tag }}>
+  {% endif %}
+
+  {% if intro %}
+    <div class="heading__intro">
+      {{ intro }}
+    </div>
+  {% endif %}
+</div>

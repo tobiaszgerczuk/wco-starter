@@ -1,0 +1,41 @@
+<section class="features-grid{{ class ? ' ' ~ class : '' }}">
+  <div class="{{ container|default('container') }}">
+    {% include 'components/heading.twig' with {
+      class: 'features-grid__heading',
+      eyebrow: eyebrow,
+      title: title,
+      intro: intro
+    } only %}
+
+    {% if items %}
+      <div class="features-grid__items">
+        {% for item in items %}
+          <article class="features-grid__item">
+            {% if item.icon %}
+              {% include 'components/icon.twig' with {
+                name: item.icon,
+                class: 'features-grid__icon'
+              } only %}
+            {% endif %}
+
+            {% if item.title %}
+              <h3 class="features-grid__title">{{ item.title }}</h3>
+            {% endif %}
+
+            {% if item.content %}
+              <div class="features-grid__content">{{ item.content }}</div>
+            {% endif %}
+
+            {% if item.link %}
+              {% include 'components/link.twig' with {
+                link_data: item.link,
+                class: 'features-grid__link',
+                label: item.link_label|default(item.link.title|default('Czytaj więcej'))
+              } only %}
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>

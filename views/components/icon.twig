@@ -1,0 +1,5 @@
+{% if name %}
+  <span class="icon icon--{{ name }}{{ class ? ' ' ~ class : '' }}" aria-hidden="true">
+    <i data-lucide="{{ name }}"></i>
+  </span>
+{% endif %}

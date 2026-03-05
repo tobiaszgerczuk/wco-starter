@@ -1,0 +1,24 @@
+<section class="posts-list{{ class ? ' ' ~ class : '' }}">
+  <div class="{{ container|default('container') }}">
+    {% include 'components/heading.twig' with {
+      class: 'posts-list__heading',
+      eyebrow: eyebrow,
+      title: title,
+      intro: intro
+    } only %}
+
+    {% if posts %}
+      <div class="posts-list__grid">
+        {% for post in posts %}
+          {% include 'modules/post-card.twig' with {
+            post: post,
+            read_more_label: read_more_label|default('Czytaj więcej'),
+            placeholder: no_image_label|default('Brak obrazka')
+          } only %}
+        {% endfor %}
+      </div>
+    {% elseif empty_label %}
+      <p class="posts-list__empty">{{ empty_label }}</p>
+    {% endif %}
+  </div>
+</section>

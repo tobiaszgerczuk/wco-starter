@@ -1,0 +1,15 @@
+{% set item = link_data ?? link ?? null %}
+{% set target_value = target|default(item.target|default('')) %}
+{% set rel_value = rel|default(target_value == '_blank' ? 'noopener noreferrer' : '') %}
+
+{% if item and item.url %}
+  <a
+    class="{{ class|default('') }}"
+    href="{{ item.url }}"
+    {% if target_value %}target="{{ target_value }}"{% endif %}
+    {% if rel_value %}rel="{{ rel_value }}"{% endif %}
+    {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+  >
+    {{ label|default(item.title|default('Read more')) }}
+  </a>
+{% endif %}

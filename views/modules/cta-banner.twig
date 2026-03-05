@@ -1,0 +1,22 @@
+<section class="cta-banner{{ class ? ' ' ~ class : '' }}">
+  <div class="{{ container|default('container') }}">
+    <div class="cta-banner__inner">
+      {% include 'components/heading.twig' with {
+        class: 'cta-banner__heading',
+        eyebrow: eyebrow,
+        title: title,
+        intro: intro
+      } only %}
+
+      {% if link %}
+        <div class="cta-banner__actions">
+          {% include 'components/button.twig' with {
+            link: link,
+            label: button_label|default(link.title|default('Dowiedz się więcej')),
+            variant: button_variant|default('primary')
+          } only %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>

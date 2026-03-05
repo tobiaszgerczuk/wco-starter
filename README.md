@@ -167,17 +167,39 @@ Dodatkowo w `views` masz też miejsce na reużywalne partiale:
 
 ```text
 views/components/
+  badge.twig
   button.twig
+  heading.twig
+  icon.twig
+  link.twig
+  media.twig
   modal.twig
 
 views/modules/
+  breadcrumbs.twig
+  cta-banner.twig
+  features-grid.twig
   modal-trigger.twig
+  posts-list.twig
   section-header.twig
+  stats-grid.twig
 ```
 
 Przykłady użycia:
 - `components` = małe, wielokrotnego użytku elementy UI
 - `modules` = większe fragmenty sekcji lub powtarzalne układy
+
+Nowe gotowce:
+- `components/heading.twig` — spójny nagłówek sekcji (`eyebrow`, `title`, `intro`)
+- `components/icon.twig` — wrapper dla ikon (np. lucide przez `data-lucide`)
+- `components/media.twig` — obraz/video/placeholder z prostym API
+- `components/badge.twig` — etykiety/tagi
+- `components/link.twig` — link z obsługą `target`, `rel`, `aria-label`
+- `modules/cta-banner.twig` — sekcja CTA z heading + button
+- `modules/stats-grid.twig` — siatka statystyk
+- `modules/features-grid.twig` — siatka cech z ikonami i linkami
+- `modules/posts-list.twig` — wspólny listing kart wpisów
+- `modules/breadcrumbs.twig` — breadcrumbs do stron wpisów i podstron
 
 ## Gotowe bloki startowe
 

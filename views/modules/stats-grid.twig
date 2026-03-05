@@ -1,0 +1,28 @@
+<section class="stats-grid{{ class ? ' ' ~ class : '' }}">
+  <div class="{{ container|default('container') }}">
+    {% include 'components/heading.twig' with {
+      class: 'stats-grid__heading',
+      eyebrow: eyebrow,
+      title: title,
+      intro: intro
+    } only %}
+
+    {% if items %}
+      <div class="stats-grid__items">
+        {% for item in items %}
+          <article class="stats-grid__item">
+            {% if item.value %}
+              <p class="stats-grid__value">{{ item.value }}</p>
+            {% endif %}
+            {% if item.label %}
+              <h3 class="stats-grid__label">{{ item.label }}</h3>
+            {% endif %}
+            {% if item.description %}
+              <p class="stats-grid__description">{{ item.description }}</p>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>

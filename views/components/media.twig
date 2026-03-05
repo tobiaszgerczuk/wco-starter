@@ -1,0 +1,28 @@
+{% set media_class = 'media' ~ (class ? ' ' ~ class : '') %}
+{% set media_ratio = ratio|default('16-9') %}
+
+<div class="{{ media_class }} media--{{ media_ratio }}">
+  {% if image %}
+    <img
+      src="{{ image.url ?: image }}"
+      alt="{{ image.alt ?: alt|default('') }}"
+      loading="{{ loading|default('lazy') }}"
+      decoding="async"
+      {% if image.width %}width="{{ image.width }}"{% endif %}
+      {% if image.height %}height="{{ image.height }}"{% endif %}
+    >
+  {% elseif video %}
+    <video
+      {% if poster %}poster="{{ poster }}"{% endif %}
+      {% if controls is not same as(false) %}controls{% endif %}
+      {% if autoplay %}autoplay{% endif %}
+      {% if muted %}muted{% endif %}
+      {% if loop %}loop{% endif %}
+      {% if playsinline is not same as(false) %}playsinline{% endif %}
+    >
+      <source src="{{ video }}" type="video/mp4">
+    </video>
+  {% elseif placeholder %}
+    <div class="media__placeholder">{{ placeholder }}</div>
+  {% endif %}
+</div>
