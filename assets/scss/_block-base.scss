@@ -1,6 +1,9 @@
-@import "base/variables";
-@import "base/mixins";
-@import "components/buttons";
+@forward "base/variables";
+@forward "base/mixins";
+
+@use "base/variables" as *;
+@use "base/mixins" as *;
+@use "components/buttons";
 
 .editor-styles-wrapper,
 :root {

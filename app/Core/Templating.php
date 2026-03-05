@@ -7,6 +7,8 @@ use Twig\TwigFunction;
 
 class Templating
 {
+    private static ?array $manifest = null;
+
     public static function add_to_context($context)
     {
         // 1. URL do szablonu
@@ -15,15 +17,11 @@ class Templating
         // 2. URL do assetów (public)
         $context['assets_url'] = get_template_directory_uri() . '/public';
 
-        // 3. (Opcjonalnie) mix-manifest
-        $manifest_path = get_template_directory() . '/public/mix-manifest.json';
-        if (file_exists($manifest_path)) {
-            $manifest = json_decode(file_get_contents($manifest_path), true);
-            $context['mix'] = function ($path) use ($manifest) {
-                $path = ltrim($path, '/');
-                return get_template_directory_uri() . '/public' . ($manifest[$path] ?? $path);
-            };
-        }
+        $manifest = self::manifest();
+        $context['mix'] = function ($path) use ($manifest) {
+            $path = ltrim($path, '/');
+            return get_template_directory_uri() . '/public' . ($manifest[$path] ?? $path);
+        };
 
         $context['woo_active'] = class_exists('WooCommerce');
         $context['cart'] = null;
@@ -46,16 +44,13 @@ class Templating
             return get_template_directory_uri() . '/' . ltrim($path, '/');
         }));
 
-        // Rejestruj mix() – jeśli używasz manifestu
-        $manifest_path = get_template_directory() . '/public/mix-manifest.json';
-        if (file_exists($manifest_path)) {
-            $manifest = json_decode(file_get_contents($manifest_path), true);
-            $twig->addFunction(new TwigFunction('mix', function ($path) use ($manifest) {
-                $path = ltrim($path, '/');
-                $asset_path = $manifest[$path] ?? $path;
-                return get_template_directory_uri() . '/public' . $asset_path;
-            }));
-        }
+        // Rejestruj mix() – na bazie zcache'owanego manifestu
+        $manifest = self::manifest();
+        $twig->addFunction(new TwigFunction('mix', function ($path) use ($manifest) {
+            $path = ltrim($path, '/');
+            $asset_path = $manifest[$path] ?? $path;
+            return get_template_directory_uri() . '/public' . $asset_path;
+        }));
 
         $twig->addFunction(new \Twig\TwigFunction('do_shortcode', function ($content) {
             return do_shortcode($content);
@@ -63,5 +58,24 @@ class Templating
         
 
         return $twig;
+    }
+
+    private static function manifest(): array
+    {
+        if (self::$manifest !== null) {
+            return self::$manifest;
+        }
+
+        self::$manifest = Cache::remember('assets_manifest', HOUR_IN_SECONDS, static function (): array {
+            $manifestPath = get_template_directory() . '/public/mix-manifest.json';
+            if (!file_exists($manifestPath)) {
+                return [];
+            }
+
+            $manifest = json_decode((string) file_get_contents($manifestPath), true);
+            return is_array($manifest) ? $manifest : [];
+        });
+
+        return self::$manifest;
     }
 }

@@ -1,3 +1,5 @@
+@use "variables" as *;
+
 @function container-size($size) {
   @if $size == wide {
     @return $container-wide;

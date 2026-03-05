@@ -113,6 +113,16 @@ views/blocks/hero-banner/hero-banner.include.php
 acf-json/group_block_hero-banner.json
 ```
 
+Presety generatora:
+
+```bash
+npm run create-block -- testimonials-slider "Testimonials Slider" --preset=slider
+```
+
+Aktualnie dostępne:
+- `--preset=basic` (domyślny)
+- `--preset=slider` (szkielet pod Swiper Registry)
+
 Po wygenerowaniu:
 
 ```bash
@@ -229,6 +239,66 @@ Jeśli chcesz dodać nowy endpoint:
 3. dopisujesz klasę do listy w `app/Rest/Api.php`
 
 `PostsRoute` jest używany przez blok `latest-posts` jako baza pod ładowanie kolejnych wpisów.
+
+Endpoint `posts` korzysta też z lekkiego cache helpera, więc może służyć jako wzorzec dla cięższych endpointów.
+
+## Cache helper
+
+W starterze jest lekki helper cache:
+- `app/Core/Cache.php`
+
+API:
+- `Cache::remember($key, $ttl, fn() => ...)`
+- `Cache::forget($key)`
+
+Implementacja:
+- najpierw object cache (`wp_cache_*`)
+- fallback do transientów
+
+Przykłady użycia:
+- cache manifestu assetów w `Templating`
+- cache odpowiedzi endpointu `PostsRoute`
+
+## theme.json
+
+Starter ma skonfigurowany `theme.json` (v3), który spina nowoczesne ustawienia edytora:
+- kolory
+- spacing
+- typography
+- content width / wide width
+
+Plik:
+- `theme.json`
+
+`theme.json` generuje się automatycznie z `assets/scss/base/_variables.scss`:
+- przed `npm run build`
+- przed `npm run dev`
+
+Ręcznie:
+
+```bash
+npm run theme-json:generate
+```
+
+To działa równolegle z Twig + ACF Blocks i poprawia doświadczenie w edytorze Gutenberg.
+
+## Requirements check
+
+Wymagania motywu są zebrane centralnie:
+- `app/Core/Requirements.php`
+
+Sprawdzane elementy:
+- `Timber` (wymagane, blokujące start)
+- `ACF Pro` (wymagane dla custom blocks, ale nie blokuje całego motywu)
+- `WooCommerce` (opcjonalne, info o wyłączonych funkcjach sklepu)
+
+Notice jest spójny i idzie z jednego miejsca zamiast rozproszonej logiki.
+
+## Standardy developerskie
+
+Dodatkowo:
+- `.editorconfig`
+- `.nvmrc` (Node 20)
 
 ## CF7
 

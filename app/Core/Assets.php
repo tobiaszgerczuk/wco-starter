@@ -49,9 +49,9 @@ class Assets {
         // Admin CSS
         wp_register_style(
             'wco-starter-admin-style',
-            self::$base_url . '/css/admin_style.css',
+            self::$base_url . '/admin_style.css',
             [],
-            self::get_version('css/admin_style.css')
+            self::get_version('admin_style.css')
         );
     }
 

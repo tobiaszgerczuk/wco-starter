@@ -1,3 +1,6 @@
+@use "../base/variables" as *;
+@use "buttons";
+
 .wpcf7 {
   .wpcf7-form {
     display: grid;
@@ -50,7 +53,7 @@
 
   input[type='submit'],
   button[type='submit'] {
-    @extend .btn;
+    @include buttons.button-base;
     border: 0;
     cursor: pointer;
   }

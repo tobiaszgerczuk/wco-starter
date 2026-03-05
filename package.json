@@ -5,7 +5,10 @@
   "scripts": {
     "create-block": "php scripts/create-block.php",
     "rename-theme": "php scripts/rename-theme.php",
+    "theme-json:generate": "node scripts/generate-theme-json.mjs",
+    "predev": "npm run theme-json:generate",
     "dev": "webpack --mode development --watch",
+    "prebuild": "npm run theme-json:generate",
     "build": "webpack --mode production"
   },
   "devDependencies": {

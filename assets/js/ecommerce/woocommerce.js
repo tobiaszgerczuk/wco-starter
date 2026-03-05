@@ -49,7 +49,7 @@ export default class WcoShop {
           this.showNotice('Produkt dodany do koszyka 🎉');
           this.updateMiniCart();
         }
-      } catch (err) {
+      } catch {
         this.showNotice('Błąd przy dodawaniu do koszyka ❌');
       }
     }

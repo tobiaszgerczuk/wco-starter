@@ -3,6 +3,7 @@
 namespace WCO\Starter\Rest\Routes;
 
 use WCO\Starter\Content\PostCard;
+use WCO\Starter\Core\Cache;
 use WCO\Starter\Rest\BaseRoute;
 use WCO\Starter\Rest\Contracts\RouteInterface;
 use WP_Query;
@@ -55,30 +56,34 @@ class PostsRoute extends BaseRoute implements RouteInterface
         $read_more_label = sanitize_text_field((string) $request->get_param('read_more_label')) ?: 'Read more';
         $no_image_label = sanitize_text_field((string) $request->get_param('no_image_label')) ?: 'No image';
 
-        $query = new WP_Query([
-            'post_type' => $post_type,
-            'post_status' => 'publish',
-            'paged' => $page,
-            'posts_per_page' => $per_page,
-            'post__not_in' => $exclude_ids,
-            'ignore_sticky_posts' => true,
-        ]);
+        $payload = Cache::remember(self::cache_key($page, $per_page, $post_type, $exclude_ids, $read_more_label, $no_image_label), 5 * MINUTE_IN_SECONDS, static function () use ($page, $per_page, $post_type, $exclude_ids, $read_more_label, $no_image_label): array {
+            $query = new WP_Query([
+                'post_type' => $post_type,
+                'post_status' => 'publish',
+                'paged' => $page,
+                'posts_per_page' => $per_page,
+                'post__not_in' => $exclude_ids,
+                'ignore_sticky_posts' => true,
+            ]);
 
-        $posts = array_map(
-            static fn (\WP_Post $post): array => self::map_post($post, $read_more_label, $no_image_label),
-            $query->posts
-        );
+            $posts = array_map(
+                static fn (\WP_Post $post): array => self::map_post($post, $read_more_label, $no_image_label),
+                $query->posts
+            );
 
-        return new WP_REST_Response([
-            'posts' => $posts,
-            'pagination' => [
-                'page' => $page,
-                'perPage' => $per_page,
-                'totalPosts' => (int) $query->found_posts,
-                'totalPages' => (int) $query->max_num_pages,
-                'hasMore' => $page < (int) $query->max_num_pages,
-            ],
-        ], 200);
+            return [
+                'posts' => $posts,
+                'pagination' => [
+                    'page' => $page,
+                    'perPage' => $per_page,
+                    'totalPosts' => (int) $query->found_posts,
+                    'totalPages' => (int) $query->max_num_pages,
+                    'hasMore' => $page < (int) $query->max_num_pages,
+                ],
+            ];
+        });
+
+        return new WP_REST_Response($payload, 200);
     }
 
     public static function sanitize_ids($value): array
@@ -103,5 +108,20 @@ class PostsRoute extends BaseRoute implements RouteInterface
         ]);
 
         return $mapped_post;
+    }
+
+    private static function cache_key(int $page, int $perPage, string $postType, array $excludeIds, string $readMoreLabel, string $noImageLabel): string
+    {
+        $payload = [
+            'page' => $page,
+            'per_page' => $perPage,
+            'post_type' => $postType,
+            'exclude_ids' => $excludeIds,
+            'read_more_label' => $readMoreLabel,
+            'no_image_label' => $noImageLabel,
+            'locale' => get_locale(),
+        ];
+
+        return 'rest_posts_' . md5((string) wp_json_encode($payload));
     }
 }

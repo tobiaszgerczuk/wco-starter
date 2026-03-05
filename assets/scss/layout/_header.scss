@@ -1,3 +1,5 @@
+@use "../base/mixins" as *;
+
 .site-header {
   position: fixed;        // ← ZMIANA: fixed zamiast sticky
   top: 0;

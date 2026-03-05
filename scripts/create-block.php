@@ -14,6 +14,7 @@ array_shift($args);
 $dryRun = false;
 $icon = 'layout';
 $category = 'wco-blocks';
+$preset = 'basic';
 $positional = [];
 
 foreach ($args as $arg) {
@@ -32,16 +33,28 @@ foreach ($args as $arg) {
         continue;
     }
 
+    if (str_starts_with($arg, '--preset=')) {
+        $preset = substr($arg, 9);
+        continue;
+    }
+
     $positional[] = $arg;
+}
+
+$availablePresets = ['basic', 'slider'];
+if (!in_array($preset, $availablePresets, true)) {
+    fwrite(STDERR, "Unsupported preset: {$preset}. Available presets: " . implode(', ', $availablePresets) . "\n");
+    exit(1);
 }
 
 if (count($positional) < 1) {
     $usage = <<<TXT
 Usage:
-  php scripts/create-block.php block-slug ["Block Title"] [--icon=layout] [--category=wco-blocks] [--dry-run]
+  php scripts/create-block.php block-slug ["Block Title"] [--icon=layout] [--category=wco-blocks] [--preset=basic] [--dry-run]
 
 Examples:
   php scripts/create-block.php hero-banner "Hero Banner"
+  php scripts/create-block.php testimonials-slider "Testimonials Slider" --preset=slider
   npm run create-block -- hero-banner "Hero Banner"
 
 TXT;
@@ -72,9 +85,9 @@ $timestamp = (string) time();
 
 $files = [
     $blockDir . '/block.json' => build_block_metadata_json($slug, $title, $icon, $category),
-    $blockDir . '/' . $slug . '.twig' => build_twig_template($slug, $title, $fieldPrefix),
+    $blockDir . '/' . $slug . '.twig' => build_twig_template($slug, $title, $fieldPrefix, $preset),
     $blockDir . '/_' . $slug . '.scss' => build_scss_template($slug),
-    $blockDir . '/' . $slug . '.js' => build_javascript_template($slug),
+    $blockDir . '/' . $slug . '.js' => build_javascript_template($slug, $preset),
     $blockDir . '/' . $slug . '.include.php' => build_include_template($slug),
     $acfJsonDir . '/group_block_' . $slug . '.json' => build_field_group_json($slug, $title, $fieldPrefix, $icon, $category, $textDomain, $timestamp),
 ];
@@ -94,6 +107,7 @@ foreach (array_keys($files) as $filePath) {
 echo $dryRun ? "Dry run complete.\n" : "Block scaffold created.\n";
 echo "Block: {$slug}\n";
 echo "Title: {$title}\n";
+echo "Preset: {$preset}\n";
 echo "Files:\n";
 
 foreach ($files as $filePath => $contents) {
@@ -119,8 +133,12 @@ if (!$dryRun) {
     echo "Next: open ACF Field Groups to adjust fields if needed, then run npm run build.\n";
 }
 
-function build_twig_template(string $slug, string $title, string $fieldPrefix): string
+function build_twig_template(string $slug, string $title, string $fieldPrefix, string $preset): string
 {
+    if ($preset === 'slider') {
+        return build_slider_twig_template($slug, $title, $fieldPrefix);
+    }
+
     $fallback = addslashes($title);
 
     return <<<TWIG
@@ -135,6 +153,39 @@ function build_twig_template(string $slug, string $title, string $fieldPrefix): 
         </div>
       {% elseif is_preview %}
         <p class="block-{$slug}__placeholder">Add fields for the {$slug} block in ACF.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+TWIG;
+}
+
+function build_slider_twig_template(string $slug, string $title, string $fieldPrefix): string
+{
+    $fallback = addslashes($title);
+
+    return <<<TWIG
+<section class="{{ section_classes }}">
+  <div class="container">
+    <div class="block-{$slug}__inner">
+      <h2 class="block-{$slug}__title">{{ fields['{$fieldPrefix}_title'] ?: '{$fallback}' }}</h2>
+
+      <div class="swiper js-swiper-{$slug}">
+        <div class="swiper-wrapper">
+          {% if is_preview %}
+            {% for i in 1..3 %}
+              <div class="swiper-slide block-{$slug}__slide">
+                <p>Slide {{ i }}</p>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+
+      {% if is_preview and not fields['{$fieldPrefix}_content'] %}
+        <p class="block-{$slug}__placeholder">Set up slides and swiper options in this block.</p>
       {% endif %}
     </div>
   </div>
@@ -367,9 +418,12 @@ function build_spacing_select(string $fieldPrefix, string $name, string $label, 
     ];
 }
 
-function build_javascript_template(string $slug): string
+function build_javascript_template(string $slug, string $preset): string
 {
     $className = studly_case($slug);
+    if ($preset === 'slider') {
+        return build_slider_javascript_template($slug, $className);
+    }
 
     return <<<JS
 export default class {$className} {
@@ -382,6 +436,45 @@ export default class {$className} {
 
   init() {
     // Block-specific behavior goes here.
+  }
+}
+
+JS;
+}
+
+function build_slider_javascript_template(string $slug, string $className): string
+{
+    return <<<JS
+import swipers from '../../../assets/js/modules/swipers.js';
+
+export default class {$className} {
+  static selector = '.block-{$slug}';
+  static registered = false;
+
+  constructor(element) {
+    this.element = element;
+    this.init();
+  }
+
+  init() {
+    if ({$className}.registered) {
+      return;
+    }
+
+    swipers.register({
+      name: '{$slug}',
+      selector: '.js-swiper-{$slug}',
+      options: (element) => ({
+        slidesPerView: 1,
+        spaceBetween: 24,
+        pagination: {
+          el: element.querySelector('.swiper-pagination'),
+          clickable: true,
+        },
+      }),
+    });
+
+    {$className}.registered = true;
   }
 }
 

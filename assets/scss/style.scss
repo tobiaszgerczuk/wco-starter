@@ -1,21 +1,20 @@
-@import "base/variables";
-@import "base/mixins";
-@import "base/reset";
-@import "base/typography";
+@use "base/variables" as *;
+@use "base/mixins" as *;
+@use "base/reset";
+@use "base/typography";
 
-@import "base";
+@use "base";
 
-@import "layout/header";
-@import "layout/footer";
+@use "layout/header";
+@use "layout/footer";
 
+@use "components/buttons";
+@use "components/custom";
+@use "components/lazy";
+@use "components/forms";
+@use "components/pages";
 
-@import "components/buttons";
-@import "components/custom";
-@import "components/lazy";
-@import "components/forms";
-@import "components/pages";
+@use "woocommerce/shop";
+@use "woocommerce/mini-cart";
 
-@import "woocommerce/shop";
-@import "woocommerce/mini-cart";
-
-@import "~aos/dist/aos.css";
+@import url("~aos/dist/aos.css");
