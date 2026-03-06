@@ -79,6 +79,7 @@ if ($themeDir === false) {
 
 $blockDir = $themeDir . '/views/blocks/' . $slug;
 $acfJsonDir = $themeDir . '/acf-json';
+$blockAcfJsonPath = $blockDir . '/group_' . $slug . '.json';
 $fieldPrefix = str_replace('-', '_', $slug);
 $textDomain = extractStyleHeader($themeDir . '/style.css', 'Text Domain') ?? 'wco-starter';
 $timestamp = (string) time();
@@ -89,6 +90,7 @@ $files = [
     $blockDir . '/_' . $slug . '.scss' => build_scss_template($slug),
     $blockDir . '/' . $slug . '.js' => build_javascript_template($slug, $preset),
     $blockDir . '/' . $slug . '.include.php' => build_include_template($slug),
+    $blockAcfJsonPath => build_field_group_json($slug, $title, $fieldPrefix, $icon, $category, $textDomain, $timestamp),
     $acfJsonDir . '/group_block_' . $slug . '.json' => build_field_group_json($slug, $title, $fieldPrefix, $icon, $category, $textDomain, $timestamp),
 ];
 

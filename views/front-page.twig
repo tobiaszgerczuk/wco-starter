@@ -1,7 +1,19 @@
 {% extends "base.twig" %}
 {% block content %}
-
-	{{ post.content }}
-
+	{% if post.content %}
+		{{ post.content }}
+	{% elseif global_settings.fallback_home_title or global_settings.fallback_home_content %}
+		<section class="container">
+			{% if global_settings.fallback_home_title %}
+				<h1>{{ global_settings.fallback_home_title }}</h1>
+			{% endif %}
+			{% if global_settings.fallback_home_content %}
+				<div class="fallback-home__content">{{ global_settings.fallback_home_content|raw }}</div>
+			{% endif %}
+		</section>
+	{% else %}
+		<section class="container">
+			<h1>{{ __('Welcome', 'wco-starter') }}</h1>
+		</section>
+	{% endif %}
 {% endblock %}
-

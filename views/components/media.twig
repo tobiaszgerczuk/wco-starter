@@ -1,16 +1,16 @@
 {% set media_class = 'media' ~ (class ? ' ' ~ class : '') %}
 {% set media_ratio = ratio|default('16-9') %}
+{% set media_size = size|default('large') %}
+{% set media_loading = loading|default('lazy') %}
 
 <div class="{{ media_class }} media--{{ media_ratio }}">
   {% if image %}
-    <img
-      src="{{ image.url ?: image }}"
-      alt="{{ image.alt ?: alt|default('') }}"
-      loading="{{ loading|default('lazy') }}"
-      decoding="async"
-      {% if image.width %}width="{{ image.width }}"{% endif %}
-      {% if image.height %}height="{{ image.height }}"{% endif %}
-    >
+    {{ wco_image(image, {
+      'size': media_size,
+      'loading': media_loading,
+      'alt': image.alt ?: alt|default(''),
+      'class': media_class
+    })|raw }}
   {% elseif video %}
     <video
       {% if poster %}poster="{{ poster }}"{% endif %}

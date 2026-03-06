@@ -8,9 +8,29 @@
 <body class="{{ body_class }} {% if subpage %} subpage {% endif %}">
   {% include 'partials/header.twig' %}
 
+  {% if global_settings.global_banner_enabled and global_settings.global_banner_html %}
+    <div class="global-banner">
+      <div class="container">
+        {{ global_settings.global_banner_html|raw }}
+      </div>
+    </div>
+  {% endif %}
+
   <main>
     {% block content %}{% endblock %}
   </main>
+
+  {% if global_settings.global_cta_enabled and (global_settings.global_cta_title or global_settings.global_cta_text) %}
+    {% include 'modules/cta-banner.twig' with {
+      eyebrow: null,
+      title: global_settings.global_cta_title,
+      intro: global_settings.global_cta_text,
+      link: global_settings.global_cta_link,
+      button_label: global_settings.global_cta_link.title|default('Learn more'),
+      button_variant: 'primary',
+      class: 'global-cta'
+    } %}
+  {% endif %}
 
   {% include 'partials/footer.twig' %}
   {{ function('wp_footer') }}

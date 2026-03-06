@@ -1,11 +1,13 @@
 export default class Header {
     constructor() {
       this.header = document.querySelector('header');
-      this.menuToggle = document.querySelector('[data-toggle="menu"]');
+      this.menuToggles = document.querySelectorAll('[data-toggle="menu"]');
       this.menu = document.querySelector('[data-menu]');
-  
-      if (this.menuToggle && this.menu) {
-        this.menuToggle.addEventListener('click', this.toggleMenu.bind(this));
+
+      if (this.menu && this.menuToggles.length) {
+        this.menuToggles.forEach((toggle) => {
+          toggle.addEventListener('click', this.toggleMenu.bind(this));
+        });
       }
   
       window.addEventListener('scroll', this.handleScroll.bind(this));
@@ -13,7 +15,7 @@ export default class Header {
   
     toggleMenu() {
       this.menu.classList.toggle('is-open');
-      this.menuToggle.classList.toggle('is-open');
+      this.menuToggles.forEach((toggle) => toggle.classList.toggle('is-open'));
     }
   
     handleScroll() {

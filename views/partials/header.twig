@@ -15,6 +15,9 @@
 		</button>
 
 		<nav class="primary-nav" data-menu>
+			<button class="menu-close" type="button" aria-label="Zamknij menu" data-toggle="menu">
+				<span>×</span>
+			</button>
 			{% if function('has_nav_menu', 'main-menu') %}
 				{{ function('wp_nav_menu', {
       'theme_location'  : 'main-menu',

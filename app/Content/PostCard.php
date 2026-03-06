@@ -17,7 +17,8 @@ class PostCard
             'date' => get_the_date('', $post),
             'author' => get_the_author_meta('display_name', (int) $post->post_author),
             'image' => get_the_post_thumbnail_url($post, 'large'),
-            'imageAlt' => get_post_meta((int) get_post_thumbnail_id($post), '_wp_attachment_image_alt', true),
+            'image_id' => get_post_thumbnail_id($post),
+            'image_alt' => get_post_meta((int) get_post_thumbnail_id($post), '_wp_attachment_image_alt', true),
         ];
     }
 

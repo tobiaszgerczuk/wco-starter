@@ -78,9 +78,40 @@ npm run rename-theme -- "Nazwa Projektu" nazwa-projektu --no-rename-dir
 ```bash
 npm run dev
 npm run build
+npm run acf:pull
+npm run acf:push
+npm run acf:diff
 npm run rename-theme -- "Nazwa Projektu" nazwa-projektu
 npm run create-block -- hero-banner "Hero Banner"
 ```
+
+### ACF JSON lifecycle
+
+Pole `acf-json` utrzymujesz lokalnie. Workflow:
+
+```bash
+npm run acf:diff   # podgląd różnic między środowiskami
+npm run acf:pull   # pobierz JSONy z innego środowiska
+npm run acf:push   # wypchnij lokalne JSONy na środowisko docelowe
+```
+
+Jeżeli chcesz używać `pull/push` bez ręcznego dopisywania ścieżki za każdym razem, ustaw w `theme/.env`:
+
+```bash
+ACF_JSON_SOURCE_DIR=/ścieżka/do/acf-json-zrodlowego
+ACF_JSON_TARGET_DIR=/ścieżka/do/acf-json-docelowego
+```
+
+Przykład:
+
+```bash
+ACF_JSON_TARGET_DIR=/srv/stage/wp-content/themes/wco-starter/acf-json npm run acf:push
+ACF_JSON_SOURCE_DIR=/srv/prod/wp-content/themes/wco-starter/acf-json npm run acf:pull
+```
+
+Na stronie w panelu admina pojawi Ci się komunikat:
+- `Some local ACF JSON groups are not in DB` -> uruchom `npm run acf:push`
+- `DB-only groups` -> uruchom `npm run acf:pull`
 
 ## Ustawienia motywu
 
@@ -110,6 +141,7 @@ views/blocks/hero-banner/hero-banner.twig
 views/blocks/hero-banner/_hero-banner.scss
 views/blocks/hero-banner/hero-banner.js
 views/blocks/hero-banner/hero-banner.include.php
+views/blocks/hero-banner/group_hero-banner.json
 acf-json/group_block_hero-banner.json
 ```
 
@@ -134,7 +166,7 @@ Ważne:
 - kategoria bloków to `WCO Blocks`
 - style bloku ładują się automatycznie tylko dla danego bloku
 - JS bloku ładuje się automatycznie tylko wtedy, gdy blok istnieje w DOM
-- field group zapisuje się lokalnie do `acf-json`
+- field group zapisuje się lokalnie do `acf-json` i jest jednocześnie mirrored do `views/blocks/<slug>/group_<slug>.json` (po zapisie w ACF)
 - generator dodaje też domyślne pola sekcji: `section_has_background`, `section_gap_top`, `section_gap_bottom`, `section_space_top`, `section_space_bottom`
 
 Dry run:

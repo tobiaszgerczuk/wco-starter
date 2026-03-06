@@ -34,6 +34,8 @@ class Templating
             $context['cart_url'] = function_exists('wc_get_cart_url') ? wc_get_cart_url() : null;
         }
 
+        $context['global_settings'] = Acf::get_global_settings();
+
         return $context;
     }
 
@@ -55,6 +57,8 @@ class Templating
         $twig->addFunction(new \Twig\TwigFunction('do_shortcode', function ($content) {
             return do_shortcode($content);
         }, ['is_safe' => ['html']]));
+
+        $twig->addFunction(new TwigFunction('wco_image', [Media::class, 'image'], ['is_safe' => ['html']]));
         
 
         return $twig;

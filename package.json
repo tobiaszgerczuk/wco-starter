@@ -5,6 +5,9 @@
   "scripts": {
     "create-block": "php scripts/create-block.php",
     "rename-theme": "php scripts/rename-theme.php",
+    "acf:pull": "php scripts/acf-json-sync.php pull",
+    "acf:push": "php scripts/acf-json-sync.php push",
+    "acf:diff": "php scripts/acf-json-sync.php diff --dry-run",
     "theme-json:generate": "node scripts/generate-theme-json.mjs",
     "predev": "npm run theme-json:generate",
     "dev": "webpack --mode development --watch",

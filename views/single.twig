@@ -21,7 +21,12 @@
     {% if post.thumbnail %}
       <div class="single-post__featured">
         <div class="container">
-          <img src="{{ post.thumbnail.src('large') }}" alt="{{ post.thumbnail.alt ?: post.title }}">
+          {{ wco_image(post.thumbnail, {
+            size: 'large',
+            loading: 'lazy',
+            alt: post.thumbnail.alt ?: post.title,
+            class: 'single-post__featured-image'
+          })|raw }}
         </div>
       </div>
     {% endif %}

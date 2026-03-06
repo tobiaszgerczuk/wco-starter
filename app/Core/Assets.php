@@ -32,16 +32,17 @@ class Assets {
         wp_register_script(
             'wco-starter-front',
             self::$base_url . '/js/front.js',
-            ['jquery'],
+            [],
             self::get_version('js/front.js'),
             true
         );
+        wp_script_add_data('wco-starter-front', 'strategy', 'defer');
 
         // Admin JS
         wp_register_script(
             'wco-starter-admin',
             self::$base_url . '/js/admin.js',
-            ['jquery'],
+            [],
             self::get_version('js/admin.js'),
             true
         );
@@ -59,6 +60,7 @@ class Assets {
      * Front: enqueue + localize
      */
     public static function enqueue_front(): void {
+        self::preload();
         wp_enqueue_style('wco-starter-style');
         wp_enqueue_script('wco-starter-front');
 
@@ -70,6 +72,33 @@ class Assets {
             'wooActive' => $wooActive,
             'cartUrl' => $wooActive && function_exists('wc_get_cart_url') ? esc_url_raw(wc_get_cart_url()) : null,
         ]);
+    }
+
+    public static function preload(): void
+    {
+        self::init_paths();
+
+        $stylePath = self::$base_path . '/style.css';
+        $scriptPath = self::$base_path . '/js/front.js';
+        if (is_admin() || !is_readable($stylePath) || !is_readable($scriptPath)) {
+            return;
+        }
+
+        $ver = self::get_version('style.css') ?: time();
+        $scriptVer = self::get_version('js/front.js') ?: time();
+        $styleUrl = esc_url(self::$base_url . '/style.css');
+        $scriptUrl = esc_url(self::$base_url . '/js/front.js');
+
+        printf(
+            "<link rel=\"preload\" as=\"style\" href=\"%s?ver=%s\">\n",
+            $styleUrl,
+            rawurlencode((string) $ver)
+        );
+        printf(
+            "<link rel=\"preload\" as=\"script\" href=\"%s?ver=%s\">\n",
+            $scriptUrl,
+            rawurlencode((string) $scriptVer)
+        );
     }
 
     /**

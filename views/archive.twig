@@ -20,7 +20,12 @@
             <article class="post-card">
               <a class="post-card__media" href="{{ post.link }}">
                 {% if post.thumbnail %}
-                  <img src="{{ post.thumbnail.src('large') }}" alt="{{ post.thumbnail.alt ?: post.title }}">
+                  {{ wco_image(post.thumbnail, {
+                    size: 'large',
+                    loading: 'lazy',
+                    alt: post.thumbnail.alt ?: post.title,
+                    class: 'post-card__media-image'
+                  })|raw }}
                 {% else %}
                   <span class="post-card__placeholder">{{ __('No image', 'wco-starter') }}</span>
                 {% endif %}

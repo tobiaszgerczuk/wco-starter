@@ -1,6 +1,13 @@
 {% extends "base.twig" %}
 
 {% block content %}
-  <h1>{{ __('404 — Page Not Found', 'wco-starter') }}</h1>
-  <p>{{ __('Sorry, the page you are looking for does not exist.', 'wco-starter') }}</p>
+  {% if global_settings.fallback_404_title or global_settings.fallback_404_message %}
+    <section class="container">
+      <h1>{{ global_settings.fallback_404_title|default(__('404 — Page Not Found', 'wco-starter')) }}</h1>
+      <div>{{ global_settings.fallback_404_message|default(__('Sorry, the page you are looking for does not exist.', 'wco-starter'))|raw }}</div>
+    </section>
+  {% else %}
+    <h1>{{ __('404 — Page Not Found', 'wco-starter') }}</h1>
+    <p>{{ __('Sorry, the page you are looking for does not exist.', 'wco-starter') }}</p>
+  {% endif %}
 {% endblock %}

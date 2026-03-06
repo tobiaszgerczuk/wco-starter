@@ -91,6 +91,37 @@ class Requirements
                 'type' => 'warning',
                 'message' => $acfMessage,
             ];
+        } else {
+            $syncStatus = Acf::field_group_sync_status();
+            if (!empty($syncStatus['missing_in_db'])) {
+                self::$messages[] = [
+                    'type' => 'warning',
+                    'message' => 'Some local ACF JSON groups are not in DB: ' . implode(', ', $syncStatus['missing_in_db']) . '. Sync them in ACF Tools (Local JSON sync).',
+                ];
+            }
+
+            if (!empty($syncStatus['missing_in_local'])) {
+                self::$messages[] = [
+                    'type' => 'warning',
+                    'message' => 'Some ACF groups exist in DB only: ' . implode(', ', $syncStatus['missing_in_local']) . '. Run `npm run acf:pull`.',
+                ];
+            }
+
+            if (!empty($syncStatus['local_ahead']) || !empty($syncStatus['db_ahead'])) {
+                $delta = [];
+                if (!empty($syncStatus['local_ahead'])) {
+                    $delta[] = 'Local JSON newer: ' . implode(', ', $syncStatus['local_ahead']) . ' (sync from ACF tools).';
+                }
+
+                if (!empty($syncStatus['db_ahead'])) {
+                    $delta[] = 'DB newer: ' . implode(', ', $syncStatus['db_ahead']) . ' (run `npm run acf:pull`).';
+                }
+
+                self::$messages[] = [
+                    'type' => 'info',
+                    'message' => implode(' ', $delta),
+                ];
+            }
         }
 
         if (!class_exists('WooCommerce')) {

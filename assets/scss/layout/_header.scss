@@ -1,16 +1,14 @@
 @use "../base/mixins" as *;
 
 .site-header {
-  position: fixed;        // ← ZMIANA: fixed zamiast sticky
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
   background: transparent;
-
   transition: all 0.3s ease;
 
-  // Stan po scrollu
   &.is-scrolled {
     box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
     border-bottom-color: transparent;
@@ -30,13 +28,13 @@
     min-height: 60px;
   }
 
-  // Logo
   .brand {
     color: #000;
     font-size: 2rem;
     @include mobile {
       font-size: 1rem;
     }
+
     img {
       height: 40px;
       width: auto;
@@ -48,7 +46,6 @@
     height: 30px;
   }
 
-  // Hamburger
   .hamburger {
     display: none;
     position: relative;
@@ -83,8 +80,10 @@
     }
   }
 
-  // Nawigacja
   .primary-nav {
+    position: relative;
+    z-index: 1100;
+
     ul {
       list-style: none;
       padding: 0;
@@ -93,6 +92,10 @@
       gap: 16px;
       font-size: 1rem;
       transition: font-size 0.3s ease;
+    }
+
+    .menu-close {
+      display: none;
     }
   }
 
@@ -108,11 +111,10 @@
     transition: background 0.2s ease;
   }
 
-  .primary-nav .is-active  {
+  .primary-nav .is-active {
     background: rgba(0, 0, 0, .06);
   }
 
-  // === MOBILE ===
   @include mobile {
     .hamburger {
       display: block;
@@ -133,17 +135,37 @@
       transition: transform .25s ease;
       box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
       overflow-y: auto;
+
+      .menu-close {
+        display: inline-flex;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 36px;
+        height: 36px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, .04);
+        color: #111;
+        font-size: 1.4rem;
+      }
+
+      .menu-list {
+        position: relative;
+        z-index: 1;
+      }
+
+      ul {
+        flex-direction: column;
+        padding: 0;
+        gap: 12px;
+        align-items: flex-start;
+      }
     }
 
     .primary-nav.is-open {
       transform: scaleY(1);
-    }
-
-    .primary-nav ul {
-      flex-direction: column;
-      padding: 0;
-      gap: 12px;
-      align-items: flex-start;
     }
 
     .primary-nav a {

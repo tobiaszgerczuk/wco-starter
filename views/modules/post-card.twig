@@ -1,11 +1,12 @@
 <article class="post-card{{ class ? ' ' ~ class : '' }}">
   <a class="post-card__media" href="{{ post.permalink }}">
     {% if post.image %}
-      <img
-        src="{{ post.image }}"
-        alt="{{ post.imageAlt ?: post.title }}"
-        loading="lazy"
-      >
+      {{ wco_image(post.image_id ?? post.image, {
+        size: 'large',
+        loading: 'lazy',
+        class: 'post-card__media-image',
+        alt: post.image_alt ?: post.title
+      })|raw }}
     {% else %}
       <span class="post-card__placeholder">{{ placeholder|default('No image') }}</span>
     {% endif %}
