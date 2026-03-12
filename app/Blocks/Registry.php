@@ -245,19 +245,26 @@ class Registry
         Timber::render("blocks/{$slug}/{$slug}.twig", $context);
     }
 
-    public static function render_container_group(array $attributes = [], string $content = '', array $block = []): void
+    public static function render_container_group($attributes = [], string $content = '', $block = null): void
     {
         $context = Timber::context();
         $fields = [];
+        $block_attrs = [];
 
         if (function_exists('get_fields')) {
-            if (!empty($block['id'])) {
+            if (is_array($block) && !empty($block['id'])) {
                 $fields = get_fields($block['id']) ?: [];
             }
         }
 
-        if (is_array($block['attrs']['data'] ?? null)) {
-            $fields = array_replace_recursive($fields, $block['attrs']['data']);
+        if (is_array($block)) {
+            $block_attrs = $block['attrs']['data'] ?? [];
+        } elseif (is_object($block) && isset($block->attributes)) {
+            $block_attrs = $block->attributes;
+        }
+
+        if (is_array($block_attrs) && !empty($block_attrs)) {
+            $fields = array_replace_recursive($fields, $block_attrs);
         }
 
         if (!is_array($fields)) {
@@ -269,13 +276,19 @@ class Registry
         }
 
         $context['fields'] = $fields;
-        $context['block'] = $block;
+        $context['block'] = is_array($block) ? $block : [];
         $context['is_preview'] = is_admin();
         $context['post_id'] = 0;
         $context['content'] = $content;
+        $align = null;
+        if (is_array($block) && !empty($block['align'])) {
+            $align = $block['align'];
+        } elseif (is_object($block) && property_exists($block, 'attributes') && is_array($block->attributes) && !empty($block->attributes['align'])) {
+            $align = $block->attributes['align'];
+        }
         $context['section_classes'] = SectionSettings::build_classes(
             $fields,
-            ['block-container-group', !empty($context['block']['align']) ? 'align' . $context['block']['align'] : '']
+            ['block-container-group', $align ? 'align' . $align : '']
         );
         $context['container_class'] = SectionSettings::container_class($fields);
 
