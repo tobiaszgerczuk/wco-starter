@@ -188,7 +188,7 @@ class Registry
                 ],
                 is_array($metadata['attributes'] ?? null) ? $metadata['attributes'] : []
             ),
-            'render_callback' => [__CLASS__, 'render_container_group'],
+            'render_callback' => [__CLASS__, 'render_container_group_callback'],
         ];
 
         $groupStyle = self::register_container_group_style();
@@ -198,6 +198,13 @@ class Registry
         }
 
         register_block_type('acf/container-group', $args);
+    }
+
+    public static function render_container_group_callback($attributes = [], string $content = '', $block = null): string
+    {
+        ob_start();
+        self::render_container_group($attributes, $content, $block);
+        return (string) ob_get_clean();
     }
 
     private static function register_container_group_style(): string
