@@ -3,6 +3,7 @@
 namespace WCO\Starter\Blocks;
 
 use Timber\Timber;
+use WCO\Starter\Blocks\SectionSettings;
 
 class Registry
 {
@@ -21,12 +22,14 @@ class Registry
 
     public static function register_blocks(): void
     {
+        // === GUTENBERG EDITOR ASSETS ===
+        add_action('enqueue_block_editor_assets', [self::class, 'enqueue_editor_assets']);
+
+        self::register_container_group_block();
+
         if (!function_exists('acf_register_block_type')) {
             return;
         }
-
-        // === GUTENBERG EDITOR ASSETS ===
-        add_action('enqueue_block_editor_assets', [self::class, 'enqueue_editor_assets']);
 
         $blocks_dir = get_template_directory() . '/' . self::VIEWS_DIR . '/' . self::BLOCKS_DIR;
         if (!is_dir($blocks_dir)) {
@@ -37,6 +40,10 @@ class Registry
 
         foreach ($directories as $dir) {
             $slug = basename($dir);
+
+            if ($slug === 'container-group') {
+                continue;
+            }
 
             // Sprawdź, czy istnieje .twig
             $twig_file = $dir . '/' . $slug . '.twig';
@@ -69,7 +76,7 @@ class Registry
         wp_enqueue_script(
             'wco-blocks-editor',
             $js_url,
-            ['wp-blocks', 'wp-dom', 'wp-element'],
+            ['wp-blocks', 'wp-dom', 'wp-element', 'wp-block-editor', 'wp-components'],
             file_exists($editor_js_path) ? filemtime($editor_js_path) : null,
             true
         );
@@ -119,11 +126,6 @@ class Registry
             $args['supports']['align'] = ['full', 'wide'];
         }
 
-        if ($slug === 'container-group') {
-            $args['supports']['jsx'] = true;
-            $args['mode'] = 'edit';
-        }
-    
         if ($has_include) {
             $args['render_template'] = self::VIEWS_DIR . '/' . self::BLOCKS_DIR . '/' . $slug . '/' . $slug . '.include.php';
         } else {
@@ -144,6 +146,79 @@ class Registry
         }
 
         return $args;
+    }
+
+    private static function register_container_group_block(): void
+    {
+        if (!function_exists('register_block_type')) {
+            return;
+        }
+
+        if (class_exists('\\WP_Block_Type_Registry')) {
+            if (\WP_Block_Type_Registry::get_instance()->is_registered('acf/container-group')) {
+                return;
+            }
+        }
+
+        $container_group_dir = get_template_directory() . '/' . self::VIEWS_DIR . '/' . self::BLOCKS_DIR . '/container-group';
+        if (!is_dir($container_group_dir)) {
+            return;
+        }
+
+        $metadata = self::get_block_metadata($container_group_dir);
+        $supports = $metadata['supports'] ?? ['align' => ['full', 'wide']];
+
+        if (!is_array($supports['align'] ?? null)) {
+            $supports['align'] = ['full', 'wide'];
+        }
+
+        $args = [
+            'title' => $metadata['title'] ?? 'Container Group',
+            'description' => $metadata['description'] ?? __('Container Group', 'wco-starter'),
+            'category' => $metadata['category'] ?? self::CATEGORY,
+            'icon' => $metadata['icon'] ?? 'align-wide',
+            'api_version' => $metadata['apiVersion'] ?? 2,
+            'supports' => $supports,
+            'attributes' => array_replace_recursive(
+                [
+                    'containerWidth' => [
+                        'type' => 'string',
+                        'default' => 'default',
+                    ],
+                ],
+                is_array($metadata['attributes'] ?? null) ? $metadata['attributes'] : []
+            ),
+            'render_callback' => [__CLASS__, 'render_container_group'],
+        ];
+
+        $groupStyle = self::register_container_group_style();
+        if ($groupStyle !== '') {
+            $args['style'] = $groupStyle;
+            $args['editor_style'] = $groupStyle;
+        }
+
+        register_block_type('acf/container-group', $args);
+    }
+
+    private static function register_container_group_style(): string
+    {
+        $handle = 'wco-container-group';
+        $css_path = get_template_directory() . '/public/blocks/container-group/container-group.css';
+
+        if (!file_exists($css_path)) {
+            return '';
+        }
+
+        if (!wp_style_is($handle, 'registered')) {
+            wp_register_style(
+                $handle,
+                get_template_directory_uri() . '/public/blocks/container-group/container-group.css',
+                ['wco-starter-style'],
+                filemtime($css_path)
+            );
+        }
+
+        return $handle;
     }
 
     private static function get_block_metadata(string $dir): array
@@ -168,5 +243,42 @@ class Registry
         ];
 
         Timber::render("blocks/{$slug}/{$slug}.twig", $context);
+    }
+
+    public static function render_container_group(array $attributes = [], string $content = '', array $block = []): void
+    {
+        $context = Timber::context();
+        $fields = [];
+
+        if (function_exists('get_fields')) {
+            if (!empty($block['id'])) {
+                $fields = get_fields($block['id']) ?: [];
+            }
+        }
+
+        if (is_array($block['attrs']['data'] ?? null)) {
+            $fields = array_replace_recursive($fields, $block['attrs']['data']);
+        }
+
+        if (!is_array($fields)) {
+            $fields = [];
+        }
+
+        if (!empty($attributes['containerWidth'])) {
+            $fields['container_width'] = $attributes['containerWidth'];
+        }
+
+        $context['fields'] = $fields;
+        $context['block'] = $block;
+        $context['is_preview'] = is_admin();
+        $context['post_id'] = 0;
+        $context['content'] = $content;
+        $context['section_classes'] = SectionSettings::build_classes(
+            $fields,
+            ['block-container-group', !empty($context['block']['align']) ? 'align' . $context['block']['align'] : '']
+        );
+        $context['container_class'] = SectionSettings::container_class($fields);
+
+        Timber::render('blocks/container-group/container-group.twig', $context);
     }
 }

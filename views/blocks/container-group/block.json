@@ -1,15 +1,23 @@
 {
+  "apiVersion": 2,
+  "name": "acf/container-group",
   "title": "Container Group",
   "description": "Wrapper block with configurable container width.",
   "mode": "edit",
   "category": "wco-blocks",
   "icon": "align-wide",
   "supports": {
+    "jsx": true,
     "align": [
       "full",
       "wide"
-    ],
-    "jsx": true
+    ]
+  },
+  "attributes": {
+    "containerWidth": {
+      "type": "string",
+      "default": "default"
+    }
   },
   "keywords": [
     "container",
