@@ -3,9 +3,9 @@
     <div class="{{ container_class }}">
   {% endif %}
 
-  {% if content %}
-    {{ content|raw }}
-  {% elseif is_preview %}
+  {{ content|raw }}
+
+  {% if is_preview and content is empty %}
     <p class="block-container-group__placeholder">Add blocks inside this group and set container width in settings.</p>
   {% endif %}
 

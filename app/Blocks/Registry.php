@@ -118,6 +118,11 @@ class Registry
         if (isset($metadata['supports']) && is_array($metadata['supports']) && !isset($metadata['supports']['align'])) {
             $args['supports']['align'] = ['full', 'wide'];
         }
+
+        if ($slug === 'container-group') {
+            $args['supports']['jsx'] = true;
+            $args['mode'] = 'edit';
+        }
     
         if ($has_include) {
             $args['render_template'] = self::VIEWS_DIR . '/' . self::BLOCKS_DIR . '/' . $slug . '/' . $slug . '.include.php';
