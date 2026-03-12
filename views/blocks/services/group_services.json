@@ -1,0 +1,361 @@
+{
+    "ID": 103,
+    "key": "group_block_services",
+    "title": "Services Block",
+    "fields": [
+        {
+            "key": "field_services_eyebrow",
+            "label": "Eyebrow",
+            "name": "services_eyebrow",
+            "aria-label": "",
+            "type": "text",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "parent": "group_block_services",
+            "menu_order": 0
+        },
+        {
+            "key": "field_services_title",
+            "label": "Title",
+            "name": "services_title",
+            "aria-label": "",
+            "type": "text",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "parent": "group_block_services",
+            "menu_order": 1
+        },
+        {
+            "key": "field_services_intro",
+            "label": "Intro",
+            "name": "services_intro",
+            "aria-label": "",
+            "type": "textarea",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 4,
+            "placeholder": "",
+            "new_lines": "wpautop",
+            "parent": "group_block_services",
+            "menu_order": 2
+        },
+        {
+            "key": "field_services_items",
+            "label": "Services",
+            "name": "services_items",
+            "aria-label": "",
+            "type": "repeater",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "button_label": "Add service",
+            "sub_fields": [
+                {
+                    "key": "field_services_items_icon",
+                    "label": "Icon",
+                    "name": "icon",
+                    "aria-label": "",
+                    "type": "image",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "25",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "medium",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": ""
+                },
+                {
+                    "key": "field_services_items_title",
+                    "label": "Title",
+                    "name": "title",
+                    "aria-label": "",
+                    "type": "text",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "35",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_services_items_link",
+                    "label": "Link",
+                    "name": "link",
+                    "aria-label": "",
+                    "type": "link",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "40",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array"
+                },
+                {
+                    "key": "field_services_items_content",
+                    "label": "Content",
+                    "name": "content",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "rows": 4,
+                    "placeholder": "",
+                    "new_lines": "wpautop"
+                }
+            ],
+            "min": 0,
+            "max": 0,
+            "collapsed": "field_services_items_title",
+            "parent": "group_block_services",
+            "menu_order": 3
+        },
+        {
+            "key": "field_services_section_tab",
+            "label": "Section settings",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "parent": "group_block_services",
+            "menu_order": 4
+        },
+        {
+            "key": "field_services_section_has_background",
+            "label": "Section background",
+            "name": "section_has_background",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Adds the section background helper class.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "Use .section-bg on this block",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "On",
+            "ui_off_text": "Off",
+            "parent": "group_block_services",
+            "menu_order": 5
+        },
+        {
+            "key": "field_services_section_gap_top",
+            "label": "Gap top",
+            "name": "section_gap_top",
+            "aria-label": "",
+            "type": "select",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "none": "None",
+                "xs": "XS",
+                "sm": "SM",
+                "md": "MD",
+                "lg": "LG",
+                "xl": "XL"
+            },
+            "default_value": "none",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "parent": "group_block_services",
+            "menu_order": 6
+        },
+        {
+            "key": "field_services_section_gap_bottom",
+            "label": "Gap bottom",
+            "name": "section_gap_bottom",
+            "aria-label": "",
+            "type": "select",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "none": "None",
+                "xs": "XS",
+                "sm": "SM",
+                "md": "MD",
+                "lg": "LG",
+                "xl": "XL"
+            },
+            "default_value": "none",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "parent": "group_block_services",
+            "menu_order": 7
+        },
+        {
+            "key": "field_services_section_space_top",
+            "label": "Space top",
+            "name": "section_space_top",
+            "aria-label": "",
+            "type": "select",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "none": "None",
+                "xs": "XS",
+                "sm": "SM",
+                "md": "MD",
+                "lg": "LG",
+                "xl": "XL"
+            },
+            "default_value": "md",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "parent": "group_block_services",
+            "menu_order": 8
+        },
+        {
+            "key": "field_services_section_space_bottom",
+            "label": "Space bottom",
+            "name": "section_space_bottom",
+            "aria-label": "",
+            "type": "select",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "none": "None",
+                "xs": "XS",
+                "sm": "SM",
+                "md": "MD",
+                "lg": "LG",
+                "xl": "XL"
+            },
+            "default_value": "md",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "parent": "group_block_services",
+            "menu_order": 9
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/services"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Generated for the Services block.",
+    "show_in_rest": 0,
+    "display_title": "",
+    "modified": 1772629001,
+    "wco_metadata": {
+        "block_name": "services",
+        "icon": "screenoptions",
+        "category": "wco-blocks",
+        "text_domain": "wco-starter"
+    },
+    "_valid": true
+}

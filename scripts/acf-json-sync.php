@@ -14,7 +14,7 @@ array_shift($args);
 $action = $args[0] ?? '';
 if (in_array($action, ['-h', '--help'], true) || $action === '') {
     $themeDir = realpath(__DIR__ . '/..');
-    $defaultSourceHint = $themeDir !== false ? $themeDir . '/acf-json' : '/path/to/theme/acf-json';
+    $defaultSourceHint = $themeDir !== false ? $themeDir . '/views/blocks' : '/path/to/theme/views/blocks';
 
     $help = <<<TXT
 Usage:
@@ -23,21 +23,17 @@ Usage:
   php scripts/acf-json-sync.php diff [--source=PATH] [--target=PATH]
 
 Shortcuts:
-  acf:pull runs: pull --target=<theme>/acf-json --source=\${ACF_JSON_SOURCE_DIR}
-  acf:push runs: push --source=<theme>/acf-json --target=\${ACF_JSON_TARGET_DIR}
+  acf:pull  runs: pull --source=<remote>/views/blocks --target=<theme>/views/blocks
+  acf:push  runs: push --source=<theme>/views/blocks --target=<remote>/views/blocks
 
 Options:
   --source=PATH     Source directory with ACF JSON files.
   --target=PATH     Target directory where files should be synced to.
   --dry-run         Show what will happen without changing files.
 
-Environment:
-  ACF_JSON_SOURCE_DIR  Default source for acf:pull
-  ACF_JSON_TARGET_DIR  Default target for acf:push
-
 Examples:
-  php scripts/acf-json-sync.php pull --source=/srv/prod/wp-content/themes/my-theme/acf-json
-  php scripts/acf-json-sync.php push --target=/srv/stage/wp-content/themes/my-theme/acf-json --dry-run
+  php scripts/acf-json-sync.php pull --source=/srv/prod/wp-content/themes/my-theme/views/blocks
+  php scripts/acf-json-sync.php push --target=/srv/stage/wp-content/themes/my-theme/views/blocks --dry-run
 
 TXT;
 
@@ -61,7 +57,7 @@ if ($themeDir === false) {
     exit(1);
 }
 
-$themeJsonDir = $themeDir . '/acf-json';
+$themeBlocksDir = $themeDir . '/views/blocks';
 $source = null;
 $target = null;
 $dryRun = false;
@@ -83,64 +79,51 @@ foreach ($args as $arg) {
 }
 
 if ($isPull) {
-    $source = $source ?? getenv('ACF_JSON_SOURCE_DIR');
-    $target = $target ?? $themeJsonDir;
+    $source = $source ?? '';
+    $target = $target ?? $themeBlocksDir;
 }
 
 if ($isPush) {
-    $source = $source ?? $themeJsonDir;
-    $target = $target ?? get_env_value($themeDir . '/.env', 'ACF_JSON_TARGET_DIR');
-    if (!is_string($target) || $target === '') {
-        $target = getenv('ACF_JSON_TARGET_DIR');
-    }
+    $source = $source ?? $themeBlocksDir;
+    $target = $target ?? '';
 }
 
 if ($isDiff) {
-    $source = $source ?? getenv('ACF_JSON_SOURCE_DIR');
-    if (!is_string($source) || $source === '') {
-        $source = get_env_value($themeDir . '/.env', 'ACF_JSON_SOURCE_DIR');
-    }
-    $target = $target ?? $themeJsonDir;
+    $source = $source ?? '';
+    $target = $target ?? $themeBlocksDir;
 }
 
 if (!is_string($source) || $source === '') {
-    fwrite(STDERR, "Source path is required. Use --source=... or set ACF_JSON_SOURCE_DIR.\n");
+    fwrite(STDERR, "Source path is required. Use --source=... when using pull/diff, for push source defaults to <theme>/views/blocks.\n");
     exit(1);
 }
 
 if (!is_string($target) || $target === '') {
-    $message = 'Target path is required. Use --target=... or set ACF_JSON_TARGET_DIR in environment/ .env.';
-    if (!($isPush || $isDiff)) {
+    $message = $isPull ? 'Target path is required for pull. Use --target=... or accept default <theme>/views/blocks.' : 'Target path is required. Use --target=...';
+    if ($isPush || $isDiff) {
         $message = 'Target path is required. Use --target=...';
     }
     fwrite(STDERR, "{$message}\n");
     exit(1);
 }
 
-if ($isPush && !file_exists($source)) {
-    fwrite(STDERR, "Source path does not exist: {$source}\n");
+if (!is_dir($source)) {
+    fwrite(STDERR, "Source path does not exist or is not a directory: {$source}\n");
     exit(1);
 }
 
 $source = rtrim((string) realpath($source), DIRECTORY_SEPARATOR);
-$target = rtrim((string) realpath($target), DIRECTORY_SEPARATOR);
-
-if ($source === '') {
-    fwrite(STDERR, "Source directory does not exist.\n");
-    exit(1);
-}
-
-if (!is_dir($source) || !is_dir($target)) {
-    if (($isPush || $isPull || $isDiff) && !is_dir($target)) {
-        if (!is_dir(dirname($target))) {
-            fwrite(STDERR, "Target path parent does not exist: {$target}\n");
-            exit(1);
-        }
-    }
-}
+$resolvedTarget = realpath($target);
+$target = $resolvedTarget === false ? rtrim((string) $target, DIRECTORY_SEPARATOR) : rtrim((string) $resolvedTarget, DIRECTORY_SEPARATOR);
 
 if (!is_dir($target)) {
-    if (!mkdir($target, 0755, true)) {
+    $targetParent = dirname($target);
+    if (!is_dir($targetParent)) {
+        fwrite(STDERR, "Target path parent does not exist: {$targetParent}\n");
+        exit(1);
+    }
+
+    if (!mkdir($target, 0755, true) && !is_dir($target)) {
         fwrite(STDERR, "Could not create target directory: {$target}\n");
         exit(1);
     }
@@ -209,6 +192,11 @@ foreach ($summary['removed'] as $file) {
 foreach ($summary['added'] as $file) {
     $sourcePath = $source . DIRECTORY_SEPARATOR . $file;
     $targetPath = $target . DIRECTORY_SEPARATOR . $file;
+    $targetDir = dirname($targetPath);
+    if (!is_dir($targetDir) && !mkdir($targetDir, 0755, true)) {
+        fwrite(STDERR, "Could not create target file directory: {$targetDir}\n");
+        exit(1);
+    }
     if (!copy($sourcePath, $targetPath)) {
         fwrite(STDERR, "Failed to copy: {$sourcePath}\n");
         exit(1);
@@ -218,6 +206,11 @@ foreach ($summary['added'] as $file) {
 foreach ($summary['changed'] as $file) {
     $sourcePath = $source . DIRECTORY_SEPARATOR . $file;
     $targetPath = $target . DIRECTORY_SEPARATOR . $file;
+    $targetDir = dirname($targetPath);
+    if (!is_dir($targetDir) && !mkdir($targetDir, 0755, true)) {
+        fwrite(STDERR, "Could not create target file directory: {$targetDir}\n");
+        exit(1);
+    }
     if (!copy($sourcePath, $targetPath)) {
         fwrite(STDERR, "Failed to copy: {$sourcePath}\n");
         exit(1);
@@ -234,18 +227,21 @@ function scan_acf_json_files(string $dir): array
         return $files;
     }
 
-    $iterator = new DirectoryIterator($dir);
+    $basePath = rtrim((string) realpath($dir), DIRECTORY_SEPARATOR);
+    if ($basePath === '') {
+        return $files;
+    }
+
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($basePath, FilesystemIterator::SKIP_DOTS)
+    );
+
     foreach ($iterator as $item) {
-        if ($item->isDot() || !$item->isFile()) {
+        if (!$item->isFile()) {
             continue;
         }
 
-        if ($item->getExtension() !== 'json') {
-            continue;
-        }
-
-        $name = $item->getFilename();
-        if (!str_starts_with($name, 'group_')) {
+        if ($item->getExtension() !== 'json' || !str_starts_with($item->getFilename(), 'group_')) {
             continue;
         }
 
@@ -255,8 +251,10 @@ function scan_acf_json_files(string $dir): array
             continue;
         }
 
-        $files[$name] = [
+        $relativePath = ltrim(str_replace($basePath, '', $path), DIRECTORY_SEPARATOR);
+        $files[$relativePath] = [
             'path' => $path,
+            'relative_path' => $relativePath,
             'hash' => md5($content),
             'size' => $item->getSize(),
             'modified' => $item->getMTime(),
@@ -314,35 +312,12 @@ function backup_path(string $target): void
 
     foreach (scan_acf_json_files($target) as $name => $file) {
         $source = $file['path'];
-        $destination = $snapshot . DIRECTORY_SEPARATOR . $name;
+        $destination = $snapshot . DIRECTORY_SEPARATOR . $file['relative_path'];
+        $dir = dirname($destination);
+        if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
+            fwrite(STDERR, "Could not create backup path: {$dir}\n");
+            exit(1);
+        }
         copy($source, $destination);
     }
-}
-
-function get_env_value(string $filePath, string $key): ?string
-{
-    if (!is_readable($filePath)) {
-        return null;
-    }
-
-    $contents = file_get_contents($filePath);
-    if ($contents === false) {
-        return null;
-    }
-
-    $pattern = '/^' . preg_quote($key, '/') . '=(.*)$/m';
-    if (!preg_match($pattern, $contents, $matches)) {
-        return null;
-    }
-
-    $value = trim($matches[1]);
-    if (str_starts_with($value, '"') && str_ends_with($value, '"')) {
-        return substr($value, 1, -1);
-    }
-
-    if (str_starts_with($value, "'") && str_ends_with($value, "'")) {
-        return substr($value, 1, -1);
-    }
-
-    return $value;
 }

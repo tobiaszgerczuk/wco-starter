@@ -5,6 +5,7 @@ namespace WCO\Starter\Blocks;
 class SectionSettings
 {
     private const SCALE = ['none', 'xs', 'sm', 'md', 'lg', 'xl'];
+    private const CONTAINER_WIDTHS = ['default', 'wide', 'medium', 'narrow', 'full'];
 
     public static function build_classes(array $fields, array $baseClasses = []): string
     {
@@ -30,5 +31,22 @@ class SectionSettings
         }
 
         return implode(' ', array_unique($classes));
+    }
+
+    public static function container_class(array $fields, string $default = 'default'): string
+    {
+        $containerWidth = is_string($fields['container_width'] ?? null) ? $fields['container_width'] : $default;
+
+        if (!in_array($containerWidth, self::CONTAINER_WIDTHS, true)) {
+            $containerWidth = $default;
+        }
+
+        return match ($containerWidth) {
+            'wide' => 'container-wide',
+            'medium' => 'container-medium',
+            'narrow' => 'container-narrow',
+            'full' => '',
+            default => 'container',
+        };
     }
 }

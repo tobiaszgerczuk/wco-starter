@@ -157,7 +157,7 @@ class Acf
     private static function local_field_groups(): array
     {
         $result = [];
-        $jsonDirs = [self::json_dir()];
+        $jsonDirs = [];
 
         $blocksDir = get_template_directory() . '/views/blocks';
         if (is_dir($blocksDir)) {

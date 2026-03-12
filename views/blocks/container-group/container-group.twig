@@ -1,0 +1,15 @@
+<section class="{{ section_classes }}">
+  {% if container_class %}
+    <div class="{{ container_class }}">
+  {% endif %}
+
+  {% if content %}
+    {{ content|raw }}
+  {% elseif is_preview %}
+    <p class="block-container-group__placeholder">Add blocks inside this group and set container width in settings.</p>
+  {% endif %}
+
+  {% if container_class %}
+    </div>
+  {% endif %}
+</section>

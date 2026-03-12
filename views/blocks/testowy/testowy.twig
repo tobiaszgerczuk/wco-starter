@@ -1,0 +1,15 @@
+<section class="{{ section_classes }}">
+  <div class="container">
+    <div class="block-testowy__inner">
+      <h2 class="block-testowy__title">{{ fields['testowy_title'] ?: 'Testowy' }}</h2>
+
+      {% if fields['testowy_content'] %}
+        <div class="block-testowy__content">
+          {{ fields['testowy_content']|wpautop }}
+        </div>
+      {% elseif is_preview %}
+        <p class="block-testowy__placeholder">Add fields for the testowy block in ACF.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>

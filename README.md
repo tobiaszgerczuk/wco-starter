@@ -78,40 +78,9 @@ npm run rename-theme -- "Nazwa Projektu" nazwa-projektu --no-rename-dir
 ```bash
 npm run dev
 npm run build
-npm run acf:pull
-npm run acf:push
-npm run acf:diff
 npm run rename-theme -- "Nazwa Projektu" nazwa-projektu
 npm run create-block -- hero-banner "Hero Banner"
 ```
-
-### ACF JSON lifecycle
-
-Pole `acf-json` utrzymujesz lokalnie. Workflow:
-
-```bash
-npm run acf:diff   # podgląd różnic między środowiskami
-npm run acf:pull   # pobierz JSONy z innego środowiska
-npm run acf:push   # wypchnij lokalne JSONy na środowisko docelowe
-```
-
-Jeżeli chcesz używać `pull/push` bez ręcznego dopisywania ścieżki za każdym razem, ustaw w `theme/.env`:
-
-```bash
-ACF_JSON_SOURCE_DIR=/ścieżka/do/acf-json-zrodlowego
-ACF_JSON_TARGET_DIR=/ścieżka/do/acf-json-docelowego
-```
-
-Przykład:
-
-```bash
-ACF_JSON_TARGET_DIR=/srv/stage/wp-content/themes/wco-starter/acf-json npm run acf:push
-ACF_JSON_SOURCE_DIR=/srv/prod/wp-content/themes/wco-starter/acf-json npm run acf:pull
-```
-
-Na stronie w panelu admina pojawi Ci się komunikat:
-- `Some local ACF JSON groups are not in DB` -> uruchom `npm run acf:push`
-- `DB-only groups` -> uruchom `npm run acf:pull`
 
 ## Ustawienia motywu
 
@@ -142,7 +111,6 @@ views/blocks/hero-banner/_hero-banner.scss
 views/blocks/hero-banner/hero-banner.js
 views/blocks/hero-banner/hero-banner.include.php
 views/blocks/hero-banner/group_hero-banner.json
-acf-json/group_block_hero-banner.json
 ```
 
 Presety generatora:
@@ -166,7 +134,7 @@ Ważne:
 - kategoria bloków to `WCO Blocks`
 - style bloku ładują się automatycznie tylko dla danego bloku
 - JS bloku ładuje się automatycznie tylko wtedy, gdy blok istnieje w DOM
-- field group zapisuje się lokalnie do `acf-json` i jest jednocześnie mirrored do `views/blocks/<slug>/group_<slug>.json` (po zapisie w ACF)
+- field group zapisuje się jako lokalny JSON w `views/blocks/<slug>/group_<slug>.json` (po zapisie w ACF plik jest automatycznie aktualizowany).
 - generator dodaje też domyślne pola sekcji: `section_has_background`, `section_gap_top`, `section_gap_bottom`, `section_space_top`, `section_space_bottom`
 
 Dry run:
@@ -241,9 +209,27 @@ W starterze są już przygotowane przykładowe bloki:
 - `services`
 - `testimonials-slider`
 - `latest-posts`
+- `container-group`
 
 `testimonials-slider` jest spięty z registry swiperów i ma już gotowy JS, Twig, SCSS i ACF JSON.
 `latest-posts` ma bazę pod infinite pagination przez REST API.
+
+### Container Group
+
+Blok `container-group` to wrapper do układania układów (sekcji z innymi blokami). W ustawieniach możesz wybrać szerokość kontenera:
+
+- `default` (`$container-default`)
+- `wide` (`$container-wide`)
+- `medium` (`$container-medium`)
+- `narrow` (`$container-narrow`)
+- `full` (bez klasy kontenera)
+
+Blok dodatkowo wspiera ustawienia sekcji:
+- `section_has_background`
+- `section_gap_top`
+- `section_gap_bottom`
+- `section_space_top`
+- `section_space_bottom`
 
 ## Swiper
 
@@ -476,7 +462,6 @@ Najważniejsze katalogi:
 app/
 assets/
 views/
-acf-json/
 scripts/
 public/
 ```
@@ -485,7 +470,7 @@ Co oznaczają:
 - `app/` — PHP, rejestracje, bootstrap, logika motywu
 - `assets/` — źródła SCSS i JS
 - `views/` — Twig i katalogi bloków
-- `acf-json/` — lokalny zapis field groups ACF
+- `views/blocks/<slug>/group_<slug>.json` — lokalne pola ACF dla każdego bloku
 - `scripts/` — komendy pomocnicze startera
 - `public/` — build z webpacka
 

@@ -111,9 +111,13 @@ class Registry
             'category'    => $metadata['category'] ?? self::CATEGORY,
             'icon'        => $metadata['icon'] ?? 'layout',
             'keywords'    => $metadata['keywords'] ?? [$slug],
-            'supports'    => ['align' => ['full', 'wide']],
-            'mode'        => 'preview',
+            'supports'    => isset($metadata['supports']) && is_array($metadata['supports']) ? $metadata['supports'] : ['align' => ['full', 'wide']],
+            'mode'        => is_string($metadata['mode'] ?? null) ? $metadata['mode'] : 'preview',
         ];
+
+        if (isset($metadata['supports']) && is_array($metadata['supports']) && !isset($metadata['supports']['align'])) {
+            $args['supports']['align'] = ['full', 'wide'];
+        }
     
         if ($has_include) {
             $args['render_template'] = self::VIEWS_DIR . '/' . self::BLOCKS_DIR . '/' . $slug . '/' . $slug . '.include.php';

@@ -1,0 +1,20 @@
+{
+  "title": "Container Group",
+  "description": "Wrapper block with configurable container width.",
+  "mode": "edit",
+  "category": "wco-blocks",
+  "icon": "align-wide",
+  "supports": {
+    "align": [
+      "full",
+      "wide"
+    ],
+    "jsx": true
+  },
+  "keywords": [
+    "container",
+    "group",
+    "wrapper",
+    "section"
+  ]
+}

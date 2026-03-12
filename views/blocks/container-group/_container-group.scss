@@ -1,0 +1,9 @@
+.block-container-group {
+  &__placeholder {
+    margin: 0;
+    padding: 1.5rem;
+    border: 1px dashed var(--color-border);
+    color: var(--color-muted);
+    text-align: center;
+  }
+}
