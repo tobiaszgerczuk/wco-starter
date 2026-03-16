@@ -210,9 +210,19 @@ W starterze są już przygotowane przykładowe bloki:
 - `testimonials-slider`
 - `latest-posts`
 - `container-group`
+- `spacer`
 
 `testimonials-slider` jest spięty z registry swiperów i ma już gotowy JS, Twig, SCSS i ACF JSON.
 `latest-posts` ma bazę pod infinite pagination przez REST API.
+`spacer` to prosty separator odstępu z osobnym ustawieniem wysokości dla `desktop` i `mobile`.
+
+### Spacer
+
+Blok `spacer` służy do kontrolowanego dodawania pionowych odstępów między sekcjami lub elementami treści.
+
+Dla `desktop` i `mobile` możesz niezależnie wybrać:
+- wartość ze skali motywu: `none`, `xs`, `sm`, `md`, `lg`, `xl`
+- albo własną wartość w `px`
 
 ### Container Group
 
