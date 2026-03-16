@@ -1,4 +1,4 @@
-<section class="{{ section_classes }}">
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
   <div class="container">
     {% include 'modules/section-header.twig' with {
       eyebrow: fields['latest_posts_eyebrow'],

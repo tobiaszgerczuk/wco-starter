@@ -4,6 +4,47 @@ namespace WCO\Starter\Core;
 
 class Media
 {
+    public static function boot(): void
+    {
+        add_filter('upload_mimes', [self::class, 'allow_svg_upload']);
+        add_filter('wp_check_filetype_and_ext', [self::class, 'fix_svg_filetype'], 10, 5);
+        add_action('admin_head', [self::class, 'print_svg_admin_styles']);
+    }
+
+    public static function allow_svg_upload(array $mimes): array
+    {
+        $mimes['svg'] = 'image/svg+xml';
+
+        return $mimes;
+    }
+
+    public static function fix_svg_filetype(array $data, string $file, string $filename, array $mimes, $realMime): array
+    {
+        if (!str_ends_with(strtolower($filename), '.svg')) {
+            return $data;
+        }
+
+        $data['ext'] = 'svg';
+        $data['type'] = 'image/svg+xml';
+        $data['proper_filename'] = $filename;
+
+        return $data;
+    }
+
+    public static function print_svg_admin_styles(): void
+    {
+        echo '<style>
+            .attachment .thumbnail img[src$=".svg"],
+            .attachment .thumbnail img[src*=".svg?"],
+            .media-frame-content .thumbnail img[src$=".svg"],
+            .media-frame-content .thumbnail img[src*=".svg?"] {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        </style>';
+    }
+
     public static function image($image, array $args = []): string
     {
         $options = array_merge(

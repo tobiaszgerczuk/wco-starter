@@ -9,22 +9,42 @@
   const { InspectorControls, InnerBlocks, useBlockProps } = blockEditor;
   const { createElement: el } = element;
   const { PanelBody, SelectControl } = components;
+  const isPolish = (document.documentElement.lang || '').toLowerCase().startsWith('pl');
 
   if (!registerBlockType || !useBlockProps || !InnerBlocks || !el || !PanelBody || !SelectControl) {
     return;
   }
 
-  const LABELS = {
-    title: 'Container Group',
-    description: 'Wrapper block with nested blocks and configurable container width.',
-  };
+  const LABELS = isPolish
+    ? {
+        title: 'Grupa kontenera',
+        description: 'Blok opakowujący z zagnieżdżonymi blokami i wyborem szerokości kontenera.',
+        panelTitle: 'Ustawienia kontenera',
+        fieldLabel: 'Szerokość kontenera',
+        default: 'Domyślna',
+        wide: 'Szeroka',
+        medium: 'Średnia',
+        narrow: 'Wąska',
+        full: 'Pełna szerokość',
+      }
+    : {
+        title: 'Container Group',
+        description: 'Wrapper block with nested blocks and configurable container width.',
+        panelTitle: 'Container settings',
+        fieldLabel: 'Container width',
+        default: 'Default',
+        wide: 'Wide',
+        medium: 'Medium',
+        narrow: 'Narrow',
+        full: 'Full',
+      };
 
   const CONTAINER_WIDTH_OPTIONS = [
-    { label: 'Default', value: 'default' },
-    { label: 'Wide', value: 'wide' },
-    { label: 'Medium', value: 'medium' },
-    { label: 'Narrow', value: 'narrow' },
-    { label: 'Full', value: 'full' },
+    { label: LABELS.default, value: 'default' },
+    { label: LABELS.wide, value: 'wide' },
+    { label: LABELS.medium, value: 'medium' },
+    { label: LABELS.narrow, value: 'narrow' },
+    { label: LABELS.full, value: 'full' },
   ];
 
   registerBlockType('acf/container-group', {
@@ -54,11 +74,11 @@
           el(
             PanelBody,
             {
-              title: 'Container settings',
+              title: LABELS.panelTitle,
               initialOpen: true,
             },
             el(SelectControl, {
-              label: 'Container width',
+              label: LABELS.fieldLabel,
               value: containerWidth,
               options: CONTAINER_WIDTH_OPTIONS,
               onChange(value) {

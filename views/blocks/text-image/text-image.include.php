@@ -12,5 +12,7 @@ $context['section_classes'] = SectionSettings::build_classes(
     $context['fields'],
     ['block-text-image', !empty($context['block']['align']) ? 'align' . $context['block']['align'] : '']
 );
+$context['section_id'] = SectionSettings::section_id($context['fields']);
+$context['section_style'] = SectionSettings::inline_style($context['fields']);
 
 Timber::render('blocks/text-image/text-image.twig', $context);

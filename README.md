@@ -135,7 +135,7 @@ Ważne:
 - style bloku ładują się automatycznie tylko dla danego bloku
 - JS bloku ładuje się automatycznie tylko wtedy, gdy blok istnieje w DOM
 - field group zapisuje się jako lokalny JSON w `views/blocks/<slug>/group_<slug>.json` (po zapisie w ACF plik jest automatycznie aktualizowany).
-- generator dodaje też domyślne pola sekcji: `section_has_background`, `section_gap_top`, `section_gap_bottom`, `section_space_top`, `section_space_bottom`
+- generator dodaje też domyślne pola sekcji: `section_background_color`, `section_gap_top`, `section_gap_bottom`, `section_space_top`, `section_space_bottom`
 
 Dry run:
 
@@ -225,11 +225,13 @@ Blok `container-group` to wrapper do układania układów (sekcji z innymi bloka
 - `full` (bez klasy kontenera)
 
 Blok dodatkowo wspiera ustawienia sekcji:
-- `section_has_background`
+- `section_background_color`
 - `section_gap_top`
 - `section_gap_bottom`
 - `section_space_top`
 - `section_space_bottom`
+
+`section_background_color` automatycznie dodaje klasę tła sekcji, jeśli wybierzesz kolor inny niż `none`.
 
 ## Swiper
 

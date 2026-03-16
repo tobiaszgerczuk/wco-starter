@@ -89,7 +89,7 @@ body {
 }
 
 .section-bg {
-    background: var(--color-surface);
+    background: var(--section-background-color, var(--color-surface));
 }
 
 .section-gap-top-none { --section-gap-top: #{$section-space-none}; }

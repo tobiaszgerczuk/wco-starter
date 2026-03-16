@@ -1,4 +1,4 @@
-<section class="{{ section_classes }}">
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
   <div class="container">
     <div class="block-testowy__inner">
       <h2 class="block-testowy__title">{{ fields['testowy_title'] ?: 'Testowy' }}</h2>

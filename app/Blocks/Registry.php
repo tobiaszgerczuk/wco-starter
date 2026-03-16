@@ -26,6 +26,8 @@ class Registry
         add_action('enqueue_block_editor_assets', [self::class, 'enqueue_editor_assets']);
 
         self::register_container_group_block();
+        self::register_two_columns_block();
+        self::register_two_columns_column_block();
 
         if (!function_exists('acf_register_block_type')) {
             return;
@@ -41,7 +43,7 @@ class Registry
         foreach ($directories as $dir) {
             $slug = basename($dir);
 
-            if ($slug === 'container-group') {
+            if (in_array($slug, ['container-group', 'two-columns', 'two-columns-column'], true)) {
                 continue;
             }
 
@@ -150,22 +152,68 @@ class Registry
 
     private static function register_container_group_block(): void
     {
+        self::register_native_layout_block(
+            'container-group',
+            [
+                'containerWidth' => [
+                    'type' => 'string',
+                    'default' => 'default',
+                ],
+            ],
+            [__CLASS__, 'render_container_group_callback']
+        );
+    }
+
+    private static function register_two_columns_block(): void
+    {
+        self::register_native_layout_block(
+            'two-columns',
+            [
+                'containerWidth' => [
+                    'type' => 'string',
+                    'default' => 'default',
+                ],
+                'columnsRatio' => [
+                    'type' => 'string',
+                    'default' => '50-50',
+                ],
+            ],
+            [__CLASS__, 'render_two_columns_callback']
+        );
+    }
+
+    private static function register_two_columns_column_block(): void
+    {
+        self::register_native_layout_block(
+            'two-columns-column',
+            [
+                'columnPosition' => [
+                    'type' => 'string',
+                    'default' => 'left',
+                ],
+            ],
+            [__CLASS__, 'render_two_columns_column_callback']
+        );
+    }
+
+    private static function register_native_layout_block(string $slug, array $default_attributes, callable $render_callback): void
+    {
         if (!function_exists('register_block_type')) {
             return;
         }
 
-        if (class_exists('\\WP_Block_Type_Registry')) {
-            if (\WP_Block_Type_Registry::get_instance()->is_registered('acf/container-group')) {
-                return;
-            }
-        }
+        $name = 'acf/' . $slug;
 
-        $container_group_dir = get_template_directory() . '/' . self::VIEWS_DIR . '/' . self::BLOCKS_DIR . '/container-group';
-        if (!is_dir($container_group_dir)) {
+        if (class_exists('\\WP_Block_Type_Registry') && \WP_Block_Type_Registry::get_instance()->is_registered($name)) {
             return;
         }
 
-        $metadata = self::get_block_metadata($container_group_dir);
+        $dir = get_template_directory() . '/' . self::VIEWS_DIR . '/' . self::BLOCKS_DIR . '/' . $slug;
+        if (!is_dir($dir)) {
+            return;
+        }
+
+        $metadata = self::get_block_metadata($dir);
         $supports = $metadata['supports'] ?? ['align' => ['full', 'wide']];
 
         if (!is_array($supports['align'] ?? null)) {
@@ -173,31 +221,26 @@ class Registry
         }
 
         $args = [
-            'title' => $metadata['title'] ?? 'Container Group',
-            'description' => $metadata['description'] ?? __('Container Group', 'wco-starter'),
+            'title' => $metadata['title'] ?? ucfirst(str_replace('-', ' ', $slug)),
+            'description' => $metadata['description'] ?? ucfirst(str_replace('-', ' ', $slug)),
             'category' => $metadata['category'] ?? self::CATEGORY,
-            'icon' => $metadata['icon'] ?? 'align-wide',
+            'icon' => $metadata['icon'] ?? 'layout',
             'api_version' => $metadata['apiVersion'] ?? 2,
             'supports' => $supports,
             'attributes' => array_replace_recursive(
-                [
-                    'containerWidth' => [
-                        'type' => 'string',
-                        'default' => 'default',
-                    ],
-                ],
+                $default_attributes,
                 is_array($metadata['attributes'] ?? null) ? $metadata['attributes'] : []
             ),
-            'render_callback' => [__CLASS__, 'render_container_group_callback'],
+            'render_callback' => $render_callback,
         ];
 
-        $groupStyle = self::register_container_group_style();
-        if ($groupStyle !== '') {
-            $args['style'] = $groupStyle;
-            $args['editor_style'] = $groupStyle;
+        $style = self::register_block_style_handle($slug);
+        if ($style !== '') {
+            $args['style'] = $style;
+            $args['editor_style'] = $style;
         }
 
-        register_block_type('acf/container-group', $args);
+        register_block_type($name, $args);
     }
 
     public static function render_container_group_callback($attributes = [], string $content = '', $block = null): string
@@ -207,10 +250,10 @@ class Registry
         return (string) ob_get_clean();
     }
 
-    private static function register_container_group_style(): string
+    private static function register_block_style_handle(string $slug): string
     {
-        $handle = 'wco-container-group';
-        $css_path = get_template_directory() . '/public/blocks/container-group/container-group.css';
+        $handle = 'wco-' . $slug;
+        $css_path = get_template_directory() . '/public/blocks/' . $slug . '/' . $slug . '.css';
 
         if (!file_exists($css_path)) {
             return '';
@@ -219,7 +262,7 @@ class Registry
         if (!wp_style_is($handle, 'registered')) {
             wp_register_style(
                 $handle,
-                get_template_directory_uri() . '/public/blocks/container-group/container-group.css',
+                get_template_directory_uri() . '/public/blocks/' . $slug . '/' . $slug . '.css',
                 ['wco-starter-style'],
                 filemtime($css_path)
             );
@@ -237,7 +280,92 @@ class Registry
 
         $metadata = json_decode((string) file_get_contents($metadataPath), true);
 
-        return is_array($metadata) ? $metadata : [];
+        if (!is_array($metadata)) {
+            return [];
+        }
+
+        if (!self::is_polish_locale()) {
+            return $metadata;
+        }
+
+        if (!empty($metadata['title']) && is_string($metadata['title'])) {
+            $metadata['title'] = self::translate_block_string($metadata['title']);
+        }
+
+        if (!empty($metadata['description']) && is_string($metadata['description'])) {
+            $metadata['description'] = self::translate_block_string($metadata['description']);
+        }
+
+        if (!empty($metadata['keywords']) && is_array($metadata['keywords'])) {
+            $metadata['keywords'] = array_map(
+                static fn($keyword) => is_string($keyword) ? self::translate_block_string($keyword) : $keyword,
+                $metadata['keywords']
+            );
+        }
+
+        return $metadata;
+    }
+
+    private static function is_polish_locale(): bool
+    {
+        return str_starts_with(strtolower(get_locale()), 'pl');
+    }
+
+    private static function translate_block_string(string $value): string
+    {
+        $blockNames = [
+            'Container Group' => 'Grupa kontenera',
+            'FAQ Accordion' => 'FAQ akordeon',
+            'Hero Banner' => 'Baner hero',
+            'Latest Posts' => 'Najnowsze wpisy',
+            'Services' => 'Usługi',
+            'Testimonials Slider' => 'Slider opinii',
+            'Text image' => 'Tekst i obraz',
+            'Two Columns' => 'Dwie kolumny',
+            'Two Columns Column' => 'Kolumna dwóch kolumn',
+            'Testowy' => 'Testowy',
+        ];
+
+        if (isset($blockNames[$value])) {
+            return $blockNames[$value];
+        }
+
+        if (preg_match('/^Block: (.+)$/', $value, $matches) === 1) {
+            $name = $matches[1];
+            return 'Blok: ' . ($blockNames[$name] ?? $name);
+        }
+
+        $translations = [
+            'Wrapper block with configurable container width.' => 'Blok opakowujący z wyborem szerokości kontenera.',
+            'Accordion FAQ block.' => 'Blok FAQ w formie akordeonu.',
+            'Latest blog posts block with REST pagination.' => 'Blok najnowszych wpisów blogowych z paginacją REST.',
+            'Services cards block.' => 'Blok kart usług.',
+            'Testimonials slider block.' => 'Blok slidera opinii.',
+            'Two-column layout block with container width and ratio controls.' => 'Blok układu dwóch kolumn z wyborem szerokości kontenera i proporcji.',
+            'Inner column for the Two Columns layout block.' => 'Wewnętrzna kolumna dla bloku układu dwóch kolumn.',
+            'container' => 'kontener',
+            'group' => 'grupa',
+            'wrapper' => 'wrapper',
+            'section' => 'sekcja',
+            'faq' => 'faq',
+            'accordion' => 'akordeon',
+            'questions' => 'pytania',
+            'posts' => 'wpisy',
+            'blog' => 'blog',
+            'news' => 'aktualności',
+            'services' => 'usługi',
+            'cards' => 'karty',
+            'offer' => 'oferta',
+            'testimonials' => 'opinie',
+            'slider' => 'slider',
+            'reviews' => 'recenzje',
+            'columns' => 'kolumny',
+            'layout' => 'układ',
+            'split' => 'podział',
+            'content' => 'treść',
+        ];
+
+        return $translations[$value] ?? $value;
     }
 
     public static function render_simple_block($block, $content = '', $is_preview = false, $post_id = 0): void
@@ -254,14 +382,55 @@ class Registry
 
     public static function render_container_group($attributes = [], string $content = '', $block = null): void
     {
+        $context = self::build_layout_block_context($attributes, $block, $content, 'block-container-group');
+        Timber::render('blocks/container-group/container-group.twig', $context);
+    }
+
+    public static function render_two_columns_callback($attributes = [], string $content = '', $block = null): string
+    {
+        ob_start();
+        self::render_two_columns($attributes, $content, $block);
+        return (string) ob_get_clean();
+    }
+
+    public static function render_two_columns($attributes = [], string $content = '', $block = null): void
+    {
+        $context = self::build_layout_block_context($attributes, $block, $content, 'block-two-columns');
+        $allowed_ratios = ['50-50', '60-40', '40-60', '70-30', '30-70'];
+        $ratio = is_string($attributes['columnsRatio'] ?? null) ? $attributes['columnsRatio'] : '50-50';
+        $context['ratio_class'] = 'block-two-columns__grid--ratio-' . (in_array($ratio, $allowed_ratios, true) ? $ratio : '50-50');
+
+        Timber::render('blocks/two-columns/two-columns.twig', $context);
+    }
+
+    public static function render_two_columns_column_callback($attributes = [], string $content = '', $block = null): string
+    {
+        ob_start();
+        self::render_two_columns_column($attributes, $content, $block);
+        return (string) ob_get_clean();
+    }
+
+    public static function render_two_columns_column($attributes = [], string $content = '', $block = null): void
+    {
+        $position = is_string($attributes['columnPosition'] ?? null) ? $attributes['columnPosition'] : 'left';
+        if (!in_array($position, ['left', 'right'], true)) {
+            $position = 'left';
+        }
+
+        Timber::render('blocks/two-columns-column/two-columns-column.twig', [
+            'content' => $content,
+            'column_class' => 'block-two-columns__column--' . $position,
+        ]);
+    }
+
+    private static function build_layout_block_context($attributes, $block, string $content, string $base_class): array
+    {
         $context = Timber::context();
         $fields = [];
         $block_attrs = [];
 
-        if (function_exists('get_fields')) {
-            if (is_array($block) && !empty($block['id'])) {
-                $fields = get_fields($block['id']) ?: [];
-            }
+        if (function_exists('get_fields') && is_array($block) && !empty($block['id'])) {
+            $fields = get_fields($block['id']) ?: [];
         }
 
         if (is_array($block)) {
@@ -295,10 +464,11 @@ class Registry
         }
         $context['section_classes'] = SectionSettings::build_classes(
             $fields,
-            ['block-container-group', $align ? 'align' . $align : '']
+            [$base_class, $align ? 'align' . $align : '']
         );
+        $context['section_id'] = SectionSettings::section_id($fields);
+        $context['section_style'] = SectionSettings::inline_style($fields);
         $context['container_class'] = SectionSettings::container_class($fields);
-
-        Timber::render('blocks/container-group/container-group.twig', $context);
+        return $context;
     }
 }

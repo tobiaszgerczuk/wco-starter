@@ -142,7 +142,7 @@ function build_twig_template(string $slug, string $title, string $fieldPrefix, s
     $fallback = addslashes($title);
 
     return <<<TWIG
-<section class="{{ section_classes }}">
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
   <div class="container">
     <div class="block-{$slug}__inner">
       <h2 class="block-{$slug}__title">{{ fields['{$fieldPrefix}_title'] ?: '{$fallback}' }}</h2>
@@ -166,7 +166,7 @@ function build_slider_twig_template(string $slug, string $title, string $fieldPr
     $fallback = addslashes($title);
 
     return <<<TWIG
-<section class="{{ section_classes }}">
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
   <div class="container">
     <div class="block-{$slug}__inner">
       <h2 class="block-{$slug}__title">{{ fields['{$fieldPrefix}_title'] ?: '{$fallback}' }}</h2>
@@ -239,6 +239,8 @@ use WCO\Starter\Blocks\SectionSettings;
     \$context['fields'],
     ['block-{$slug}', !empty(\$context['block']['align']) ? 'align' . \$context['block']['align'] : '']
 );
+\$context['section_id'] = SectionSettings::section_id(\$context['fields']);
+\$context['section_style'] = SectionSettings::inline_style(\$context['fields']);
 
 Timber::render('blocks/{$slug}/{$slug}.twig', \$context);
 
@@ -365,12 +367,12 @@ function build_section_fields(string $fieldPrefix): array
             'endpoint' => 0,
         ],
         [
-            'key' => 'field_' . $fieldPrefix . '_section_has_background',
-            'label' => 'Section background',
-            'name' => 'section_has_background',
+            'key' => 'field_' . $fieldPrefix . '_section_background_color',
+            'label' => 'Background color',
+            'name' => 'section_background_color',
             'aria-label' => '',
-            'type' => 'true_false',
-            'instructions' => 'Adds the section background helper class.',
+            'type' => 'color_picker',
+            'instructions' => 'Select a background color for this section.',
             'required' => 0,
             'conditional_logic' => 0,
             'wrapper' => [
@@ -378,11 +380,46 @@ function build_section_fields(string $fieldPrefix): array
                 'class' => '',
                 'id' => '',
             ],
-            'message' => 'Use .section-bg on this block',
-            'default_value' => 0,
-            'ui' => 1,
-            'ui_on_text' => 'On',
-            'ui_off_text' => 'Off',
+            'default_value' => '',
+            'enable_opacity' => 0,
+            'return_format' => 'string',
+        ],
+        [
+            'key' => 'field_' . $fieldPrefix . '_block_id',
+            'label' => 'Block ID',
+            'name' => 'block_id',
+            'aria-label' => '',
+            'type' => 'text',
+            'instructions' => 'Optional HTML id attribute for anchor links, e.g. contact-section.',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => [
+                'width' => '50',
+                'class' => '',
+                'id' => '',
+            ],
+            'default_value' => '',
+            'maxlength' => '',
+            'placeholder' => '',
+            'prepend' => '',
+            'append' => '',
+        ],
+        [
+            'key' => 'field_' . $fieldPrefix . '_spacing_tab',
+            'label' => 'Spacing settings',
+            'name' => '',
+            'aria-label' => '',
+            'type' => 'tab',
+            'instructions' => '',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => [
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ],
+            'placement' => 'top',
+            'endpoint' => 0,
         ],
         build_spacing_select($fieldPrefix, 'section_gap_top', 'Gap top', '50', 'none', $choices),
         build_spacing_select($fieldPrefix, 'section_gap_bottom', 'Gap bottom', '50', 'none', $choices),

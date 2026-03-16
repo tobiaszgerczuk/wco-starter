@@ -556,6 +556,10 @@ class Acf
             $group['title'] = self::translate_string((string) $group['title']);
         }
 
+        if (!empty($group['description'])) {
+            $group['description'] = self::translate_string((string) $group['description']);
+        }
+
         return $group;
     }
 
@@ -590,6 +594,29 @@ class Acf
             return $value;
         }
 
+        $blockNames = [
+            'Container Group' => 'Grupa kontenera',
+            'FAQ Accordion' => 'FAQ akordeon',
+            'Hero Banner' => 'Baner hero',
+            'Latest Posts' => 'Najnowsze wpisy',
+            'Services' => 'Usługi',
+            'Testimonials Slider' => 'Slider opinii',
+            'Text image' => 'Tekst i obraz',
+            'Testowy' => 'Testowy',
+            'Two Columns' => 'Dwie kolumny',
+            'Two Columns Column' => 'Kolumna dwóch kolumn',
+        ];
+
+        if (preg_match('/^Generated for the (.+) block\.$/', $value, $matches) === 1) {
+            $name = $matches[1];
+            return sprintf('Wygenerowane dla bloku %s.', $blockNames[$name] ?? $name);
+        }
+
+        if (preg_match('/^Block: (.+)$/', $value, $matches) === 1) {
+            $name = $matches[1];
+            return 'Blok: ' . ($blockNames[$name] ?? $name);
+        }
+
         $translations = [
             'Theme settings' => 'Ustawienia motywu',
             'Custom code' => 'Własny kod',
@@ -603,14 +630,29 @@ class Acf
             'Image' => 'Obraz',
             'Image position' => 'Pozycja obrazka',
             'Link' => 'Link',
+            'Container Group Block' => 'Blok grupy kontenera',
+            'Container settings' => 'Ustawienia kontenera',
+            'Container width' => 'Szerokość kontenera',
+            'Sets the width of the inner container.' => 'Ustawia szerokość wewnętrznego kontenera.',
+            'Default' => 'Domyślna',
+            'Wide' => 'Szeroka',
+            'Medium' => 'Średnia',
+            'Narrow' => 'Wąska',
+            'Full' => 'Pełna szerokość',
             'Section settings' => 'Ustawienia sekcji',
-            'Section background' => 'Tło sekcji',
-            'Adds the section background helper class.' => 'Dodaje pomocniczą klasę tła sekcji.',
-            'Use .section-bg on this block' => 'Użyj klasy .section-bg dla tego bloku',
-            'Gap top' => 'Odstęp zewnętrzny u góry',
-            'Gap bottom' => 'Odstęp zewnętrzny na dole',
-            'Space top' => 'Padding u góry',
-            'Space bottom' => 'Padding na dole',
+            'Spacing settings' => 'Paddingi i marginesy',
+            'Background color' => 'Kolor tła',
+            'Select a background color for this section.' => 'Wybierz kolor tła dla tej sekcji.',
+            'Block ID' => 'ID bloku',
+            'Optional HTML id attribute for anchor links, e.g. contact-section.' => 'Opcjonalny atrybut HTML id do linków kotwiczących, np. kontakt.',
+            'Surface' => 'Powierzchnia',
+            'Surface strong' => 'Powierzchnia mocna',
+            'Background' => 'Tło strony',
+            'White' => 'Białe',
+            'Gap top' => 'Margines górny',
+            'Gap bottom' => 'Margines dolny',
+            'Space top' => 'Padding górny',
+            'Space bottom' => 'Padding dolny',
             'None' => 'Brak',
             'Right' => 'Po prawej',
             'Left' => 'Po lewej',
@@ -628,6 +670,7 @@ class Acf
             'Author name' => 'Imię autora',
             'Author role' => 'Rola autora',
             'Latest Posts Block' => 'Blok Najnowsze wpisy',
+            'Intro text displayed above the posts list.' => 'Tekst wstępny wyświetlany nad listą wpisów.',
             'Posts per page' => 'Liczba wpisów na stronę',
             'Button label' => 'Etykieta przycisku',
             'Loading label' => 'Etykieta ładowania',
@@ -645,6 +688,8 @@ class Acf
             'Services Block' => 'Blok Usługi',
             'Testimonials Block' => 'Blok Testimonials',
             'Testimonials Slider Block' => 'Blok Slider opinii',
+            'Two Columns' => 'Dwie kolumny',
+            'Two Columns Column' => 'Kolumna dwóch kolumn',
             'Tracking' => 'Śledzenie',
             'Google Tag Manager ID' => 'ID Google Tag Manager',
             'Google Analytics ID' => 'ID Google Analytics',

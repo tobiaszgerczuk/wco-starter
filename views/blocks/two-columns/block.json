@@ -1,0 +1,30 @@
+{
+  "apiVersion": 2,
+  "name": "acf/two-columns",
+  "title": "Two Columns",
+  "description": "Two-column layout block with container width and ratio controls.",
+  "category": "wco-blocks",
+  "icon": "columns",
+  "keywords": [
+    "columns",
+    "layout",
+    "split",
+    "content"
+  ],
+  "supports": {
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "attributes": {
+    "containerWidth": {
+      "type": "string",
+      "default": "default"
+    },
+    "columnsRatio": {
+      "type": "string",
+      "default": "50-50"
+    }
+  }
+}

@@ -85,12 +85,12 @@
             "menu_order": 3
         },
         {
-            "key": "field_hero_banner_section_has_background",
-            "label": "Section background",
-            "name": "section_has_background",
+            "key": "field_hero_banner_section_background_color",
+            "label": "Background color",
+            "name": "section_background_color",
             "aria-label": "",
-            "type": "true_false",
-            "instructions": "Adds the section background helper class.",
+            "type": "color_picker",
+            "instructions": "Select a background color for this section.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -98,13 +98,50 @@
                 "class": "",
                 "id": ""
             },
-            "message": "Use .section-bg on this block",
-            "default_value": 0,
-            "ui": 1,
-            "ui_on_text": "On",
-            "ui_off_text": "Off",
+            "default_value": "",
             "parent": "group_block_hero-banner",
-            "menu_order": 4
+            "menu_order": 4,
+            "return_format": "string",
+            "enable_opacity": 0
+        },
+        {
+            "key": "field_hero_banner_block_id",
+            "label": "Block ID",
+            "name": "block_id",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Optional HTML id attribute for anchor links, e.g. contact-section.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "parent": "group_block_hero-banner"
+        },
+        {
+            "key": "field_hero_banner_spacing_tab",
+            "label": "Spacing settings",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "parent": "group_block_hero-banner"
         },
         {
             "key": "field_hero_banner_section_gap_top",
@@ -136,7 +173,7 @@
             "ajax": 0,
             "placeholder": "",
             "parent": "group_block_hero-banner",
-            "menu_order": 5
+            "menu_order": 7
         },
         {
             "key": "field_hero_banner_section_gap_bottom",
@@ -168,7 +205,7 @@
             "ajax": 0,
             "placeholder": "",
             "parent": "group_block_hero-banner",
-            "menu_order": 6
+            "menu_order": 8
         },
         {
             "key": "field_hero_banner_section_space_top",
@@ -200,7 +237,7 @@
             "ajax": 0,
             "placeholder": "",
             "parent": "group_block_hero-banner",
-            "menu_order": 7
+            "menu_order": 9
         },
         {
             "key": "field_hero_banner_section_space_bottom",
@@ -232,7 +269,7 @@
             "ajax": 0,
             "placeholder": "",
             "parent": "group_block_hero-banner",
-            "menu_order": 8
+            "menu_order": 10
         }
     ],
     "location": [

@@ -1,0 +1,32 @@
+.block-two-columns__column {
+  min-width: 0;
+  align-self: start;
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+
+  > .block-editor-inner-blocks {
+    width: 100%;
+  }
+
+  > .block-editor-inner-blocks > .block-editor-block-list__layout {
+    display: block;
+    width: 100%;
+  }
+
+  .wp-block {
+    max-width: 100%;
+  }
+
+  .block-list-appender,
+  .block-editor-button-block-appender {
+    display: block;
+    width: 100%;
+    margin-top: 0.75rem;
+  }
+}

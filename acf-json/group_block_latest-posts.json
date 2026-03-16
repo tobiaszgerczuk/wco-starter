@@ -156,12 +156,12 @@
             "endpoint": 0
         },
         {
-            "key": "field_latest_posts_section_has_background",
-            "label": "Section background",
-            "name": "section_has_background",
+            "key": "field_latest_posts_section_background_color",
+            "label": "Background color",
+            "name": "section_background_color",
             "aria-label": "",
-            "type": "true_false",
-            "instructions": "Adds the section background helper class.",
+            "type": "color_picker",
+            "instructions": "Select a background color for this section.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -169,11 +169,46 @@
                 "class": "",
                 "id": ""
             },
-            "message": "Use .section-bg on this block",
-            "default_value": 0,
-            "ui": 1,
-            "ui_on_text": "On",
-            "ui_off_text": "Off"
+            "default_value": "",
+            "return_format": "string",
+            "enable_opacity": 0
+        },
+        {
+            "key": "field_latest_posts_block_id",
+            "label": "Block ID",
+            "name": "block_id",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Optional HTML id attribute for anchor links, e.g. contact-section.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_latest_posts_spacing_tab",
+            "label": "Spacing settings",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0
         },
         {
             "key": "field_latest_posts_section_gap_top",

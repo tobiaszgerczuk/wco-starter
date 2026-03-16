@@ -5,8 +5,8 @@
 @use "base/mixins" as *;
 @use "components/buttons";
 
-.editor-styles-wrapper,
-:root {
+:root,
+.editor-styles-wrapper [data-type^="acf/"] {
   --font-family-base: #{$font-family-base};
   --font-family-heading: #{$font-family-heading};
   --font-family-accent: #{$font-family-accent};
@@ -38,7 +38,7 @@
   --container-gutter-mobile: #{$container-gutter-mobile};
 }
 
-.editor-styles-wrapper :where(.wp-block) {
+.editor-styles-wrapper [data-type^="acf/"] :where(.wp-block) {
     max-width: 80vw;
 }
 
@@ -72,7 +72,7 @@
   }
 
   .section-bg {
-    background: var(--color-surface);
+    background: var(--section-background-color, var(--color-surface));
   }
 
   .section-gap-top-none { --section-gap-top: #{$section-space-none}; }

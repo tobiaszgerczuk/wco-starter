@@ -1,4 +1,5 @@
 import './container-group-editor.js';
+import './two-columns-editor.js';
 import swipers from './modules/swipers.js';
 
 function initBlockModules() {

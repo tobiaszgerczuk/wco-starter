@@ -1,0 +1,15 @@
+{
+  "apiVersion": 2,
+  "name": "acf/two-columns-column",
+  "title": "Two Columns Column",
+  "description": "Inner column for the Two Columns layout block.",
+  "category": "wco-blocks",
+  "icon": "excerpt-view",
+  "parent": [
+    "acf/two-columns"
+  ],
+  "supports": {
+    "html": false,
+    "reusable": false
+  }
+}

@@ -1,0 +1,17 @@
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  {% if container_class %}
+    <div class="{{ container_class }}">
+  {% endif %}
+
+  <div class="block-two-columns__grid {{ ratio_class }}">
+    {{ content|raw }}
+  </div>
+
+  {% if is_preview and content is empty %}
+    <p class="block-two-columns__placeholder">Add blocks inside the left and right columns.</p>
+  {% endif %}
+
+  {% if container_class %}
+    </div>
+  {% endif %}
+</section>

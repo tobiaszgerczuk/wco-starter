@@ -1,4 +1,5 @@
 {
+    "ID": 145,
     "key": "group_block_container-group",
     "title": "Container Group Block",
     "fields": [
@@ -16,7 +17,9 @@
                 "id": ""
             },
             "placement": "top",
-            "endpoint": 0
+            "endpoint": 0,
+            "parent": "group_block_container-group",
+            "menu_order": 0
         },
         {
             "key": "field_container_group_container_width",
@@ -45,7 +48,9 @@
             "allow_null": 0,
             "ui": 0,
             "ajax": 0,
-            "placeholder": ""
+            "placeholder": "",
+            "parent": "group_block_container-group",
+            "menu_order": 1
         },
         {
             "key": "field_container_group_section_tab",
@@ -61,15 +66,17 @@
                 "id": ""
             },
             "placement": "top",
-            "endpoint": 0
+            "endpoint": 0,
+            "parent": "group_block_container-group",
+            "menu_order": 2
         },
         {
-            "key": "field_container_group_section_has_background",
-            "label": "Section background",
-            "name": "section_has_background",
+            "key": "field_container_group_section_background_color",
+            "label": "Background color",
+            "name": "section_background_color",
             "aria-label": "",
-            "type": "true_false",
-            "instructions": "Adds the section background helper class.",
+            "type": "color_picker",
+            "instructions": "Select a background color for this section.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -77,11 +84,50 @@
                 "class": "",
                 "id": ""
             },
-            "message": "Use .section-bg on this block",
-            "default_value": 0,
-            "ui": 1,
-            "ui_on_text": "On",
-            "ui_off_text": "Off"
+            "default_value": "",
+            "return_format": "string",
+            "parent": "group_block_container-group",
+            "menu_order": 3,
+            "enable_opacity": 0
+        },
+        {
+            "key": "field_container_group_block_id",
+            "label": "Block ID",
+            "name": "block_id",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Optional HTML id attribute for anchor links, e.g. contact-section.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "parent": "group_block_container-group"
+        },
+        {
+            "key": "field_container_group_spacing_tab",
+            "label": "Spacing settings",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "parent": "group_block_container-group"
         },
         {
             "key": "field_container_group_section_gap_top",
@@ -110,7 +156,9 @@
             "allow_null": 0,
             "ui": 0,
             "ajax": 0,
-            "placeholder": ""
+            "placeholder": "",
+            "parent": "group_block_container-group",
+            "menu_order": 6
         },
         {
             "key": "field_container_group_section_gap_bottom",
@@ -139,7 +187,9 @@
             "allow_null": 0,
             "ui": 0,
             "ajax": 0,
-            "placeholder": ""
+            "placeholder": "",
+            "parent": "group_block_container-group",
+            "menu_order": 7
         },
         {
             "key": "field_container_group_section_space_top",
@@ -168,7 +218,9 @@
             "allow_null": 0,
             "ui": 0,
             "ajax": 0,
-            "placeholder": ""
+            "placeholder": "",
+            "parent": "group_block_container-group",
+            "menu_order": 8
         },
         {
             "key": "field_container_group_section_space_bottom",
@@ -197,7 +249,9 @@
             "allow_null": 0,
             "ui": 0,
             "ajax": 0,
-            "placeholder": ""
+            "placeholder": "",
+            "parent": "group_block_container-group",
+            "menu_order": 9
         }
     ],
     "location": [
@@ -218,11 +272,13 @@
     "active": true,
     "description": "Generated for the Container Group block.",
     "show_in_rest": 0,
+    "display_title": "",
     "wco_metadata": {
         "block_name": "container-group",
         "icon": "align-wide",
         "category": "wco-blocks",
         "text_domain": "wco-starter"
     },
-    "modified": 1760000000
+    "modified": 1760000000,
+    "_valid": true
 }

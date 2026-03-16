@@ -25,6 +25,8 @@ $context['section_classes'] = SectionSettings::build_classes(
     $fields,
     ['block-latest-posts', !empty($context['block']['align']) ? 'align' . $context['block']['align'] : '']
 );
+$context['section_id'] = SectionSettings::section_id($fields);
+$context['section_style'] = SectionSettings::inline_style($fields);
 $context['posts'] = $posts;
 $context['posts_query'] = [
     'page' => 1,

@@ -1,4 +1,4 @@
-<section class="{{ section_classes }}">
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
   <div class="container">
     <div class="block-text-image__inner {{ fields['text_image_image_position'] == 'left' ? 'block-text-image__inner--image-left' : 'block-text-image__inner--image-right' }}">
       <div class="block-text-image__content">

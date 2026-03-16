@@ -5,6 +5,7 @@ namespace WCO\Starter\Core;
 use Timber\Timber;
 use WCO\Starter\Core\Acf;
 use WCO\Starter\Core\Assets;
+use WCO\Starter\Core\Media;
 use WCO\Starter\Core\Templating;
 use WCO\Starter\Blocks\Registry as BlocksRegistry;
 use WCO\Starter\Rest\Api as RestApi;
@@ -27,6 +28,9 @@ class Theme
         // Timber/Twig
         add_filter('timber/context', [Templating::class, 'add_to_context']);
         add_filter('timber/twig', [Templating::class, 'extend_twig']);
+
+        // Media helpers / upload support
+        Media::boot();
 
         // ACF Local JSON
         Acf::boot();
