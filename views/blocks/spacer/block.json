@@ -1,0 +1,11 @@
+{
+    "title": "Spacer",
+    "description": "Spacing separator block with independent mobile and desktop height.",
+    "category": "wco-blocks",
+    "icon": "minus",
+    "keywords": [
+        "spacer",
+        "space",
+        "separator"
+    ]
+}

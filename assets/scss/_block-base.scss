@@ -36,6 +36,13 @@
   --container-gutter-desktop: #{$container-gutter-desktop};
   --container-gutter-tablet: #{$container-gutter-tablet};
   --container-gutter-mobile: #{$container-gutter-mobile};
+
+  --section-space-none: #{$section-space-none};
+  --section-space-xs: #{$section-space-xs};
+  --section-space-sm: #{$section-space-sm};
+  --section-space-md: #{$section-space-md};
+  --section-space-lg: #{$section-space-lg};
+  --section-space-xl: #{$section-space-xl};
 }
 
 .editor-styles-wrapper [data-type^="acf/"] :where(.wp-block) {

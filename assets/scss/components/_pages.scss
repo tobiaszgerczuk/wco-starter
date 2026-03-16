@@ -37,6 +37,47 @@
 
 .subpage-content {
 	padding: 4rem 0;
+
+  > :where(p, ul, ol, h1, h2, h3, h4, h5, h6, blockquote, pre, table, .wp-block-image, .wp-block-heading, .wp-block-list, .wp-block-quote, .wp-block-table, .wp-block-columns, .wp-block-group, .wp-block-cover, .wp-block-media-text, .wp-block-gallery, .wp-block-spacer, .wp-block-separator, .wp-block-embed) {
+    @include container;
+  }
+
+  .alignwide {
+    max-width: calc(var(--container-wide) + (var(--container-gutter-desktop) * 2));
+  }
+
+  .alignfull {
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .aligncenter,
+  .wp-block-image.aligncenter,
+  figure.aligncenter {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .wp-block-image.aligncenter img,
+  figure.aligncenter img,
+  img.aligncenter {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .alignleft {
+    float: left;
+    margin-right: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .alignright {
+    float: right;
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
 }
 
 .archive-hero,

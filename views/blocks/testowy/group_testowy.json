@@ -52,7 +52,7 @@
             "label": "Section settings",
             "name": "",
             "aria-label": "",
-            "type": "tab",
+            "type": "accordion",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -61,10 +61,11 @@
                 "class": "",
                 "id": ""
             },
-            "placement": "top",
             "endpoint": 0,
             "parent": "group_block_testowy",
-            "menu_order": 2
+            "menu_order": 2,
+            "open": 0,
+            "multi_expand": 1
         },
         {
             "key": "field_testowy_section_background_color",
@@ -112,7 +113,7 @@
             "label": "Spacing settings",
             "name": "",
             "aria-label": "",
-            "type": "tab",
+            "type": "accordion",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -121,9 +122,10 @@
                 "class": "",
                 "id": ""
             },
-            "placement": "top",
             "endpoint": 0,
-            "parent": "group_block_testowy"
+            "parent": "group_block_testowy",
+            "open": 0,
+            "multi_expand": 1
         },
         {
             "key": "field_testowy_section_gap_top",

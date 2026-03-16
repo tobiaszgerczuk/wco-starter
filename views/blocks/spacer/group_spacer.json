@@ -1,0 +1,241 @@
+{
+    "key": "group_block_spacer",
+    "title": "Spacer Block",
+    "fields": [
+        {
+            "key": "field_spacer_desktop_tab",
+            "label": "Desktop settings",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_spacer_desktop_mode",
+            "label": "Desktop source",
+            "name": "spacer_desktop_mode",
+            "aria-label": "",
+            "type": "select",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "scale": "Theme scale",
+                "custom": "Custom px"
+            },
+            "default_value": "scale",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_spacer_desktop_size",
+            "label": "Desktop size",
+            "name": "spacer_desktop_size",
+            "aria-label": "",
+            "type": "select",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_spacer_desktop_mode",
+                        "operator": "==",
+                        "value": "scale"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "none": "None",
+                "xs": "XS",
+                "sm": "SM",
+                "md": "MD",
+                "lg": "LG",
+                "xl": "XL"
+            },
+            "default_value": "md",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_spacer_desktop_custom",
+            "label": "Desktop custom px",
+            "name": "spacer_desktop_custom",
+            "aria-label": "",
+            "type": "number",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_spacer_desktop_mode",
+                        "operator": "==",
+                        "value": "custom"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "min": 0,
+            "max": 600,
+            "step": 1,
+            "append": "px"
+        },
+        {
+            "key": "field_spacer_mobile_tab",
+            "label": "Mobile settings",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_spacer_mobile_mode",
+            "label": "Mobile source",
+            "name": "spacer_mobile_mode",
+            "aria-label": "",
+            "type": "select",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "scale": "Theme scale",
+                "custom": "Custom px"
+            },
+            "default_value": "scale",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_spacer_mobile_size",
+            "label": "Mobile size",
+            "name": "spacer_mobile_size",
+            "aria-label": "",
+            "type": "select",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_spacer_mobile_mode",
+                        "operator": "==",
+                        "value": "scale"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "none": "None",
+                "xs": "XS",
+                "sm": "SM",
+                "md": "MD",
+                "lg": "LG",
+                "xl": "XL"
+            },
+            "default_value": "sm",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_spacer_mobile_custom",
+            "label": "Mobile custom px",
+            "name": "spacer_mobile_custom",
+            "aria-label": "",
+            "type": "number",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_spacer_mobile_mode",
+                        "operator": "==",
+                        "value": "custom"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "min": 0,
+            "max": 600,
+            "step": 1,
+            "append": "px"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/spacer"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Generated for the Spacer block.",
+    "show_in_rest": 0,
+    "wco_metadata": {
+        "block_name": "spacer",
+        "icon": "minus",
+        "category": "wco-blocks",
+        "text_domain": "wco-starter"
+    },
+    "modified": 1773651600
+}

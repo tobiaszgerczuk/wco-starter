@@ -1,0 +1,34 @@
+@use "../../../assets/scss/base/mixins" as *;
+
+.block-spacer {
+  height: var(--spacer-height-desktop);
+
+  @include mobile {
+    height: var(--spacer-height-mobile, var(--spacer-height-desktop));
+  }
+
+  &.is-preview {
+    display: grid;
+    place-items: center;
+    min-height: 2.5rem;
+    border: 1px dashed var(--color-border);
+    background: repeating-linear-gradient(
+      -45deg,
+      rgba(0, 0, 0, 0.02),
+      rgba(0, 0, 0, 0.02) 12px,
+      rgba(0, 0, 0, 0.04) 12px,
+      rgba(0, 0, 0, 0.04) 24px
+    );
+  }
+
+  &__label {
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    background: var(--color-white);
+    color: var(--color-muted);
+    font-size: 0.75rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
