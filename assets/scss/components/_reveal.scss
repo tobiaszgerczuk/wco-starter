@@ -1,0 +1,29 @@
+[data-reveal] {
+  transition:
+    opacity var(--reveal-duration, 600ms) ease,
+    transform var(--reveal-duration, 600ms) ease;
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+
+  &.is-reveal-ready:not(.is-revealed) {
+    opacity: 0;
+    transform: translate3d(0, 1.5rem, 0);
+  }
+
+  &.is-reveal-ready.is-revealed {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    transition: none;
+
+    &.is-reveal-ready:not(.is-revealed),
+    &.is-reveal-ready.is-revealed {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

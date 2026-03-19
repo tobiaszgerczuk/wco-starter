@@ -18,9 +18,20 @@ class Media
         return $mimes;
     }
 
-    public static function fix_svg_filetype(array $data, string $file, string $filename, array $mimes, $realMime): array
+    public static function fix_svg_filetype(array $data, string $file, string $filename, ?array $mimes, $realMime): array
     {
-        if (!str_ends_with(strtolower($filename), '.svg')) {
+        $extension = strtolower((string) pathinfo($filename, PATHINFO_EXTENSION));
+
+        if ($extension !== 'svg') {
+            return $data;
+        }
+
+        if ($filename === '' || !is_file($file)) {
+            return $data;
+        }
+
+        $allowedMimes = is_array($mimes) ? $mimes : [];
+        if ($allowedMimes !== [] && !isset($allowedMimes['svg'])) {
             return $data;
         }
 

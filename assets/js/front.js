@@ -1,12 +1,10 @@
 import CustomBehaviors from './components/CustomBehaviors.js';
 import LazyLoader from './components/lazyload.js';
 import Parallax from './components/parralax.js';
+import Reveal from './components/Reveal.js';
 import Header from './modules/header.js';
 import swipers from './modules/swipers.js';
 import WcoShop from './ecommerce/woocommerce.js';
-
-// import AOS from 'aos';
-// import 'aos/dist/aos.css';
 // Optional: uncomment when a block needs Swiper.
 // import Swiper from 'swiper';
 // import { Navigation, Pagination, Autoplay } from 'swiper/modules';
@@ -39,13 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
   new LazyLoader();
   new CustomBehaviors();
   new Parallax('[data-parallax]', 0.4);
+  new Reveal();
   new WcoShop();
   initBlockModules();
-
-  // AOS.init({
-  //   duration: 800,
-  //   once: true,
-  // });
 
   // If you install Swiper from npm, uncomment imports above and set the engine here.
   // swipers.setEngine(Swiper);

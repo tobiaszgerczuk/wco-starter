@@ -5,7 +5,6 @@
  * - Smooth scroll
  * - Scroll spy
  * - Back to top
- * - AOS (Animate On Scroll)
  */
 class CustomBehaviors {
   constructor(options = {}) {
@@ -14,15 +13,6 @@ class CustomBehaviors {
       scrollOffset: () => 80,
       scrollSpy: false,
       backToTop: false,
-      aos: {
-        enable: true,
-        once: true,
-        duration: 600,
-        easing: 'ease-out-cubic',
-        offset: 100,
-        delay: 0,
-        anchorPlacement: 'top-bottom'
-      },
       ...options
     };
 
@@ -33,7 +23,6 @@ class CustomBehaviors {
     if (this.options.smoothScroll) this.initSmoothScroll();
     if (this.options.scrollSpy) this.initScrollSpy();
     if (this.options.backToTop) this.initBackToTop();
-    if (this.options.aos.enable) this.initAOS();
   }
 
   // ==============================================================
@@ -110,17 +99,6 @@ class CustomBehaviors {
     btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 
-  // ==============================================================
-  // 4. AOS – Animate On Scroll
-  // ==============================================================
-  async initAOS() {
-    try {
-      const AOS = await import('aos');
-      AOS.init(this.options.aos);
-    } catch (err) {
-      console.warn('AOS nie załadowany:', err);
-    }
-  }
 }
 
 

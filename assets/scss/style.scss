@@ -11,10 +11,9 @@
 @use "components/buttons";
 @use "components/custom";
 @use "components/lazy";
+@use "components/reveal";
 @use "components/forms";
 @use "components/pages";
 
 @use "woocommerce/shop";
 @use "woocommerce/mini-cart";
-
-@import url("~aos/dist/aos.css");
