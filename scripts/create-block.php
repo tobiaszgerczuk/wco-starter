@@ -149,7 +149,7 @@ function build_twig_template(string $slug, string $title, string $fieldPrefix, s
 
       {% if fields['{$fieldPrefix}_content'] %}
         <div class="block-{$slug}__content">
-          {{ fields['{$fieldPrefix}_content']|wpautop }}
+          {{ fields['{$fieldPrefix}_content']|raw }}
         </div>
       {% elseif is_preview %}
         <p class="block-{$slug}__placeholder">Add fields for the {$slug} block in ACF.</p>
@@ -291,7 +291,7 @@ function build_field_group_json(string $slug, string $title, string $fieldPrefix
                 'label' => 'Content',
                 'name' => $fieldPrefix . '_content',
                 'aria-label' => '',
-                'type' => 'textarea',
+                'type' => 'wysiwyg',
                 'instructions' => '',
                 'required' => 0,
                 'conditional_logic' => 0,
@@ -301,10 +301,11 @@ function build_field_group_json(string $slug, string $title, string $fieldPrefix
                     'id' => '',
                 ],
                 'default_value' => '',
-                'maxlength' => '',
-                'rows' => 4,
+                'tabs' => 'all',
+                'toolbar' => 'full',
+                'media_upload' => 1,
+                'delay' => 0,
                 'placeholder' => '',
-                'new_lines' => 'wpautop',
             ],
         ], build_section_fields($fieldPrefix)),
         'location' => [

@@ -50,7 +50,7 @@
             "label": "Content",
             "name": "text_image_content",
             "aria-label": "",
-            "type": "textarea",
+            "type": "wysiwyg",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -59,12 +59,13 @@
                 "id": ""
             },
             "default_value": "",
-            "maxlength": "",
-            "rows": 5,
             "placeholder": "",
-            "new_lines": "wpautop",
             "parent": "group_block_text-image",
-            "menu_order": 2
+            "menu_order": 2,
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
         },
         {
             "key": "field_text_image_image",

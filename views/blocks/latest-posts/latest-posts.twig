@@ -3,7 +3,7 @@
     {% include 'modules/section-header.twig' with {
       eyebrow: fields['latest_posts_eyebrow'],
       title: fields['latest_posts_title'] ?: 'Latest posts',
-      intro: fields['latest_posts_intro'] ? fields['latest_posts_intro']|wpautop : null,
+      intro: fields['latest_posts_intro'] ?: null,
       class: 'block-latest-posts__header'
     } only %}
 

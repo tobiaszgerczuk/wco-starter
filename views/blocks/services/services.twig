@@ -9,7 +9,7 @@
 
       {% if fields['services_intro'] %}
         <div class="block-services__intro">
-          {{ fields['services_intro']|wpautop }}
+          {{ fields['services_intro']|raw }}
         </div>
       {% endif %}
     </div>
@@ -28,7 +28,7 @@
 
             {% if item.content %}
               <div class="block-services__card-content">
-                {{ item.content|wpautop }}
+                {{ item.content|raw }}
               </div>
             {% endif %}
 

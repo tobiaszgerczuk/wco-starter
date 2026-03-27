@@ -1,0 +1,24 @@
+{% if name %}
+  <span class="btn__icon" aria-hidden="true">
+    {% if name == 'arrow-right' %}
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M5 12h14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13 5l7 7-7 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    {% elseif name == 'arrow-up-right' %}
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M7 17L17 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9 7h8v8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    {% elseif name == 'chevron-right' %}
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    {% elseif name == 'plus' %}
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M12 5v14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M5 12h14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    {% endif %}
+  </span>
+{% endif %}

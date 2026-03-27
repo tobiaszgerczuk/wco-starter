@@ -5,7 +5,7 @@
 
       {% if fields['testowy_content'] %}
         <div class="block-testowy__content">
-          {{ fields['testowy_content']|wpautop }}
+          {{ fields['testowy_content']|raw }}
         </div>
       {% elseif is_preview %}
         <p class="block-testowy__placeholder">Add fields for the testowy block in ACF.</p>

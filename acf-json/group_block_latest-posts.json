@@ -35,7 +35,7 @@
             "label": "Intro",
             "name": "latest_posts_intro",
             "aria-label": "",
-            "type": "textarea",
+            "type": "wysiwyg",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -43,8 +43,10 @@
                 "class": "",
                 "id": ""
             },
-            "rows": 4,
-            "new_lines": "wpautop"
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
         },
         {
             "key": "field_latest_posts_posts_per_page",

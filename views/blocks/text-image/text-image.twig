@@ -10,7 +10,7 @@
 
         {% if fields['text_image_content'] %}
           <div class="block-text-image__text">
-            {{ fields['text_image_content']|wpautop }}
+            {{ fields['text_image_content']|raw }}
           </div>
         {% endif %}
 

@@ -1,5 +1,8 @@
 {% set button_variant = variant|default('primary') %}
 {% set button_target = target|default(link.target|default('')) %}
+{% set button_label = label|default(link.title|default('Learn more')) %}
+{% set button_icon = icon|default(null) %}
+{% set button_icon_position = icon_position|default('after') %}
 
 {% if link %}
   <a
@@ -8,6 +11,18 @@
     {% if button_target %}target="{{ button_target }}"{% endif %}
     {% if button_target == '_blank' %}rel="noopener noreferrer"{% endif %}
   >
-    {{ label|default(link.title|default('Learn more')) }}
+    {% if button_icon and button_icon_position == 'before' %}
+      {% include 'components/button-icon.twig' with {
+        name: button_icon
+      } only %}
+    {% endif %}
+
+    <span class="btn__label">{{ button_label }}</span>
+
+    {% if button_icon and button_icon_position != 'before' %}
+      {% include 'components/button-icon.twig' with {
+        name: button_icon
+      } only %}
+    {% endif %}
   </a>
 {% endif %}

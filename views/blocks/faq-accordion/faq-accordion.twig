@@ -9,7 +9,7 @@
 
       {% if fields['faq_accordion_intro'] %}
         <div class="block-faq-accordion__intro">
-          {{ fields['faq_accordion_intro']|wpautop }}
+          {{ fields['faq_accordion_intro']|raw }}
         </div>
       {% endif %}
     </div>
@@ -36,7 +36,7 @@
               hidden
               data-accordion-panel
             >
-              {{ item.answer|wpautop }}
+              {{ item.answer|raw }}
             </div>
           </article>
         {% endfor %}

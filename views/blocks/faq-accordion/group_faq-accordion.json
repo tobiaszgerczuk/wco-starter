@@ -50,7 +50,7 @@
             "label": "Intro",
             "name": "faq_accordion_intro",
             "aria-label": "",
-            "type": "textarea",
+            "type": "wysiwyg",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -59,12 +59,13 @@
                 "id": ""
             },
             "default_value": "",
-            "maxlength": "",
-            "rows": 4,
             "placeholder": "",
-            "new_lines": "wpautop",
             "parent": "group_block_faq-accordion",
-            "menu_order": 2
+            "menu_order": 2,
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
         },
         {
             "key": "field_faq_accordion_items",
@@ -106,7 +107,7 @@
                     "label": "Answer",
                     "name": "answer",
                     "aria-label": "",
-                    "type": "textarea",
+                    "type": "wysiwyg",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -115,10 +116,11 @@
                         "id": ""
                     },
                     "default_value": "",
-                    "maxlength": "",
-                    "rows": 4,
                     "placeholder": "",
-                    "new_lines": "wpautop"
+                    "tabs": "all",
+                    "toolbar": "full",
+                    "media_upload": 1,
+                    "delay": 0
                 }
             ],
             "min": 0,

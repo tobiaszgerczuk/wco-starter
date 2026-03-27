@@ -3,7 +3,7 @@
     {% include 'modules/section-header.twig' with {
       eyebrow: fields['testimonials_slider_eyebrow'],
       title: fields['testimonials_slider_title'] ?: 'Testimonials',
-      intro: fields['testimonials_slider_intro'] ? fields['testimonials_slider_intro']|wpautop : null,
+      intro: fields['testimonials_slider_intro'] ?: null,
       class: 'block-testimonials-slider__header'
     } only %}
 
@@ -15,7 +15,7 @@
               <div class="block-testimonials-slider__card">
                 {% if item.quote %}
                   <blockquote class="block-testimonials-slider__quote">
-                    {{ item.quote|wpautop }}
+                    {{ item.quote|raw }}
                   </blockquote>
                 {% endif %}
 

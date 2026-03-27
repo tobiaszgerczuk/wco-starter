@@ -5,7 +5,7 @@
 
 		  {% if fields['hero_banner_content'] %}
 			  <div class="block-hero-banner__content">
-				  {{ fields['hero_banner_content']|wpautop }}
+				  {{ fields['hero_banner_content']|raw }}
 			  </div>
 		  {% elseif is_preview %}
 			  <p class="block-hero-banner__placeholder">Add fields for the hero-banner block in ACF.</p>
