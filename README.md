@@ -117,10 +117,14 @@ Presety generatora:
 
 ```bash
 npm run create-block -- testimonials-slider "Testimonials Slider" --preset=slider
+npm run create-block -- promo "Promo" --preset=content
+npm run create-block -- team "Team" --preset=items
 ```
 
 Aktualnie dostępne:
-- `--preset=basic` (domyślny)
+- `--preset=content` — blok, którego treść (nagłówek, tekst, obraz, przyciski) edytujesz **bezpośrednio w podglądzie** (patrz niżej)
+- `--preset=items` — blok nadrzędny + blok potomny `<slug>-item` (lista kafelków, pytań, opinii…) z przyciskiem „+” w podglądzie
+- `--preset=basic` (domyślny, starszy model: pola w ACF, edycja z panelu bocznym)
 - `--preset=slider` (szkielet pod Swiper Registry)
 
 Po wygenerowaniu:
@@ -141,6 +145,40 @@ Dry run:
 
 ```bash
 npm run create-block -- hero-banner "Hero Banner" --dry-run
+```
+
+## Bloki z edycją w podglądzie (InnerBlocks)
+
+Domyślny sposób budowania sekcji w tym starterze: **ACF trzyma tylko ustawienia, a treść to zwykłe bloki WP wewnątrz bloku**. Dzięki temu teksty, obrazy i przyciski klikasz i edytujesz bezpośrednio na podglądzie sekcji, bez ołówka i panelu bocznego.
+
+- Blok jest rejestrowany przez `block.json` (klucze `name` i `acf`) — `Registry::register_json_blocks()`.
+- Treść startową definiuje szablon w `<slug>.include.php` (`inner_template`): tablica `[nazwa, atrybuty, dzieci]`. Pomocnicze: `BlockContext::head_template()` (nadtytuł + nagłówek + lead), `BlockContext::buttons_template()`.
+- W Twigu wstawiasz `{{ inner_blocks(inner_template) }}` (opcjonalnie `inner_blocks(inner_template, inner_allowed)` — lista dozwolonych bloków). W edytorze funkcja drukuje tag ACF `<InnerBlocks />`, na froncie zwraca czystą zapisaną treść (bez dodatkowego `div.acf-innerblocks-container`, który ACF inaczej dokłada na każdym poziomie).
+- Listy elementów (kafelki, FAQ, opinie, statystyki) to bloki potomne (`"parent": ["acf/features"]` w `block.json`), a nie repeatery ACF — dodajesz, przestawiasz i usuwasz je w podglądzie.
+- Układ siatki piszesz mixinem `inner-layout`, który działa i na froncie, i w edytorze (`@include inner-layout { @include grid-columns(3); }`).
+- Klasy `className` w szablonie (`is-eyebrow`, `is-lead`, `is-span-all`, `is-value` …) są stylowane w `assets/scss/components/_block-content.scss` i w SCSS bloku.
+- Przyciski to natywny `core/button` z wariantami `secondary`, `outline`, `link` (style w `components/_buttons.scss`).
+
+### Wspólne ustawienia sekcji
+
+Tło, szerokość treści, ID bloku i odstępy to **jedna** grupa ACF: `acf-json/group_section_settings.json`. Dołączasz ją do bloku jedną linijką w `block.json`:
+
+```json
+"wco": { "sectionSettings": true }
+```
+
+Lokalizacje grupy uzupełnia `Registry::section_settings_locations()`, więc nowy blok nie potrzebuje własnej kopii pól. Pola specyficzne dla bloku (kolumny, wyrównanie…) są w `group_<slug>.json` bloku. Wartości domyślne ustawień sekcji są w `BlockContext::SECTION_DEFAULTS` (działają też dla bloków wstawionych ze wzorca).
+
+### Gotowe sekcje
+
+`hero`, `section-heading`, `text-image`, `cta`, `separator`, `features` (+`feature-item`), `faq` (+`faq-item`, akordeon i dane strukturalne FAQPage), `testimonials` (+`testimonial-item`), `stats` (+`stat-item`), `logos`, `gallery`, `latest-posts`. Wcześniejsze: `container-group`, `two-columns`, `spacer`, `testimonials-slider`.
+
+### Wzorce (patterns)
+
+Gotowe układy stron są w `patterns/*.php` (`landing`, `about`, `faq`, `blog-intro`) i pojawiają się w edytorze w kategorii **WCO sections**. WordPress cache'uje listę wzorców motywu — po dodaniu pliku wyczyść ją:
+
+```bash
+docker compose run --rm wp-cli wp eval 'wp_get_theme()->delete_pattern_cache();'
 ```
 
 ## Struktura bloku
@@ -203,17 +241,12 @@ Nowe gotowce:
 
 ## Gotowe bloki startowe
 
-W starterze są już przygotowane przykładowe bloki:
-- `text-image`
-- `faq-accordion`
-- `services`
+W starterze są już przygotowane przykładowe bloki (pełna lista nowych sekcji — wyżej):
 - `testimonials-slider`
-- `latest-posts`
 - `container-group`
 - `spacer`
 
 `testimonials-slider` jest spięty z registry swiperów i ma już gotowy JS, Twig, SCSS i ACF JSON.
-`latest-posts` ma bazę pod infinite pagination przez REST API.
 `spacer` to prosty separator odstępu z osobnym ustawieniem wysokości dla `desktop` i `mobile`.
 
 ### Spacer

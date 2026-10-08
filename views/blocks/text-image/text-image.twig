@@ -1,38 +1,7 @@
 <section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
-  <div class="container">
-    <div class="block-text-image__inner {{ fields['text_image_image_position'] == 'left' ? 'block-text-image__inner--image-left' : 'block-text-image__inner--image-right' }}">
-      <div class="block-text-image__content">
-        {% if fields['text_image_eyebrow'] %}
-          <p class="block-text-image__eyebrow">{{ fields['text_image_eyebrow'] }}</p>
-        {% endif %}
-
-        <h2 class="block-text-image__title">{{ fields['text_image_title'] ?: 'Text with image' }}</h2>
-
-        {% if fields['text_image_content'] %}
-          <div class="block-text-image__text">
-            {{ fields['text_image_content']|raw }}
-          </div>
-        {% endif %}
-
-        {% if fields['text_image_link'] %}
-          <a
-            class="btn block-text-image__link"
-            href="{{ fields['text_image_link'].url }}"
-            {% if fields['text_image_link'].target %}target="{{ fields['text_image_link'].target }}"{% endif %}
-            {% if fields['text_image_link'].target == '_blank' %}rel="noopener noreferrer"{% endif %}
-          >
-            {{ fields['text_image_link'].title ?: 'Read more' }}
-          </a>
-        {% endif %}
-      </div>
-
-      <div class="block-text-image__media">
-        {% if fields['text_image_image'] %}
-          {{ fn('wp_get_attachment_image', fields['text_image_image'], 'large', false, { class: 'block-text-image__image' }) }}
-        {% elseif is_preview %}
-          <div class="block-text-image__image-placeholder">Choose an image in ACF.</div>
-        {% endif %}
-      </div>
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-text-image__inner block-text-image__inner--image-{{ fields.text_image_image_position|default('right') }} block-text-image__inner--size-{{ fields.text_image_image_size|default('half') }} block-text-image__inner--align-{{ fields.text_image_vertical_align|default('center') }}{{ fields.text_image_reverse_mobile ? ' block-text-image__inner--image-first-mobile' : '' }}">
+      {{ inner_blocks(inner_template) }}
     </div>
   </div>
 </section>

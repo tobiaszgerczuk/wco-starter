@@ -1,37 +1,18 @@
 .block-latest-posts {
-  &__header {
-    max-width: 720px;
-    margin-bottom: 2rem;
-  }
+  &__head { @include inner-layout { > * { margin: 0; } } }
 
   &__grid {
-    display: grid;
-    gap: 1.5rem;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    @include grid-columns(3);
 
-    @include tablet {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    @each $n in (2, 3, 4) {
+      &--cols-#{$n} { @include grid-columns($n); }
     }
 
-    @include mobile {
-      grid-template-columns: 1fr;
-    }
+    &.is-no-image .post-card__media { display: none; }
+    &.is-no-date .post-card__meta { display: none; }
+    &.is-no-excerpt .post-card__excerpt { display: none; }
   }
 
-  &__actions {
-    display: flex;
-    justify-content: center;
-    margin-top: 2rem;
-  }
-
-  &__button.is-loading {
-    opacity: 0.7;
-    pointer-events: none;
-  }
-
-  &__empty {
-    margin-top: 1.5rem;
-    text-align: center;
-    color: var(--color-muted);
-  }
+  &__more { margin-top: 2.5rem; text-align: center; }
+  &__empty { color: var(--color-muted); text-align: center; }
 }

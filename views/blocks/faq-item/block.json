@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/faq-item",
+  "title": "FAQ Item",
+  "description": "Single question and answer. The first heading is the question.",
+  "category": "wco-blocks",
+  "icon": "editor-help",
+  "keywords": [
+    "faq",
+    "question"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "faq-item.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false
+  },
+  "parent": [
+    "acf/faq"
+  ]
+}

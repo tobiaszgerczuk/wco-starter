@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/logos",
+  "title": "Logos",
+  "description": "Client logos. Add images and links in the preview.",
+  "category": "wco-blocks",
+  "icon": "images-alt2",
+  "keywords": [
+    "logos",
+    "clients",
+    "partners"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "logos.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false,
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "wco": {
+    "sectionSettings": true
+  }
+}

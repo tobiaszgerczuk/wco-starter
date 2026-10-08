@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/feature-item",
+  "title": "Feature Item",
+  "description": "Single feature card.",
+  "category": "wco-blocks",
+  "icon": "index-card",
+  "keywords": [
+    "feature",
+    "item"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "feature-item.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false
+  },
+  "parent": [
+    "acf/features"
+  ]
+}

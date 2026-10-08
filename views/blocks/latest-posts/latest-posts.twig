@@ -1,45 +1,27 @@
 <section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
-  <div class="container">
-    {% include 'modules/section-header.twig' with {
-      eyebrow: fields['latest_posts_eyebrow'],
-      title: fields['latest_posts_title'] ?: 'Latest posts',
-      intro: fields['latest_posts_intro'] ?: null,
-      class: 'block-latest-posts__header'
-    } only %}
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-latest-posts__head">
+      {{ inner_blocks(inner_template, inner_allowed) }}
+    </div>
 
-    <div
-      class="block-latest-posts__inner"
-      data-latest-posts
-      data-rest-url="{{ latest_posts_rest_url }}"
-      data-page="{{ posts_query.page }}"
-      data-per-page="{{ posts_query.perPage }}"
-      data-total-pages="{{ posts_query.totalPages }}"
-      data-loading-label="{{ fields['latest_posts_loading_label'] ?: 'Loading...' }}"
-      data-read-more-label="{{ fields['latest_posts_read_more_label'] ?: 'Read more' }}"
-      data-no-image-label="{{ fields['latest_posts_no_image_label'] ?: 'No image' }}"
-      data-empty-label="{{ fields['latest_posts_empty_label'] ?: 'No posts found.' }}"
-    >
-      <div class="block-latest-posts__grid" data-latest-posts-grid>
+    {% if posts %}
+      <div class="block-latest-posts__grid block-latest-posts__grid--cols-{{ fields.latest_posts_columns|default(3) }}{{ fields.latest_posts_show_image is same as(false) ? ' is-no-image' : '' }}{{ fields.latest_posts_show_date is same as(false) ? ' is-no-date' : '' }}{{ fields.latest_posts_show_excerpt is same as(false) ? ' is-no-excerpt' : '' }}">
         {% for post in posts %}
           {% include 'modules/post-card.twig' with {
             post: post,
-            read_more_label: fields['latest_posts_read_more_label'] ?: 'Read more',
-            placeholder: fields['latest_posts_no_image_label'] ?: 'No image'
+            read_more_label: 'Czytaj więcej',
+            placeholder: 'Brak obrazka'
           } only %}
         {% endfor %}
       </div>
+    {% elseif is_preview %}
+      <p class="block-latest-posts__empty">Brak wpisów do wyświetlenia.</p>
+    {% endif %}
 
-      {% if posts_query.hasMore %}
-        <div class="block-latest-posts__actions">
-          <button class="btn block-latest-posts__button" type="button" data-latest-posts-button>
-            {{ fields['latest_posts_button_label'] ?: 'Load more posts' }}
-          </button>
-        </div>
-      {% elseif posts is empty %}
-        <p class="block-latest-posts__empty" data-latest-posts-empty>
-          {{ fields['latest_posts_empty_label'] ?: 'No posts found.' }}
-        </p>
-      {% endif %}
-    </div>
+    {% if fields.latest_posts_all_link %}
+      <div class="block-latest-posts__more">
+        {% include 'components/button.twig' with { link: fields.latest_posts_all_link, variant: 'outline' } only %}
+      </div>
+    {% endif %}
   </div>
 </section>

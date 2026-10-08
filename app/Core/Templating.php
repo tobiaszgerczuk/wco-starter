@@ -59,9 +59,43 @@ class Templating
         }, ['is_safe' => ['html']]));
 
         $twig->addFunction(new TwigFunction('wco_image', [Media::class, 'image'], ['is_safe' => ['html']]));
+
+        // {{ inner_blocks(template, allowed, lock) }}: editable <InnerBlocks /> in the editor preview,
+        // plain saved content on the front end.
+        $twig->addFunction(new TwigFunction('inner_blocks', [self::class, 'inner_blocks'], ['is_safe' => ['html'], 'needs_context' => true]));
         
 
         return $twig;
+    }
+
+    /**
+     * In the editor preview this prints ACF's <InnerBlocks /> tag, which makes the content editable
+     * in place. On the front end it returns the saved inner content directly: ACF's own tag
+     * replacement wraps it in an extra div.acf-innerblocks-container at every level.
+     *
+     * @param array<string, mixed> $context  Twig context (needs is_preview and content).
+     * @param array<int, array>    $template Block template: [[name, attrs, children], ...].
+     * @param string[]             $allowed  Allowed block names (empty = any).
+     * @param string               $lock     '', 'all' or 'insert'.
+     */
+    public static function inner_blocks(array $context, array $template = [], array $allowed = [], string $lock = ''): string
+    {
+        if (empty($context['is_preview'])) {
+            return (string) ($context['content'] ?? '');
+        }
+
+        $attrs = '';
+        if ($template) {
+            $attrs .= ' template="' . esc_attr(wp_json_encode($template)) . '"';
+        }
+        if ($allowed) {
+            $attrs .= ' allowedBlocks="' . esc_attr(wp_json_encode($allowed)) . '"';
+        }
+        if ($lock !== '') {
+            $attrs .= ' templateLock="' . esc_attr($lock) . '"';
+        }
+
+        return '<InnerBlocks' . $attrs . ' />';
     }
 
     private static function manifest(): array

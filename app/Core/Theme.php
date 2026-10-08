@@ -43,21 +43,6 @@ class Theme
 
         // REST API
         RestApi::boot();
-
-        add_action('init', function () {
-            register_post_type('inwestycja', [
-              'labels' => [
-                'name' => 'Inwestycje',
-                'singular_name' => 'Inwestycja',
-              ],
-              'public' => true,
-              'menu_icon' => 'dashicons-location-alt',
-              'supports' => ['title', 'editor', 'thumbnail'],
-              'show_in_rest' => true,
-            ]);
-          });
-          
-          
     }
 
     

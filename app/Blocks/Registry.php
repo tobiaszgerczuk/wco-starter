@@ -13,6 +13,9 @@ class Registry
 
     public static function boot(): void
     {
+        add_filter('acf/load_field_group', [self::class, 'section_settings_locations']);
+        Editor::boot();
+
         if (function_exists('get_block_categories')) {
             add_filter('block_categories_all', [self::class, 'register_block_category'], 10, 2);
         } else {
@@ -25,6 +28,7 @@ class Registry
         // === GUTENBERG EDITOR ASSETS ===
         add_action('enqueue_block_editor_assets', [self::class, 'enqueue_editor_assets']);
 
+        self::register_json_blocks();
         self::register_container_group_block();
         self::register_two_columns_block();
         self::register_two_columns_column_block();
@@ -47,6 +51,11 @@ class Registry
                 continue;
             }
 
+            // Blocks with a "name" in block.json are registered by register_json_blocks().
+            if (self::is_json_block($dir)) {
+                continue;
+            }
+
             // Sprawdź, czy istnieje .twig
             $twig_file = $dir . '/' . $slug . '.twig';
             if (!file_exists($twig_file)) {
@@ -56,6 +65,63 @@ class Registry
             $args = self::build_block_args($slug, $dir);
             acf_register_block_type($args);
         }
+    }
+
+    /**
+     * Registers ACF blocks described by block.json ("name" + "acf" keys). Content lives in
+     * InnerBlocks (edited in the preview); ACF fields only hold settings.
+     */
+    private static function register_json_blocks(): void
+    {
+        $blocks_dir = get_template_directory() . '/' . self::VIEWS_DIR . '/' . self::BLOCKS_DIR;
+
+        foreach (glob($blocks_dir . '/*', GLOB_ONLYDIR) ?: [] as $dir) {
+            if (!self::is_json_block($dir)) {
+                continue;
+            }
+
+            $slug = basename($dir);
+            $args = [];
+            $style = self::register_block_style_handle($slug);
+            if ($style !== '') {
+                $args['style'] = $style;
+                $args['editor_style'] = $style;
+            }
+
+            register_block_type($dir, $args);
+        }
+    }
+
+    /**
+     * The shared "Section settings" group is attached to every block whose block.json has
+     * "wco": { "sectionSettings": true }, so new blocks never need their own copy of the fields.
+     */
+    public static function section_settings_locations(array $group): array
+    {
+        if (($group['key'] ?? '') !== 'group_section_settings') {
+            return $group;
+        }
+
+        $location = [];
+        $blocks_dir = get_template_directory() . '/' . self::VIEWS_DIR . '/' . self::BLOCKS_DIR;
+
+        foreach (glob($blocks_dir . '/*/block.json') ?: [] as $file) {
+            $metadata = self::get_block_metadata(dirname($file));
+            if (!empty($metadata['wco']['sectionSettings']) && !empty($metadata['name'])) {
+                $location[] = [['param' => 'block', 'operator' => '==', 'value' => $metadata['name']]];
+            }
+        }
+
+        $group['location'] = $location;
+
+        return $group;
+    }
+
+    private static function is_json_block(string $dir): bool
+    {
+        $metadata = self::get_block_metadata($dir);
+
+        return !empty($metadata['name']) && isset($metadata['acf']);
     }
 
     /**

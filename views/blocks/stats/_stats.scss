@@ -1,0 +1,22 @@
+.block-stats {
+  &__items {
+    @include inner-layout {
+      @include grid-columns(4);
+
+      > * { margin: 0; }
+    }
+
+    @each $n in (2, 3, 4) {
+      &--cols-#{$n} { @include inner-layout { @include grid-columns($n); } }
+    }
+  }
+}
+
+.block-stat-item {
+  text-align: center;
+
+  p { margin: 0; }
+
+  .is-value { color: var(--color-primary); font-family: var(--font-family-heading); font-size: clamp(2.25rem, 4vw, 3.5rem); font-weight: 700; line-height: 1.1; }
+  .is-label { margin-top: 0.5rem; color: var(--color-muted); }
+}

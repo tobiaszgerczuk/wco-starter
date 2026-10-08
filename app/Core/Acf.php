@@ -41,6 +41,11 @@ class Acf
 
     public static function sync_block_json_to_file(array $fieldGroup): void
     {
+        // Shared groups live in acf-json/, not in a block folder.
+        if (($fieldGroup['key'] ?? '') === 'group_section_settings') {
+            return;
+        }
+
         $blockName = self::resolve_block_name_from_group($fieldGroup);
         if ($blockName === null) {
             return;

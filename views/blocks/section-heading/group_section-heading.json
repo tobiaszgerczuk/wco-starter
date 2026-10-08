@@ -1,0 +1,58 @@
+{
+    "key": "group_block_section-heading",
+    "title": "Section Heading Block",
+    "fields": [
+        {
+            "key": "field_section_heading_align",
+            "label": "Alignment",
+            "name": "section_heading_align",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "left": "Left",
+                "center": "Center",
+                "right": "Right"
+            },
+            "default_value": "center",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/section-heading"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1791471863,
+    "wco_metadata": {
+        "block_name": "section-heading",
+        "icon": "",
+        "category": "wco-blocks",
+        "text_domain": "wco-starter"
+    }
+}

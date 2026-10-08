@@ -1,0 +1,7 @@
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-gallery__items block-gallery__items--cols-{{ fields.gallery_columns|default(3) }} block-gallery__items--gap-{{ fields.gallery_gap|default('md') }} block-gallery__items--ratio-{{ fields.gallery_ratio|default('4-3') }}">
+      {{ inner_blocks(inner_template, inner_allowed) }}
+    </div>
+  </div>
+</section>

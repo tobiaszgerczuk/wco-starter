@@ -1,0 +1,10 @@
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %} data-open-first="{{ fields.faq_open_first ? 'true' : 'false' }}" data-multiple="{{ fields.faq_allow_multiple ? 'true' : 'false' }}">
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-faq__list">
+      {{ inner_blocks(inner_template, inner_allowed) }}
+    </div>
+  </div>
+</section>
+{% if faq_schema %}
+<script type="application/ld+json">{{ faq_schema }}</script>
+{% endif %}

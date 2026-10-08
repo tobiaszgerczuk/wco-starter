@@ -1,0 +1,7 @@
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-cta__inner block-cta__inner--{{ fields.cta_align|default('center') }}{{ fields.cta_boxed ? ' block-cta__inner--boxed' : '' }}">
+      {{ inner_blocks(inner_template) }}
+    </div>
+  </div>
+</section>

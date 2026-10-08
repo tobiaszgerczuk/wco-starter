@@ -1,0 +1,5 @@
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <hr class="block-separator__line block-separator__line--{{ fields.separator_line_style|default('solid') }} block-separator__line--{{ fields.separator_line_color|default('border') }} block-separator__line--{{ fields.separator_line_width|default('full') }}" style="--separator-thickness: {{ fields.separator_thickness|default(1) }}px">
+  </div>
+</section>
