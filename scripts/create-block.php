@@ -726,6 +726,27 @@ PHPT;
         $files[$childDir . '/block.json'] = $json($blockJson($child, $title . ' Item', $slug));
         $files[$childDir . '/' . $child . '.twig'] = "<div class=\"block-{$child}\">\n  {{ inner_blocks(inner_template) }}\n</div>\n";
         $files[$childDir . '/' . $child . '.include.php'] = $include($child, $childTemplate);
+        // Without a field group ACF shows a "this block has no editable fields" warning in the sidebar.
+        $childGroup = $group;
+        $childGroup['key'] = 'group_block_' . $child;
+        $childGroup['title'] = $title . ' Item Block';
+        $childGroup['fields'] = [[
+            'key' => 'field_' . str_replace('-', '_', $child) . '_info',
+            'label' => 'Content',
+            'name' => '',
+            'aria-label' => '',
+            'type' => 'message',
+            'instructions' => '',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => ['width' => '', 'class' => '', 'id' => ''],
+            'message' => 'Edit the content of this element directly in the preview.',
+            'new_lines' => 'wpautop',
+            'esc_html' => 0,
+        ]];
+        $childGroup['location'] = [[['param' => 'block', 'operator' => '==', 'value' => 'acf/' . $child]]];
+        $childGroup['wco_metadata']['block_name'] = $child;
+        $files[$childDir . '/group_' . $child . '.json'] = $json($childGroup);
     }
 
     return $files;
