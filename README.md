@@ -147,6 +147,18 @@ Dry run:
 npm run create-block -- hero-banner "Hero Banner" --dry-run
 ```
 
+## Tracking i zgoda na cookies (Ustawienia motywu → Śledzenie, Cookies i zgoda)
+
+Całość obsługuje `app/Core/Tracking.php`; baner to `views/partials/cookie-banner.twig` + `assets/js/modules/consent.js`.
+
+- **GTM**: wpisz ID (`GTM-XXXXXX`) w zakładce Śledzenie. Skrypt trafia na sam początek `<head>`, a `<noscript>` z iframe zaraz po `<body>` (szablon wywołuje `wp_body_open`). ID i GA4 są walidowane, nieprawidłowe nie są wypisywane.
+- **Consent Mode v2**: przy włączonym banerze przed GTM drukowane są ustawienia domyślne (`ad_storage`, `ad_user_data`, `ad_personalization`, `analytics_storage` = `denied`, `wait_for_update` 500 ms). Dla powracającego odwiedzającego domyślne wartości wynikają z jego cookie, więc nie startuje od „denied". Po wyborze wysyłany jest `gtag('consent', 'update', …)` oraz zdarzenie `wco_consent_update` do `dataLayer` (do wyzwalaczy w GTM).
+- **Baner**: „Akceptuję wszystkie” i „Tylko niezbędne” mają jednakową wagę, „Dostosuj” pokazuje kategorie (niezbędne, analityczne, marketingowe). Wybór zapisuje cookie `wco_consent` na 12 miesięcy w formacie `<wersja>.a<0|1>.m<0|1>`. Stopka ma link „Ustawienia cookies” (`data-consent-open`), który otwiera baner ponownie; ten sam atrybut możesz dać dowolnemu linkowi. Zmiana pola „Wersja zgody” pyta wszystkich ponownie.
+- **Dodatkowe skrypty (head / przed `</body>`)** są przy włączonym banerze trzymane w `<template>` i wstawiane dopiero po zgodzie na cookies analityczne. Po wycofaniu zgody strona się przeładowuje, żeby wstrzyknięte skrypty przestały działać.
+- **Pomijanie redaktorów**: domyślnie zalogowani użytkownicy z prawem edycji nie ładują śledzenia (opcja do wyłączenia).
+- **Baner pokazuje się tylko, gdy coś jest skonfigurowane** (GTM, GA4 lub dodatkowe skrypty). Jeśli zgodą zarządzasz w GTM własnym CMP, wyłącz „Baner zgody na cookies”: wtedy motyw niczego nie blokuje ani nie zmienia.
+- **Ograniczenie**: iframe `<noscript>` nie może przenieść zgody (brak JS), więc przy rygorystycznym RODO wyłącz opcję „GTM noscript iframe”.
+
 ## Panel wyglądu (Ustawienia motywu → Wygląd)
 
 Zakładki: **Kolory**, **Typografia**, **Logo i nagłówek**, **Kształt**. Całość obsługuje `app/Core/Appearance.php`.

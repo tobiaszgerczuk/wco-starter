@@ -6,6 +6,7 @@
   {{ function('wp_head') }}
 </head>
 <body class="{{ body_class }} {% if subpage %} subpage {% endif %}">
+  {{ function('wp_body_open') }}
   {% include 'partials/header.twig' %}
 
   {% if global_settings.global_banner_enabled and global_settings.global_banner_html %}

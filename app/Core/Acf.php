@@ -495,26 +495,14 @@ class Acf
         ]);
     }
 
+    /** Custom code from the settings page. GTM, GA4 and tracking scripts are handled by Tracking. */
     public static function render_custom_head_code(): void
     {
         self::render_option_code('custom_head_code');
-        self::render_option_code('tracking_head_scripts');
-
-        $gtm = self::field_from_option('google_tag_manager_id');
-        if (is_string($gtm) && trim($gtm) !== '') {
-            echo "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','{$gtm}');</script>\n";
-        }
-
-        $ga4 = self::field_from_option('google_analytics_id');
-        if (is_string($ga4) && trim($ga4) !== '') {
-            echo "<script async src=\"https://www.googletagmanager.com/gtag/js?id={$ga4}\"></script>\n";
-            echo "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','{$ga4}');</script>\n";
-        }
     }
 
     public static function render_custom_footer_code(): void
     {
-        self::render_option_code('tracking_body_scripts');
         self::render_option_code('custom_footer_code');
     }
 
@@ -647,6 +635,19 @@ class Acf
             'Full' => 'Pełna szerokość',
             'Section settings' => 'Ustawienia sekcji',
             'Spacing settings' => 'Paddingi i marginesy',
+            'Cookies and consent' => 'Cookies i zgoda',
+            'Cookie consent banner' => 'Baner zgody na cookies',
+            'Shown only when Google Tag Manager, Google Analytics or additional scripts are set. Turns on Google Consent Mode v2 (everything denied until the visitor agrees) and holds back the additional scripts until analytics cookies are accepted. Turn it off if you manage consent inside GTM.' => 'Pokazuje się tylko, gdy ustawiono Google Tag Manager, Google Analytics lub dodatkowe skrypty. Włącza Google Consent Mode v2 (wszystko zablokowane do czasu zgody) i wstrzymuje dodatkowe skrypty do zaakceptowania cookies analitycznych. Wyłącz, jeśli zgodą zarządzasz w GTM.',
+            'Banner title' => 'Tytuł banera',
+            'Privacy policy link' => 'Link do polityki prywatności',
+            'Leave empty to use the WordPress privacy page.' => 'Zostaw puste, aby użyć strony prywatności WordPressa.',
+            'Banner text' => 'Treść banera',
+            'Consent version' => 'Wersja zgody',
+            'Change it (e.g. to 2) after changing which cookies you use; every visitor is then asked again.' => 'Zmień (np. na 2) po zmianie używanych cookies; każdy odwiedzający zostanie wtedy zapytany ponownie.',
+            'GTM noscript iframe' => 'GTM noscript iframe',
+            'Adds the <noscript> iframe after <body>. Visitors without JavaScript cannot give consent, so turn it off for strict GDPR setups.' => 'Dodaje iframe <noscript> zaraz po <body>. Odwiedzający bez JavaScriptu nie mogą wyrazić zgody, więc przy rygorystycznym RODO wyłącz.',
+            'Skip tracking for logged-in editors' => 'Pomijaj śledzenie dla zalogowanych redaktorów',
+            'Keeps your own visits out of the statistics.' => 'Twoje wizyty nie zniekształcą statystyk.',
             'Appearance' => 'Wygląd',
             'Colors' => 'Kolory',
             'Primary color' => 'Kolor główny',

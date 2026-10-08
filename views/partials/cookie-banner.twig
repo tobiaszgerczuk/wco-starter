@@ -1,0 +1,44 @@
+<div
+  class="cookie-banner"
+  data-consent-banner
+  data-version="{{ consent.version }}"
+  data-cookie="{{ consent.cookie }}"
+  role="dialog"
+  aria-labelledby="cookie-banner-title"
+  aria-describedby="cookie-banner-text"
+  hidden
+>
+  <div class="cookie-banner__inner">
+    <div class="cookie-banner__text">
+      <h2 class="cookie-banner__title" id="cookie-banner-title">{{ consent.title }}</h2>
+      <p id="cookie-banner-text">
+        {{ consent.text }}
+        {% if consent.policy_url %}
+          <a href="{{ consent.policy_url }}">Polityka prywatności</a>
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="cookie-banner__details" data-consent-details hidden>
+      <label class="cookie-banner__option">
+        <input type="checkbox" checked disabled>
+        <span><strong>Niezbędne</strong> Zapewniają działanie strony. Zawsze włączone.</span>
+      </label>
+      <label class="cookie-banner__option">
+        <input type="checkbox" name="analytics" data-consent-category>
+        <span><strong>Analityczne</strong> Pomagają zrozumieć, jak korzystasz ze strony (np. Google Analytics).</span>
+      </label>
+      <label class="cookie-banner__option">
+        <input type="checkbox" name="marketing" data-consent-category>
+        <span><strong>Marketingowe</strong> Służą do wyświetlania spersonalizowanych reklam i mierzenia ich skuteczności.</span>
+      </label>
+    </div>
+
+    <div class="cookie-banner__actions">
+      <button type="button" class="btn btn--primary" data-consent-action="accept">Akceptuję wszystkie</button>
+      <button type="button" class="btn btn--primary" data-consent-action="reject">Tylko niezbędne</button>
+      <button type="button" class="btn btn--ghost" data-consent-toggle aria-expanded="false">Dostosuj</button>
+      <button type="button" class="btn btn--outline" data-consent-action="save" hidden>Zapisz wybór</button>
+    </div>
+  </div>
+</div>
