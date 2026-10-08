@@ -147,6 +147,17 @@ Dry run:
 npm run create-block -- hero-banner "Hero Banner" --dry-run
 ```
 
+## Panel wyglądu (Ustawienia motywu → Wygląd)
+
+Zakładki: **Kolory**, **Typografia**, **Logo i nagłówek**, **Kształt**. Całość obsługuje `app/Core/Appearance.php`.
+
+- **Kolory** (główny, drugi, akcent, tekst, tekst pomocniczy, tło, powierzchnia, obramowania, kolor główny po najechaniu — liczony automatycznie, jeśli pusty) trafiają do zmiennych CSS `:root` (`--color-*`) oraz do presetów WordPressa (`--wp--preset--color--*`). Przyciski, nadtytuły, tła sekcji i cały motyw czytają te zmienne, więc zmiana działa wszędzie, także w edytorze blokowym. Wartości domyślne są w `Appearance::DEFAULTS` i odpowiadają `assets/scss/base/_variables.scss`.
+- **Typografia**: czcionka nagłówków i tekstu z katalogu (`Appearance::FONTS`, dopisujesz kolejne jedną linią: nazwa, specyfikacja Google Fonts, czy szeryfowa) oraz bazowy rozmiar. Domyślnie czcionki są **hostowane lokalnie**: po zapisie ustawień pobieranie plików woff2 (podzbiory `latin` i `latin-ext`, więc polskie znaki działają) do `uploads/wco-fonts`, bez zapytań do Google przy wyświetlaniu strony. Gdy pobranie się nie uda albo przełącznik jest wyłączony, używany jest link Google Fonts. Dla innych alfabetów (np. cyrylica) dopisz podzbiór w `Appearance::build_local_fonts()`.
+- **Logo i nagłówek**: logo (wysokość ustawiasz osobno), zachowanie nagłówka (przyklejony / statyczny), przezroczysty na górze strony, zmniejszanie przy przewijaniu. Opcje wracają jako klasy `<body>`: `header-static`, `header-solid`, `header-no-shrink` (style w `assets/scss/layout/_header.scss`). Favicon ustawia się natywnie w Wygląd → Dostosuj → Tożsamość witryny.
+- **Kształt**: zaokrąglenia przycisków, kart i obrazów (`--radius-sm/md/lg`). Zmienne SCSS `$radius-*` są teraz zmiennymi CSS z wartością zapasową.
+
+Dodanie nowej opcji: pole w `Appearance::register_fields()`, wartość domyślna w `DEFAULTS`, a zmienną CSS w `Appearance::css()`.
+
 ## Bloki z edycją w podglądzie (InnerBlocks)
 
 Domyślny sposób budowania sekcji w tym starterze: **ACF trzyma tylko ustawienia, a treść to zwykłe bloki WP wewnątrz bloku**. Dzięki temu teksty, obrazy i przyciski klikasz i edytujesz bezpośrednio na podglądzie sekcji, bez ołówka i panelu bocznego.

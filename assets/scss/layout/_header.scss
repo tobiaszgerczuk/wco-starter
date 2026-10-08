@@ -36,14 +36,14 @@
     }
 
     img {
-      height: 40px;
+      height: var(--logo-height, 40px);
       width: auto;
       transition: height 0.3s ease;
     }
   }
 
   &.is-scrolled .brand img {
-    height: 30px;
+    height: calc(var(--logo-height, 40px) * 0.75);
   }
 
   .hamburger {
@@ -175,4 +175,19 @@
       font-size: 1.25rem;
     }
   }
+}
+
+// Header options (Theme settings > Appearance > Logo and header) arrive as body classes.
+.header-static .site-header {
+  position: relative;
+  background-color: var(--color-bg);
+}
+
+.header-solid .site-header {
+  background-color: var(--color-bg);
+}
+
+.header-no-shrink .site-header {
+  &.is-scrolled .header-inner { min-height: 80px; }
+  &.is-scrolled .brand img { height: var(--logo-height, 40px); }
 }
