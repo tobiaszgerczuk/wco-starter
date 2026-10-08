@@ -106,11 +106,10 @@
   font-weight: $weight;
 }
 
-// Applies styles to a block's inner-blocks container on the front end AND in the editor,
-// where ACF wraps the children in .block-editor-inner-blocks > .block-editor-block-list__layout.
+// Applies styles to a block's inner-blocks container. The editor and the front end share the same
+// DOM: .block > .acf-innerblocks-container > children (see Templating::inner_blocks()).
 @mixin inner-layout {
-  &,
-  > .block-editor-inner-blocks > .block-editor-block-list__layout {
+  > .acf-innerblocks-container {
     @content;
   }
 }

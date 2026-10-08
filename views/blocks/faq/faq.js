@@ -18,10 +18,13 @@ export default class Faq {
   }
 
   build(item) {
-    const heading = item.querySelector(':scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5, :scope > h6');
+    const heading = item.querySelector('h1, h2, h3, h4, h5, h6');
     if (!heading) {
       return;
     }
+
+    // The heading and its answer are siblings inside .acf-innerblocks-container.
+    const container = heading.parentElement;
 
     const id = `faq-panel-${Faq.counter++}`;
     const panel = document.createElement('div');
@@ -29,8 +32,8 @@ export default class Faq {
     panel.id = id;
     panel.hidden = true;
 
-    [...item.childNodes].filter((node) => node !== heading).forEach((node) => panel.appendChild(node));
-    item.appendChild(panel);
+    [...container.childNodes].filter((node) => node !== heading).forEach((node) => panel.appendChild(node));
+    container.appendChild(panel);
 
     const button = document.createElement('button');
     button.type = 'button';

@@ -153,9 +153,9 @@ Domyślny sposób budowania sekcji w tym starterze: **ACF trzyma tylko ustawieni
 
 - Blok jest rejestrowany przez `block.json` (klucze `name` i `acf`) — `Registry::register_json_blocks()`.
 - Treść startową definiuje szablon w `<slug>.include.php` (`inner_template`): tablica `[nazwa, atrybuty, dzieci]`. Pomocnicze: `BlockContext::head_template()` (nadtytuł + nagłówek + lead), `BlockContext::buttons_template()`.
-- W Twigu wstawiasz `{{ inner_blocks(inner_template) }}` (opcjonalnie `inner_blocks(inner_template, inner_allowed)` — lista dozwolonych bloków). W edytorze funkcja drukuje tag ACF `<InnerBlocks />`, na froncie zwraca czystą zapisaną treść (bez dodatkowego `div.acf-innerblocks-container`, który ACF inaczej dokłada na każdym poziomie).
+- W Twigu wstawiasz `{{ inner_blocks(inner_template) }}` (opcjonalnie `inner_blocks(inner_template, inner_allowed)` — lista dozwolonych bloków). W edytorze funkcja drukuje tag ACF `<InnerBlocks />`, na froncie zwraca zapisaną treść w tym samym `div.acf-innerblocks-container`, którego używa edytor — dzięki temu front i edytor mają identyczny DOM (`.blok > .acf-innerblocks-container > dzieci`).
 - Listy elementów (kafelki, FAQ, opinie, statystyki) to bloki potomne (`"parent": ["acf/features"]` w `block.json`), a nie repeatery ACF — dodajesz, przestawiasz i usuwasz je w podglądzie.
-- Układ siatki piszesz mixinem `inner-layout`, który działa i na froncie, i w edytorze (`@include inner-layout { @include grid-columns(3); }`).
+- Układ siatki piszesz mixinem `inner-layout` (celuje w `> .acf-innerblocks-container`), który działa i na froncie, i w edytorze (`@include inner-layout { @include grid-columns(3); }`).
 - Klasy `className` w szablonie (`is-eyebrow`, `is-lead`, `is-span-all`, `is-value` …) są stylowane w `assets/scss/components/_block-content.scss` i w SCSS bloku.
 - Przyciski to natywny `core/button` z wariantami `secondary`, `outline`, `link` (style w `components/_buttons.scss`).
 

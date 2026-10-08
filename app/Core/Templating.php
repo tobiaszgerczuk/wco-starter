@@ -70,8 +70,9 @@ class Templating
 
     /**
      * In the editor preview this prints ACF's <InnerBlocks /> tag, which makes the content editable
-     * in place. On the front end it returns the saved inner content directly: ACF's own tag
-     * replacement wraps it in an extra div.acf-innerblocks-container at every level.
+     * in place. On the front end it returns the saved inner content in the same
+     * div.acf-innerblocks-container wrapper the editor uses, so front and editor share one DOM
+     * (and one set of layout selectors) without relying on ACF's own tag replacement.
      *
      * @param array<string, mixed> $context  Twig context (needs is_preview and content).
      * @param array<int, array>    $template Block template: [[name, attrs, children], ...].
@@ -81,7 +82,7 @@ class Templating
     public static function inner_blocks(array $context, array $template = [], array $allowed = [], string $lock = ''): string
     {
         if (empty($context['is_preview'])) {
-            return (string) ($context['content'] ?? '');
+            return '<div class="acf-innerblocks-container">' . ($context['content'] ?? '') . '</div>';
         }
 
         $attrs = '';

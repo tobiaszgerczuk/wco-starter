@@ -14,7 +14,9 @@ if (!($is_preview ?? false) && !empty($fields['faq_schema']) && !empty($content)
     foreach ((new DOMXPath($dom))->query('//*[contains(concat(" ", normalize-space(@class), " "), " block-faq-item ")]') as $item) {
         $question = '';
         $answer = '';
-        foreach ($item->childNodes as $node) {
+        // The heading and its answer are siblings inside .acf-innerblocks-container.
+        $heading = (new DOMXPath($dom))->query('.//h1|.//h2|.//h3|.//h4|.//h5|.//h6', $item)->item(0);
+        foreach ($heading ? $heading->parentNode->childNodes : [] as $node) {
             if ($question === '' && $node instanceof DOMElement && preg_match('/^h[1-6]$/i', $node->nodeName)) {
                 $question = trim($node->textContent);
                 continue;
