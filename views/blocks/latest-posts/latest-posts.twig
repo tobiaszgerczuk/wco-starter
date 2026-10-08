@@ -5,7 +5,17 @@
     </div>
 
     {% if posts %}
-      <div class="block-latest-posts__grid block-latest-posts__grid--cols-{{ fields.latest_posts_columns|default(3) }}{{ fields.latest_posts_show_image is same as(false) ? ' is-no-image' : '' }}{{ fields.latest_posts_show_date is same as(false) ? ' is-no-date' : '' }}{{ fields.latest_posts_show_excerpt is same as(false) ? ' is-no-excerpt' : '' }}">
+      <div class="block-latest-posts__list"
+        data-latest-posts
+        data-rest-url="{{ rest_url }}"
+        data-page="{{ posts_query.page }}"
+        data-per-page="{{ posts_query.perPage }}"
+        data-category="{{ posts_query.category }}"
+        data-total-pages="{{ posts_query.totalPages }}"
+        data-loading-label="Ładowanie…"
+        data-read-more-label="Czytaj więcej"
+        data-no-image-label="Brak obrazka">
+      <div data-latest-posts-grid class="block-latest-posts__grid block-latest-posts__grid--cols-{{ fields.latest_posts_columns|default(3) }}{{ fields.latest_posts_show_image is same as(false) ? ' is-no-image' : '' }}{{ fields.latest_posts_show_date is same as(false) ? ' is-no-date' : '' }}{{ fields.latest_posts_show_excerpt is same as(false) ? ' is-no-excerpt' : '' }}">
         {% for post in posts %}
           {% include 'modules/post-card.twig' with {
             post: post,
@@ -13,6 +23,14 @@
             placeholder: 'Brak obrazka'
           } only %}
         {% endfor %}
+      </div>
+      {% if fields.latest_posts_load_more and posts_query.hasMore %}
+        <div class="block-latest-posts__actions">
+          <button class="btn btn--outline block-latest-posts__button" type="button" data-latest-posts-button>
+            {{ fields.latest_posts_load_more_label|default('Załaduj więcej') }}
+          </button>
+        </div>
+      {% endif %}
       </div>
     {% elseif is_preview %}
       <p class="block-latest-posts__empty">Brak wpisów do wyświetlenia.</p>

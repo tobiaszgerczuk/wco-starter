@@ -263,16 +263,17 @@ class Media
                 return null;
             }
 
-            $src = wp_get_attachment_image_url($id, $size);
-            if (!$src) {
+            // [url, width, height, is_intermediate] for the requested size.
+            $source = wp_get_attachment_image_src($id, $size);
+            if (!$source || empty($source[0])) {
                 return null;
             }
 
             return [
-                'src' => (string) $src,
+                'src' => (string) $source[0],
                 'srcset' => (string) (wp_get_attachment_image_srcset($id, $size) ?: ''),
-                'width' => (int) wp_get_attachment_image_width($id),
-                'height' => (int) wp_get_attachment_image_height($id),
+                'width' => (int) $source[1],
+                'height' => (int) $source[2],
                 'alt' => (string) get_post_meta($id, '_wp_attachment_image_alt', true),
             ];
         }

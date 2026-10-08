@@ -647,7 +647,7 @@ TWIG;
     @include inner-layout {
       @include grid-columns(3);
 
-      > * { margin: 0; }
+      > * { margin-block: 0; }
     }
   }
 }

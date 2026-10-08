@@ -126,6 +126,52 @@
             "message": ""
         },
         {
+            "key": "field_latest_posts_load_more",
+            "label": "Load more button",
+            "name": "latest_posts_load_more",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Adds a button that loads the next posts without reloading the page.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "ui": 1,
+            "message": ""
+        },
+        {
+            "key": "field_latest_posts_load_more_label",
+            "label": "Button label",
+            "name": "latest_posts_load_more_label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_latest_posts_load_more",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Załaduj więcej",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_latest_posts_all_link",
             "label": "Link to all posts",
             "name": "latest_posts_all_link",

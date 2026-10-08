@@ -3,7 +3,7 @@
     @include inner-layout {
       @include grid-columns(3, 1.5rem);
 
-      > * { margin: 0; }
+      > * { margin-block: 0; }
       .wp-block-image img { display: block; width: 100%; border-radius: $radius-md; }
     }
 

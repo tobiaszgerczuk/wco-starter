@@ -30,7 +30,7 @@
       @include grid-columns(2, 3rem);
       align-items: center;
 
-      > * { margin: 0; }
+      > * { margin-block: 0; }
     }
 
     &--image-left .wp-block-image { order: -1; }

@@ -1,5 +1,5 @@
 .block-latest-posts {
-  &__head { @include inner-layout { > * { margin: 0; } } }
+  &__head { @include inner-layout { > * { margin-block: 0; } } }
 
   &__grid {
     @include grid-columns(3);
@@ -13,6 +13,6 @@
     &.is-no-excerpt .post-card__excerpt { display: none; }
   }
 
-  &__more { margin-top: 2.5rem; text-align: center; }
+  &__more, &__actions { margin-top: 2.5rem; text-align: center; }
   &__empty { color: var(--color-muted); text-align: center; }
 }

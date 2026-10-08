@@ -3,7 +3,7 @@
     max-width: 52rem;
     margin-inline: auto;
 
-    @include inner-layout { > * { margin: 0; } }
+    @include inner-layout { > * { margin-block: 0; } }
   }
 }
 
