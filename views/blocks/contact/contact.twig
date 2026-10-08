@@ -1,0 +1,16 @@
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-contact__inner block-contact__inner--form-{{ fields.contact_form_position|default('right') }}">
+      <div class="block-contact__info">
+        {{ inner_blocks(inner_template) }}
+      </div>
+      <div class="block-contact__form">
+        {% if form_html %}
+          {{ form_html }}
+        {% elseif is_preview %}
+          <div class="block-contact__placeholder">Wklej shortcode formularza (np. Contact Form 7) w ustawieniach bloku.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

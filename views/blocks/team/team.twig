@@ -1,0 +1,7 @@
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-team__items block-team__items--cols-{{ fields.team_columns|default(3) }} block-team__items--photo-{{ fields.team_photo_shape|default('round') }}">
+      {{ inner_blocks(inner_template, inner_allowed) }}
+    </div>
+  </div>
+</section>

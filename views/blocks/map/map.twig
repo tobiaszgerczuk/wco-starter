@@ -1,0 +1,21 @@
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-map__head">
+      {{ inner_blocks(inner_template, inner_allowed) }}
+    </div>
+
+    <div class="block-map__frame" style="height: {{ map.height }}px"{% if map.src %} data-map-src="{{ map.src }}" data-map-title="{{ map.title }}"{% endif %}>
+      {% if map.src %}
+        <div class="block-map__facade">
+          <p>Mapa zostanie wczytana z zewnętrznego serwisu po kliknięciu.</p>
+          <button type="button" class="btn btn--primary" data-map-load>Wyświetl mapę</button>
+          {% if map.link %}
+            <a href="{{ map.link }}" target="_blank" rel="noopener noreferrer">Otwórz w Google Maps</a>
+          {% endif %}
+        </div>
+      {% elseif is_preview %}
+        <div class="block-map__facade"><p>Wpisz adres w ustawieniach bloku, aby pokazać mapę.</p></div>
+      {% endif %}
+    </div>
+  </div>
+</section>

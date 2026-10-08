@@ -1,0 +1,96 @@
+{
+    "key": "group_block_map",
+    "title": "Map Block",
+    "fields": [
+        {
+            "key": "field_map_address",
+            "label": "Address",
+            "name": "map_address",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "E.g. \"Rynek Główny 1, Kraków\". Used to build the map.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_map_embed_url",
+            "label": "Custom embed URL (optional)",
+            "name": "map_embed_url",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "A Google Maps, OpenStreetMap or Mapy.cz embed link. Overrides the address.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "https://"
+        },
+        {
+            "key": "field_map_height",
+            "label": "Map height (px)",
+            "name": "map_height",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "300",
+                "400": "400",
+                "500": "500",
+                "600": "600"
+            },
+            "default_value": "400",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/map"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1791480386,
+    "wco_metadata": {
+        "block_name": "map",
+        "icon": "",
+        "category": "wco-blocks",
+        "text_domain": "wco-starter"
+    }
+}

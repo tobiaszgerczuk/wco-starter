@@ -1,0 +1,26 @@
+.block-team {
+  &__items {
+    @include inner-layout {
+      @include grid-columns(3);
+
+      > * { margin-block: 0; }
+    }
+
+    @each $n in (2, 3, 4) {
+      &--cols-#{$n} { @include inner-layout { @include grid-columns($n); } }
+    }
+
+    &--photo-round .block-team-member .is-photo img { border-radius: 50%; aspect-ratio: 1 / 1; }
+    &--photo-rounded .block-team-member .is-photo img { border-radius: $radius-lg; aspect-ratio: 4 / 5; }
+    &--photo-square .block-team-member .is-photo img { border-radius: 0; aspect-ratio: 4 / 5; }
+  }
+}
+
+.block-team-member {
+  text-align: center;
+
+  .is-photo { max-width: 14rem; margin: 0 auto 1rem; img { display: block; width: 100%; object-fit: cover; } }
+  h3 { margin: 0 0 0.25rem; }
+  p { margin: 0 0 0.5rem; }
+  .is-role { color: var(--color-primary); font-weight: 600; }
+}

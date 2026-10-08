@@ -1,0 +1,7 @@
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-timeline__items block-timeline__items--{{ fields.timeline_layout|default('line') }}">
+      {{ inner_blocks(inner_template, inner_allowed) }}
+    </div>
+  </div>
+</section>

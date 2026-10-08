@@ -194,11 +194,17 @@ Lokalizacje grupy uzupełnia `Registry::section_settings_locations()`, więc now
 
 ### Gotowe sekcje
 
-`hero`, `section-heading`, `text-image`, `cta`, `separator`, `features` (+`feature-item`), `faq` (+`faq-item`, akordeon i dane strukturalne FAQPage), `testimonials` (+`testimonial-item`), `stats` (+`stat-item`), `logos`, `gallery`, `latest-posts`. Wcześniejsze: `container-group`, `two-columns`, `spacer`, `testimonials-slider`.
+`hero`, `section-heading`, `text-image`, `cta`, `separator`, `features` (+`feature-item`), `faq` (+`faq-item`, akordeon i dane strukturalne FAQPage), `testimonials` (+`testimonial-item`), `stats` (+`stat-item`), `logos`, `gallery`, `latest-posts` (z opcjonalnym „Załaduj więcej”), `pricing` (+`pricing-item`, wyróżniony pakiet z plakietką), `team` (+`team-member`), `timeline` (+`timeline-item`, jedna strona lub naprzemiennie), `video`, `map`, `contact`. Wcześniejsze: `container-group`, `two-columns`, `spacer`, `testimonials-slider`.
+
+### Wideo, mapa i formularz
+
+- **`video`**: adres YouTube, Vimeo lub plik `.mp4`/`.webm`. Dla YouTube i Vimeo pokazuje się najpierw okładka z przyciskiem odtwarzania (opcjonalny obraz okładki), a odtwarzacz (`youtube-nocookie.com`, Vimeo z `dnt=1`) wczytuje się dopiero po kliknięciu, więc przed zgodą nie ma żadnego połączenia z zewnętrznym serwisem. Dozwolone adresy iframe są sprawdzane w PHP i w `video.js`.
+- **`map`**: wpisujesz adres albo własny link osadzenia (Google Maps, OpenStreetMap, Mapy.cz; inne hosty są odrzucane). Mapa wczytuje się po kliknięciu „Wyświetl mapę”, obok jest link „Otwórz w Google Maps”. Wysokość 300–600 px.
+- **`contact`**: dane kontaktowe edytujesz w podglądzie, a formularz to pojedynczy shortcode wklejony w ustawieniach bloku (np. `[contact-form-7 id="123" title="Kontakt"]`). Style CF7 są w `components/_forms.scss`. Blok nie ma własnej obsługi wysyłki, więc potrzebuje wtyczki formularzy.
 
 ### Wzorce (patterns)
 
-Gotowe układy stron są w `patterns/*.php` (`landing`, `about`, `faq`, `blog-intro`) i pojawiają się w edytorze w kategorii **WCO sections**. WordPress cache'uje listę wzorców motywu — po dodaniu pliku wyczyść ją:
+Gotowe układy stron są w `patterns/*.php` (`landing`, `about`, `faq`, `blog-intro`, `pricing`, `contact`, `team`) i pojawiają się w edytorze w kategorii **WCO sections**. WordPress cache'uje listę wzorców motywu — po dodaniu pliku wyczyść ją:
 
 ```bash
 docker compose run --rm wp-cli wp eval 'wp_get_theme()->delete_pattern_cache();'

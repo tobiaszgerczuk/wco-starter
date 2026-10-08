@@ -1,0 +1,58 @@
+{
+    "key": "group_block_pricing",
+    "title": "Pricing Block",
+    "fields": [
+        {
+            "key": "field_pricing_columns",
+            "label": "Columns",
+            "name": "pricing_columns",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "2": "2 columns",
+                "3": "3 columns",
+                "4": "4 columns"
+            },
+            "default_value": "3",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/pricing"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1791480386,
+    "wco_metadata": {
+        "block_name": "pricing",
+        "icon": "",
+        "category": "wco-blocks",
+        "text_domain": "wco-starter"
+    }
+}

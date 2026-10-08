@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/timeline-item",
+  "title": "Timeline Step",
+  "description": "Single milestone.",
+  "category": "wco-blocks",
+  "icon": "backup",
+  "keywords": [
+    "timeline",
+    "step"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "timeline-item.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false
+  },
+  "parent": [
+    "acf/timeline"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/contact",
+  "title": "Contact",
+  "description": "Contact details next to a form (Contact Form 7 or another form shortcode).",
+  "category": "wco-blocks",
+  "icon": "email-alt",
+  "keywords": [
+    "contact",
+    "form",
+    "cf7"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "contact.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false,
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "wco": {
+    "sectionSettings": true
+  }
+}

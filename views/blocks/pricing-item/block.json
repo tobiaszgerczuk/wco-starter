@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/pricing-item",
+  "title": "Pricing Plan",
+  "description": "Single pricing plan.",
+  "category": "wco-blocks",
+  "icon": "money-alt",
+  "keywords": [
+    "pricing",
+    "plan"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "pricing-item.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false
+  },
+  "parent": [
+    "acf/pricing"
+  ]
+}

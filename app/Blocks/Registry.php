@@ -82,6 +82,15 @@ class Registry
 
             $slug = basename($dir);
             $args = [];
+            if (self::is_polish_locale()) {
+                // block.json is read directly by WordPress, so hand over the translated labels.
+                $metadata = self::get_block_metadata($dir);
+                foreach (['title', 'description'] as $key) {
+                    if (!empty($metadata[$key])) {
+                        $args[$key] = $metadata[$key];
+                    }
+                }
+            }
             $style = self::register_block_style_handle($slug);
             if ($style !== '') {
                 $args['style'] = $style;
@@ -385,12 +394,36 @@ class Registry
             'Hero Banner' => 'Baner hero',
             'Latest Posts' => 'Najnowsze wpisy',
             'Services' => 'Usługi',
-            'Spacer' => 'Separator',
+            'Spacer' => 'Odstęp',
             'Testimonials Slider' => 'Slider opinii',
             'Text image' => 'Tekst i obraz',
             'Two Columns' => 'Dwie kolumny',
             'Two Columns Column' => 'Kolumna dwóch kolumn',
             'Testowy' => 'Testowy',
+            'Contact' => 'Kontakt',
+            'Call to Action' => 'Wezwanie do działania',
+            'FAQ Item' => 'Pytanie FAQ',
+            'FAQ' => 'FAQ',
+            'Feature Item' => 'Kafelek',
+            'Features' => 'Kafelki',
+            'Gallery' => 'Galeria',
+            'Hero' => 'Hero',
+            'Logos' => 'Logotypy',
+            'Map' => 'Mapa',
+            'Pricing Plan' => 'Pakiet cennika',
+            'Pricing' => 'Cennik',
+            'Section Heading' => 'Nagłówek sekcji',
+            'Separator' => 'Linia',
+            'Stat Item' => 'Liczba',
+            'Stats' => 'Liczby',
+            'Team Member' => 'Członek zespołu',
+            'Team' => 'Zespół',
+            'Testimonial Item' => 'Opinia',
+            'Testimonials' => 'Opinie',
+            'Text and Image' => 'Tekst i obraz',
+            'Timeline Step' => 'Etap osi czasu',
+            'Timeline' => 'Oś czasu',
+            'Video' => 'Wideo',
         ];
 
         if (isset($blockNames[$value])) {
@@ -411,6 +444,31 @@ class Registry
             'Testimonials slider block.' => 'Blok slidera opinii.',
             'Two-column layout block with container width and ratio controls.' => 'Blok układu dwóch kolumn z wyborem szerokości kontenera i proporcji.',
             'Inner column for the Two Columns layout block.' => 'Wewnętrzna kolumna dla bloku układu dwóch kolumn.',
+            'Contact details next to a form (Contact Form 7 or another form shortcode).' => 'Dane kontaktowe obok formularza (Contact Form 7 lub inny shortcode).',
+            'Heading, text and buttons. Edit directly in the preview.' => 'Nagłówek, tekst i przyciski. Edytujesz bezpośrednio w podglądzie.',
+            'Single question and answer. The first heading is the question.' => 'Jedno pytanie i odpowiedź. Pierwszy nagłówek to pytanie.',
+            'Accordion of questions. Edit questions and answers in the preview.' => 'Akordeon z pytaniami. Pytania i odpowiedzi edytujesz w podglądzie.',
+            'Single feature card.' => 'Pojedynczy kafelek.',
+            'Grid of feature cards. Add, reorder and edit cards in the preview.' => 'Siatka kafelków. Dodajesz, przestawiasz i edytujesz je w podglądzie.',
+            'Image grid. Add images in the preview.' => 'Siatka zdjęć. Zdjęcia dodajesz w podglądzie.',
+            'Hero with text and image, optional background image. Edit text and image in the preview.' => 'Hero z tekstem i zdjęciem, opcjonalnie z obrazem w tle. Tekst i zdjęcie edytujesz w podglądzie.',
+            'Newest posts in cards. Edit the heading in the preview; options in the sidebar.' => 'Najnowsze wpisy w kartach. Nagłówek edytujesz w podglądzie, opcje w panelu bocznym.',
+            'Client logos. Add images and links in the preview.' => 'Logotypy klientów. Obrazy i linki dodajesz w podglądzie.',
+            'Embedded map that loads after a click (privacy friendly).' => 'Mapa wczytywana po kliknięciu (przyjazna prywatności).',
+            'Single pricing plan.' => 'Pojedynczy pakiet cennika.',
+            'Pricing plans. Add, reorder and edit plans in the preview.' => 'Pakiety cennika. Dodajesz, przestawiasz i edytujesz je w podglądzie.',
+            'Eyebrow, heading and lead text. Edit directly in the preview.' => 'Nadtytuł, nagłówek i lead. Edytujesz bezpośrednio w podglądzie.',
+            'Horizontal line with style, width and colour options.' => 'Pozioma linia z opcjami stylu, szerokości i koloru.',
+            'Single number with a label.' => 'Jedna liczba z podpisem.',
+            'Row of numbers with labels. Edit numbers and labels in the preview.' => 'Rząd liczb z podpisami. Liczby i podpisy edytujesz w podglądzie.',
+            'Single team member.' => 'Jedna osoba z zespołu.',
+            'Team members. Add, reorder and edit people in the preview.' => 'Zespół. Osoby dodajesz, przestawiasz i edytujesz w podglądzie.',
+            'Single customer quote.' => 'Pojedyncza opinia klienta.',
+            'Customer quotes. Add, reorder and edit quotes in the preview.' => 'Opinie klientów. Dodajesz, przestawiasz i edytujesz je w podglądzie.',
+            'Two columns: text and image. Edit both directly in the preview.' => 'Dwie kolumny: tekst i zdjęcie. Oba edytujesz bezpośrednio w podglądzie.',
+            'Single milestone.' => 'Pojedynczy etap.',
+            'Milestones on a vertical line. Add, reorder and edit steps in the preview.' => 'Etapy na pionowej osi. Dodajesz, przestawiasz i edytujesz je w podglądzie.',
+            'YouTube, Vimeo or a video file. The player loads after a click (privacy friendly).' => 'YouTube, Vimeo lub plik wideo. Odtwarzacz wczytuje się po kliknięciu (przyjazny prywatności).',
             'container' => 'kontener',
             'group' => 'grupa',
             'wrapper' => 'wrapper',

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/video",
+  "title": "Video",
+  "description": "YouTube, Vimeo or a video file. The player loads after a click (privacy friendly).",
+  "category": "wco-blocks",
+  "icon": "video-alt3",
+  "keywords": [
+    "video",
+    "youtube",
+    "vimeo"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "video.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false,
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "wco": {
+    "sectionSettings": true
+  }
+}
