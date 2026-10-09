@@ -1,0 +1,14 @@
+{% set has_bg = fields.hero_background_image ? true : false %}
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }} block-hero--h-{{ fields.hero_min_height|default('auto') }}{{ has_bg ? ' block-hero--has-bg' : '' }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  {% if has_bg %}
+    <div class="block-hero__bg" aria-hidden="true">
+      {{ wco_image(fields.hero_background_image, { size: 'full', class: 'block-hero__bg-image', loading: 'eager' })|raw }}
+      <span class="block-hero__overlay" style="opacity: {{ (fields.hero_overlay|default(40)) / 100 }}"></span>
+    </div>
+  {% endif %}
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-hero__inner block-hero__inner--image-{{ fields.hero_image_position|default('right') }}">
+      {{ inner_blocks(inner_template) }}
+    </div>
+  </div>
+</section>

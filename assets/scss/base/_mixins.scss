@@ -105,3 +105,28 @@
   line-height: $line-height;
   font-weight: $weight;
 }
+
+// Applies styles to a block's inner-blocks container. The editor and the front end share the same
+// DOM: .block > .acf-innerblocks-container > children (see Templating::inner_blocks()).
+@mixin inner-layout {
+  > .acf-innerblocks-container {
+    @content;
+  }
+}
+
+// Responsive grid: $n columns on desktop, 2 on tablet, 1 on mobile.
+@mixin grid-columns($n, $gap: 2rem) {
+  display: grid;
+  grid-template-columns: repeat($n, minmax(0, 1fr));
+  gap: $gap;
+
+  @include tablet {
+    @if $n > 2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

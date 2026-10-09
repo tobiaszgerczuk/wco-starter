@@ -3,6 +3,7 @@ import LazyLoader from './components/lazyload.js';
 import Parallax from './components/parralax.js';
 import Reveal from './components/Reveal.js';
 import Header from './modules/header.js';
+import Consent from './modules/consent.js';
 import swipers from './modules/swipers.js';
 import WcoShop from './ecommerce/woocommerce.js';
 // Optional: uncomment when a block needs Swiper.
@@ -34,6 +35,7 @@ function initBlockModules() {
 
 document.addEventListener('DOMContentLoaded', () => {
   new Header();
+  new Consent();
   new LazyLoader();
   new CustomBehaviors();
   new Parallax('[data-parallax]', 0.4);

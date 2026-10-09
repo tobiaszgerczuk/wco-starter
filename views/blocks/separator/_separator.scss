@@ -1,0 +1,18 @@
+.block-separator {
+  &__line {
+    margin: 0 auto;
+    border: 0;
+    border-top: var(--separator-thickness, 1px) solid currentColor;
+
+    &--solid { border-top-style: solid; }
+    &--dashed { border-top-style: dashed; }
+    &--dotted { border-top-style: dotted; }
+
+    &--border { color: var(--color-border); }
+    &--primary { color: var(--color-primary); }
+    &--text { color: var(--color-text); }
+    &--accent { color: var(--color-accent); }
+
+    &--short { width: 6rem; }
+  }
+}

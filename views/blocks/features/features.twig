@@ -1,0 +1,7 @@
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-features__items block-features__items--cols-{{ fields.features_columns|default(3) }} block-features__items--{{ fields.features_card_style|default('card') }} block-features__items--{{ fields.features_item_align|default('left') }}">
+      {{ inner_blocks(inner_template, inner_allowed) }}
+    </div>
+  </div>
+</section>

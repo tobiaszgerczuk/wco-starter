@@ -117,10 +117,14 @@ Presety generatora:
 
 ```bash
 npm run create-block -- testimonials-slider "Testimonials Slider" --preset=slider
+npm run create-block -- promo "Promo" --preset=content
+npm run create-block -- team "Team" --preset=items
 ```
 
 Aktualnie dostępne:
-- `--preset=basic` (domyślny)
+- `--preset=content` — blok, którego treść (nagłówek, tekst, obraz, przyciski) edytujesz **bezpośrednio w podglądzie** (patrz niżej)
+- `--preset=items` — blok nadrzędny + blok potomny `<slug>-item` (lista kafelków, pytań, opinii…) z przyciskiem „+” w podglądzie
+- `--preset=basic` (domyślny, starszy model: pola w ACF, edycja z panelu bocznym)
 - `--preset=slider` (szkielet pod Swiper Registry)
 
 Po wygenerowaniu:
@@ -141,6 +145,73 @@ Dry run:
 
 ```bash
 npm run create-block -- hero-banner "Hero Banner" --dry-run
+```
+
+## Tracking i zgoda na cookies (Ustawienia motywu → Śledzenie, Cookies i zgoda)
+
+Całość obsługuje `app/Core/Tracking.php`; baner to `views/partials/cookie-banner.twig` + `assets/js/modules/consent.js`.
+
+- **GTM**: wpisz ID (`GTM-XXXXXX`) w zakładce Śledzenie. Skrypt trafia na sam początek `<head>`, a `<noscript>` z iframe zaraz po `<body>` (szablon wywołuje `wp_body_open`). ID i GA4 są walidowane, nieprawidłowe nie są wypisywane.
+- **Consent Mode v2**: przy włączonym banerze przed GTM drukowane są ustawienia domyślne (`ad_storage`, `ad_user_data`, `ad_personalization`, `analytics_storage` = `denied`, `wait_for_update` 500 ms). Dla powracającego odwiedzającego domyślne wartości wynikają z jego cookie, więc nie startuje od „denied". Po wyborze wysyłany jest `gtag('consent', 'update', …)` oraz zdarzenie `wco_consent_update` do `dataLayer` (do wyzwalaczy w GTM).
+- **Baner**: „Akceptuję wszystkie” i „Tylko niezbędne” mają jednakową wagę, „Dostosuj” pokazuje kategorie (niezbędne, analityczne, marketingowe). Wybór zapisuje cookie `wco_consent` na 12 miesięcy w formacie `<wersja>.a<0|1>.m<0|1>`. Stopka ma link „Ustawienia cookies” (`data-consent-open`), który otwiera baner ponownie; ten sam atrybut możesz dać dowolnemu linkowi. Zmiana pola „Wersja zgody” pyta wszystkich ponownie.
+- **Dodatkowe skrypty (head / przed `</body>`)** są przy włączonym banerze trzymane w `<template>` i wstawiane dopiero po zgodzie na cookies analityczne. Po wycofaniu zgody strona się przeładowuje, żeby wstrzyknięte skrypty przestały działać.
+- **Pomijanie redaktorów**: domyślnie zalogowani użytkownicy z prawem edycji nie ładują śledzenia (opcja do wyłączenia).
+- **Baner pokazuje się tylko, gdy coś jest skonfigurowane** (GTM, GA4 lub dodatkowe skrypty). Jeśli zgodą zarządzasz w GTM własnym CMP, wyłącz „Baner zgody na cookies”: wtedy motyw niczego nie blokuje ani nie zmienia.
+- **Ograniczenie**: iframe `<noscript>` nie może przenieść zgody (brak JS), więc przy rygorystycznym RODO wyłącz opcję „GTM noscript iframe”.
+
+## Panel wyglądu (Ustawienia motywu → Wygląd)
+
+Zakładki: **Kolory**, **Typografia**, **Logo i nagłówek**, **Kształt**. Całość obsługuje `app/Core/Appearance.php`.
+
+- **Kolory** (główny, drugi, akcent, tekst, tekst pomocniczy, tło, powierzchnia, obramowania, kolor główny po najechaniu — liczony automatycznie, jeśli pusty) trafiają do zmiennych CSS `:root` (`--color-*`) oraz do presetów WordPressa (`--wp--preset--color--*`). Przyciski, nadtytuły, tła sekcji i cały motyw czytają te zmienne, więc zmiana działa wszędzie, także w edytorze blokowym. Wartości domyślne są w `Appearance::DEFAULTS` i odpowiadają `assets/scss/base/_variables.scss`.
+- **Typografia**: czcionka nagłówków i tekstu z katalogu (`Appearance::FONTS`, dopisujesz kolejne jedną linią: nazwa, specyfikacja Google Fonts, czy szeryfowa) oraz bazowy rozmiar. Domyślnie czcionki są **hostowane lokalnie**: po zapisie ustawień pobieranie plików woff2 (podzbiory `latin` i `latin-ext`, więc polskie znaki działają) do `uploads/wco-fonts`, bez zapytań do Google przy wyświetlaniu strony. Gdy pobranie się nie uda albo przełącznik jest wyłączony, używany jest link Google Fonts. Dla innych alfabetów (np. cyrylica) dopisz podzbiór w `Appearance::build_local_fonts()`.
+- **Logo i nagłówek**: logo (wysokość ustawiasz osobno), zachowanie nagłówka (przyklejony / statyczny), przezroczysty na górze strony, zmniejszanie przy przewijaniu. Opcje wracają jako klasy `<body>`: `header-static`, `header-solid`, `header-no-shrink` (style w `assets/scss/layout/_header.scss`). Favicon ustawia się natywnie w Wygląd → Dostosuj → Tożsamość witryny.
+- **Kształt**: zaokrąglenia przycisków, kart i obrazów (`--radius-sm/md/lg`). Zmienne SCSS `$radius-*` są teraz zmiennymi CSS z wartością zapasową.
+
+Dodanie nowej opcji: pole w `Appearance::register_fields()`, wartość domyślna w `DEFAULTS`, a zmienną CSS w `Appearance::css()`.
+
+## Bloki z edycją w podglądzie (InnerBlocks)
+
+Domyślny sposób budowania sekcji w tym starterze: **ACF trzyma tylko ustawienia, a treść to zwykłe bloki WP wewnątrz bloku**. Dzięki temu teksty, obrazy i przyciski klikasz i edytujesz bezpośrednio na podglądzie sekcji, bez ołówka i panelu bocznego.
+
+- Blok jest rejestrowany przez `block.json` (klucze `name` i `acf`) — `Registry::register_json_blocks()`.
+- Treść startową definiuje szablon w `<slug>.include.php` (`inner_template`): tablica `[nazwa, atrybuty, dzieci]`. Pomocnicze: `BlockContext::head_template()` (nadtytuł + nagłówek + lead), `BlockContext::buttons_template()`.
+- W Twigu wstawiasz `{{ inner_blocks(inner_template) }}` (opcjonalnie `inner_blocks(inner_template, inner_allowed)` — lista dozwolonych bloków). W edytorze funkcja drukuje tag ACF `<InnerBlocks />`, na froncie zwraca zapisaną treść w tym samym `div.acf-innerblocks-container`, którego używa edytor — dzięki temu front i edytor mają identyczny DOM (`.blok > .acf-innerblocks-container > dzieci`).
+- Listy elementów (kafelki, FAQ, opinie, statystyki) to bloki potomne (`"parent": ["acf/features"]` w `block.json`), a nie repeatery ACF — dodajesz, przestawiasz i usuwasz je w podglądzie.
+- Układ siatki piszesz mixinem `inner-layout` (celuje w `> .acf-innerblocks-container`), który działa i na froncie, i w edytorze (`@include inner-layout { @include grid-columns(3); }`).
+- Klasy `className` w szablonie (`is-eyebrow`, `is-lead`, `is-span-all`, `is-value` …) są stylowane w `assets/scss/components/_block-content.scss` i w SCSS bloku.
+- Przyciski to natywny `core/button` z wariantami `secondary`, `outline`, `link` (style w `components/_buttons.scss`).
+
+### Wspólne ustawienia sekcji
+
+Tło, szerokość treści, ID bloku i odstępy to **jedna** grupa ACF: `acf-json/group_section_settings.json`. Dołączasz ją do bloku jedną linijką w `block.json`:
+
+```json
+"wco": { "sectionSettings": true }
+```
+
+Lokalizacje grupy uzupełnia `Registry::section_settings_locations()`, więc nowy blok nie potrzebuje własnej kopii pól. Pola specyficzne dla bloku (kolumny, wyrównanie…) są w `group_<slug>.json` bloku. Wartości domyślne ustawień sekcji są w `BlockContext::SECTION_DEFAULTS` (działają też dla bloków wstawionych ze wzorca).
+
+### Gotowe sekcje
+
+`hero`, `section-heading`, `text-image`, `cta`, `separator`, `features` (+`feature-item`), `faq` (+`faq-item`, akordeon i dane strukturalne FAQPage), `testimonials` (+`testimonial-item`), `stats` (+`stat-item`), `logos`, `gallery`, `latest-posts` (z opcjonalnym „Załaduj więcej”), `pricing` (+`pricing-item`, wyróżniony pakiet z plakietką), `team` (+`team-member`), `timeline` (+`timeline-item`, jedna strona lub naprzemiennie), `video`, `map`, `contact`. Wcześniejsze: `container-group`, `two-columns`, `spacer`, `testimonials-slider`.
+
+### Wideo, mapa i formularz
+
+- **`video`**: adres YouTube, Vimeo lub plik `.mp4`/`.webm`. Dla YouTube i Vimeo pokazuje się najpierw okładka z przyciskiem odtwarzania (opcjonalny obraz okładki), a odtwarzacz (`youtube-nocookie.com`, Vimeo z `dnt=1`) wczytuje się dopiero po kliknięciu, więc przed zgodą nie ma żadnego połączenia z zewnętrznym serwisem. Dozwolone adresy iframe są sprawdzane w PHP i w `video.js`.
+- **`map`**: wpisujesz adres albo własny link osadzenia (Google Maps, OpenStreetMap, Mapy.cz; inne hosty są odrzucane). Mapa wczytuje się po kliknięciu „Wyświetl mapę”, obok jest link „Otwórz w Google Maps”. Wysokość 300–600 px.
+- **`contact`**: dane kontaktowe edytujesz w podglądzie, a formularz to pojedynczy shortcode wklejony w ustawieniach bloku (np. `[contact-form-7 id="123" title="Kontakt"]`). Style CF7 są w `components/_forms.scss`. Blok nie ma własnej obsługi wysyłki, więc potrzebuje wtyczki formularzy.
+
+### Style w edytorze (żeby czcionki motywu nie wchodziły do interfejsu WordPressa)
+
+Style motywu (`public/style.css`: typografia, `body`, nagłówki, linki) trafiają do edytora **tylko do podglądu treści**, przez `add_editor_style()` w `Theme::supports()`; WordPress zawęża je wtedy do `.editor-styles-wrapper`. Arkusze bloków (`public/blocks/<slug>/<slug>.css`) są ładowane także w edytorze, czyli na całym ekranie admina, dlatego `Registry::register_block_style_handle()` nie daje im zależności od `style.css` w panelu (`is_admin()`). Nie dodawaj reguł na `body`, `h1`–`h6`, `a` ani `p` do arkuszy ładowanych w adminie, bo zmienią wygląd panelu.
+
+### Wzorce (patterns)
+
+Gotowe układy stron są w `patterns/*.php` (`landing`, `about`, `faq`, `blog-intro`, `pricing`, `contact`, `team`) i pojawiają się w edytorze w kategorii **WCO sections**. WordPress cache'uje listę wzorców motywu — po dodaniu pliku wyczyść ją:
+
+```bash
+docker compose run --rm wp-cli wp eval 'wp_get_theme()->delete_pattern_cache();'
 ```
 
 ## Struktura bloku
@@ -203,17 +274,12 @@ Nowe gotowce:
 
 ## Gotowe bloki startowe
 
-W starterze są już przygotowane przykładowe bloki:
-- `text-image`
-- `faq-accordion`
-- `services`
+W starterze są już przygotowane przykładowe bloki (pełna lista nowych sekcji — wyżej):
 - `testimonials-slider`
-- `latest-posts`
 - `container-group`
 - `spacer`
 
 `testimonials-slider` jest spięty z registry swiperów i ma już gotowy JS, Twig, SCSS i ACF JSON.
-`latest-posts` ma bazę pod infinite pagination przez REST API.
 `spacer` to prosty separator odstępu z osobnym ustawieniem wysokości dla `desktop` i `mobile`.
 
 ### Spacer

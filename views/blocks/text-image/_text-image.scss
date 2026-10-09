@@ -1,78 +1,30 @@
 .block-text-image {
   &__inner {
-    display: grid;
-    gap: 2rem;
-    align-items: center;
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 520px);
+    @include inner-layout {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3rem;
+      align-items: center;
 
-    @include tablet {
-      gap: 1.5rem;
-      grid-template-columns: 1fr;
+      > * { margin-block: 0; }
+
+      @include tablet { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    &--size-third { @include inner-layout { grid-template-columns: 2fr 1fr; @include tablet { grid-template-columns: minmax(0, 1fr); } } }
+    &--size-two-thirds { @include inner-layout { grid-template-columns: 1fr 2fr; @include tablet { grid-template-columns: minmax(0, 1fr); } } }
+    &--size-third.block-text-image__inner--image-left { @include inner-layout { grid-template-columns: 1fr 2fr; @include tablet { grid-template-columns: minmax(0, 1fr); } } }
+    &--size-two-thirds.block-text-image__inner--image-left { @include inner-layout { grid-template-columns: 2fr 1fr; @include tablet { grid-template-columns: minmax(0, 1fr); } } }
+
+    &--align-start { @include inner-layout { align-items: start; } }
+    &--align-end { @include inner-layout { align-items: end; } }
+
+    &--image-left .wp-block-image { order: -1; }
+
+    &--image-first-mobile .wp-block-image {
+      @include tablet { order: -1; }
     }
   }
 
-  &__inner--image-left {
-    .block-text-image__content {
-      order: 2;
-
-      @include tablet {
-        order: 1;
-      }
-    }
-
-    .block-text-image__media {
-      order: 1;
-
-      @include tablet {
-        order: 2;
-      }
-    }
-  }
-
-  &__eyebrow {
-    margin: 0 0 0.75rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--color-primary);
-  }
-
-  &__title {
-    margin: 0 0 1rem;
-  }
-
-  &__text {
-    max-width: 60ch;
-  }
-
-  &__link {
-    margin-top: 1rem;
-  }
-
-  &__media {
-    width: 100%;
-  }
-
-  &__image,
-  &__image-placeholder {
-    width: 100%;
-    min-height: 340px;
-    border-radius: $radius-lg;
-  }
-
-  &__image {
-    height: 100%;
-    object-fit: cover;
-  }
-
-  &__image-placeholder {
-    display: grid;
-    place-items: center;
-    padding: 2rem;
-    text-align: center;
-    color: $color-muted;
-    background: var(--color-surface);
-    border: 1px dashed var(--color-border);
-  }
+  .wp-block-image img { display: block; width: 100%; height: auto; border-radius: $radius-lg; }
 }

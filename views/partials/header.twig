@@ -1,8 +1,8 @@
 <header class="site-header" data-sticky>
 	<div class="container header-inner">
 		<a class="brand" href="{{ site.url }}">
-			{% if acf.logo %}
-				<img src="{{ acf.logo.url }}" alt="{{ acf.logo.alt|default(site.name) }}">
+			{% if appearance.logo_id %}
+				{{ wco_image(appearance.logo_id, { size: 'medium', loading: 'eager', alt: site.name, class: 'brand__logo' })|raw }}
 			{% else %}
 				{{ site.name }}
 			{% endif %}

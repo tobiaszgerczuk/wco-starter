@@ -13,6 +13,9 @@ class Registry
 
     public static function boot(): void
     {
+        add_filter('acf/load_field_group', [self::class, 'section_settings_locations']);
+        Editor::boot();
+
         if (function_exists('get_block_categories')) {
             add_filter('block_categories_all', [self::class, 'register_block_category'], 10, 2);
         } else {
@@ -25,6 +28,7 @@ class Registry
         // === GUTENBERG EDITOR ASSETS ===
         add_action('enqueue_block_editor_assets', [self::class, 'enqueue_editor_assets']);
 
+        self::register_json_blocks();
         self::register_container_group_block();
         self::register_two_columns_block();
         self::register_two_columns_column_block();
@@ -47,6 +51,11 @@ class Registry
                 continue;
             }
 
+            // Blocks with a "name" in block.json are registered by register_json_blocks().
+            if (self::is_json_block($dir)) {
+                continue;
+            }
+
             // Sprawdź, czy istnieje .twig
             $twig_file = $dir . '/' . $slug . '.twig';
             if (!file_exists($twig_file)) {
@@ -56,6 +65,72 @@ class Registry
             $args = self::build_block_args($slug, $dir);
             acf_register_block_type($args);
         }
+    }
+
+    /**
+     * Registers ACF blocks described by block.json ("name" + "acf" keys). Content lives in
+     * InnerBlocks (edited in the preview); ACF fields only hold settings.
+     */
+    private static function register_json_blocks(): void
+    {
+        $blocks_dir = get_template_directory() . '/' . self::VIEWS_DIR . '/' . self::BLOCKS_DIR;
+
+        foreach (glob($blocks_dir . '/*', GLOB_ONLYDIR) ?: [] as $dir) {
+            if (!self::is_json_block($dir)) {
+                continue;
+            }
+
+            $slug = basename($dir);
+            $args = [];
+            if (self::is_polish_locale()) {
+                // block.json is read directly by WordPress, so hand over the translated labels.
+                $metadata = self::get_block_metadata($dir);
+                foreach (['title', 'description'] as $key) {
+                    if (!empty($metadata[$key])) {
+                        $args[$key] = $metadata[$key];
+                    }
+                }
+            }
+            $style = self::register_block_style_handle($slug);
+            if ($style !== '') {
+                $args['style'] = $style;
+                $args['editor_style'] = $style;
+            }
+
+            register_block_type($dir, $args);
+        }
+    }
+
+    /**
+     * The shared "Section settings" group is attached to every block whose block.json has
+     * "wco": { "sectionSettings": true }, so new blocks never need their own copy of the fields.
+     */
+    public static function section_settings_locations(array $group): array
+    {
+        if (($group['key'] ?? '') !== 'group_section_settings') {
+            return $group;
+        }
+
+        $location = [];
+        $blocks_dir = get_template_directory() . '/' . self::VIEWS_DIR . '/' . self::BLOCKS_DIR;
+
+        foreach (glob($blocks_dir . '/*/block.json') ?: [] as $file) {
+            $metadata = self::get_block_metadata(dirname($file));
+            if (!empty($metadata['wco']['sectionSettings']) && !empty($metadata['name'])) {
+                $location[] = [['param' => 'block', 'operator' => '==', 'value' => $metadata['name']]];
+            }
+        }
+
+        $group['location'] = $location;
+
+        return $group;
+    }
+
+    private static function is_json_block(string $dir): bool
+    {
+        $metadata = self::get_block_metadata($dir);
+
+        return !empty($metadata['name']) && isset($metadata['acf']);
     }
 
     /**
@@ -259,11 +334,16 @@ class Registry
             return '';
         }
 
+        // Block styles are also loaded in the editor, i.e. on a whole admin screen. The front-end
+        // stylesheet restyles <body>, headings and links, so it must not be a dependency there:
+        // theme typography reaches the editor canvas through add_editor_style() instead.
+        $dependencies = is_admin() ? [] : ['wco-starter-style'];
+
         if (!wp_style_is($handle, 'registered')) {
             wp_register_style(
                 $handle,
                 get_template_directory_uri() . '/public/blocks/' . $slug . '/' . $slug . '.css',
-                ['wco-starter-style'],
+                $dependencies,
                 filemtime($css_path)
             );
         }
@@ -319,12 +399,36 @@ class Registry
             'Hero Banner' => 'Baner hero',
             'Latest Posts' => 'Najnowsze wpisy',
             'Services' => 'Usługi',
-            'Spacer' => 'Separator',
+            'Spacer' => 'Odstęp',
             'Testimonials Slider' => 'Slider opinii',
             'Text image' => 'Tekst i obraz',
             'Two Columns' => 'Dwie kolumny',
             'Two Columns Column' => 'Kolumna dwóch kolumn',
             'Testowy' => 'Testowy',
+            'Contact' => 'Kontakt',
+            'Call to Action' => 'Wezwanie do działania',
+            'FAQ Item' => 'Pytanie FAQ',
+            'FAQ' => 'FAQ',
+            'Feature Item' => 'Kafelek',
+            'Features' => 'Kafelki',
+            'Gallery' => 'Galeria',
+            'Hero' => 'Hero',
+            'Logos' => 'Logotypy',
+            'Map' => 'Mapa',
+            'Pricing Plan' => 'Pakiet cennika',
+            'Pricing' => 'Cennik',
+            'Section Heading' => 'Nagłówek sekcji',
+            'Separator' => 'Linia',
+            'Stat Item' => 'Liczba',
+            'Stats' => 'Liczby',
+            'Team Member' => 'Członek zespołu',
+            'Team' => 'Zespół',
+            'Testimonial Item' => 'Opinia',
+            'Testimonials' => 'Opinie',
+            'Text and Image' => 'Tekst i obraz',
+            'Timeline Step' => 'Etap osi czasu',
+            'Timeline' => 'Oś czasu',
+            'Video' => 'Wideo',
         ];
 
         if (isset($blockNames[$value])) {
@@ -345,6 +449,31 @@ class Registry
             'Testimonials slider block.' => 'Blok slidera opinii.',
             'Two-column layout block with container width and ratio controls.' => 'Blok układu dwóch kolumn z wyborem szerokości kontenera i proporcji.',
             'Inner column for the Two Columns layout block.' => 'Wewnętrzna kolumna dla bloku układu dwóch kolumn.',
+            'Contact details next to a form (Contact Form 7 or another form shortcode).' => 'Dane kontaktowe obok formularza (Contact Form 7 lub inny shortcode).',
+            'Heading, text and buttons. Edit directly in the preview.' => 'Nagłówek, tekst i przyciski. Edytujesz bezpośrednio w podglądzie.',
+            'Single question and answer. The first heading is the question.' => 'Jedno pytanie i odpowiedź. Pierwszy nagłówek to pytanie.',
+            'Accordion of questions. Edit questions and answers in the preview.' => 'Akordeon z pytaniami. Pytania i odpowiedzi edytujesz w podglądzie.',
+            'Single feature card.' => 'Pojedynczy kafelek.',
+            'Grid of feature cards. Add, reorder and edit cards in the preview.' => 'Siatka kafelków. Dodajesz, przestawiasz i edytujesz je w podglądzie.',
+            'Image grid. Add images in the preview.' => 'Siatka zdjęć. Zdjęcia dodajesz w podglądzie.',
+            'Hero with text and image, optional background image. Edit text and image in the preview.' => 'Hero z tekstem i zdjęciem, opcjonalnie z obrazem w tle. Tekst i zdjęcie edytujesz w podglądzie.',
+            'Newest posts in cards. Edit the heading in the preview; options in the sidebar.' => 'Najnowsze wpisy w kartach. Nagłówek edytujesz w podglądzie, opcje w panelu bocznym.',
+            'Client logos. Add images and links in the preview.' => 'Logotypy klientów. Obrazy i linki dodajesz w podglądzie.',
+            'Embedded map that loads after a click (privacy friendly).' => 'Mapa wczytywana po kliknięciu (przyjazna prywatności).',
+            'Single pricing plan.' => 'Pojedynczy pakiet cennika.',
+            'Pricing plans. Add, reorder and edit plans in the preview.' => 'Pakiety cennika. Dodajesz, przestawiasz i edytujesz je w podglądzie.',
+            'Eyebrow, heading and lead text. Edit directly in the preview.' => 'Nadtytuł, nagłówek i lead. Edytujesz bezpośrednio w podglądzie.',
+            'Horizontal line with style, width and colour options.' => 'Pozioma linia z opcjami stylu, szerokości i koloru.',
+            'Single number with a label.' => 'Jedna liczba z podpisem.',
+            'Row of numbers with labels. Edit numbers and labels in the preview.' => 'Rząd liczb z podpisami. Liczby i podpisy edytujesz w podglądzie.',
+            'Single team member.' => 'Jedna osoba z zespołu.',
+            'Team members. Add, reorder and edit people in the preview.' => 'Zespół. Osoby dodajesz, przestawiasz i edytujesz w podglądzie.',
+            'Single customer quote.' => 'Pojedyncza opinia klienta.',
+            'Customer quotes. Add, reorder and edit quotes in the preview.' => 'Opinie klientów. Dodajesz, przestawiasz i edytujesz je w podglądzie.',
+            'Two columns: text and image. Edit both directly in the preview.' => 'Dwie kolumny: tekst i zdjęcie. Oba edytujesz bezpośrednio w podglądzie.',
+            'Single milestone.' => 'Pojedynczy etap.',
+            'Milestones on a vertical line. Add, reorder and edit steps in the preview.' => 'Etapy na pionowej osi. Dodajesz, przestawiasz i edytujesz je w podglądzie.',
+            'YouTube, Vimeo or a video file. The player loads after a click (privacy friendly).' => 'YouTube, Vimeo lub plik wideo. Odtwarzacz wczytuje się po kliknięciu (przyjazny prywatności).',
             'container' => 'kontener',
             'group' => 'grupa',
             'wrapper' => 'wrapper',

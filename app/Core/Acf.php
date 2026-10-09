@@ -41,6 +41,11 @@ class Acf
 
     public static function sync_block_json_to_file(array $fieldGroup): void
     {
+        // Shared groups live in acf-json/, not in a block folder.
+        if (($fieldGroup['key'] ?? '') === 'group_section_settings') {
+            return;
+        }
+
         $blockName = self::resolve_block_name_from_group($fieldGroup);
         if ($blockName === null) {
             return;
@@ -490,26 +495,14 @@ class Acf
         ]);
     }
 
+    /** Custom code from the settings page. GTM, GA4 and tracking scripts are handled by Tracking. */
     public static function render_custom_head_code(): void
     {
         self::render_option_code('custom_head_code');
-        self::render_option_code('tracking_head_scripts');
-
-        $gtm = self::field_from_option('google_tag_manager_id');
-        if (is_string($gtm) && trim($gtm) !== '') {
-            echo "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','{$gtm}');</script>\n";
-        }
-
-        $ga4 = self::field_from_option('google_analytics_id');
-        if (is_string($ga4) && trim($ga4) !== '') {
-            echo "<script async src=\"https://www.googletagmanager.com/gtag/js?id={$ga4}\"></script>\n";
-            echo "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','{$ga4}');</script>\n";
-        }
     }
 
     public static function render_custom_footer_code(): void
     {
-        self::render_option_code('tracking_body_scripts');
         self::render_option_code('custom_footer_code');
     }
 
@@ -642,6 +635,153 @@ class Acf
             'Full' => 'Pełna szerokość',
             'Section settings' => 'Ustawienia sekcji',
             'Spacing settings' => 'Paddingi i marginesy',
+            'Video URL' => 'Adres wideo',
+            'YouTube, Vimeo or a direct .mp4 / .webm link.' => 'YouTube, Vimeo lub bezpośredni link do pliku .mp4 / .webm.',
+            'Cover image' => 'Obraz okładki',
+            'Shown before the video loads.' => 'Widoczny, zanim wideo się wczyta.',
+            'Aspect ratio' => 'Proporcje',
+            'Form shortcode' => 'Shortcode formularza',
+            'Paste a single shortcode from Contact Form 7 (or another form plugin).' => 'Wklej pojedynczy shortcode z Contact Form 7 (lub innej wtyczki formularzy).',
+            'Form position' => 'Pozycja formularza',
+            'Address' => 'Adres',
+            'E.g. \'Rynek Główny 1, Kraków\'. Used to build the map.' => 'Np. „Rynek Główny 1, Kraków”. Na jego podstawie powstaje mapa.',
+            'Custom embed URL (optional)' => 'Własny adres osadzenia (opcjonalnie)',
+            'A Google Maps, OpenStreetMap or Mapy.cz embed link. Overrides the address.' => 'Link osadzenia z Google Maps, OpenStreetMap lub Mapy.cz. Zastępuje adres.',
+            'Map height (px)' => 'Wysokość mapy (px)',
+            '300' => '300',
+            '400' => '400',
+            '500' => '500',
+            '600' => '600',
+            'Highlight this plan' => 'Wyróżnij ten pakiet',
+            'Badge text' => 'Tekst plakietki',
+            'Photo shape' => 'Kształt zdjęć',
+            'Rounded' => 'Zaokrąglone',
+            'Square' => 'Kwadratowe',
+            'Layout' => 'Układ',
+            'One side' => 'Po jednej stronie',
+            'Alternating sides' => 'Naprzemiennie',
+            'Cookies and consent' => 'Cookies i zgoda',
+            'Cookie consent banner' => 'Baner zgody na cookies',
+            'Shown only when Google Tag Manager, Google Analytics or additional scripts are set. Turns on Google Consent Mode v2 (everything denied until the visitor agrees) and holds back the additional scripts until analytics cookies are accepted. Turn it off if you manage consent inside GTM.' => 'Pokazuje się tylko, gdy ustawiono Google Tag Manager, Google Analytics lub dodatkowe skrypty. Włącza Google Consent Mode v2 (wszystko zablokowane do czasu zgody) i wstrzymuje dodatkowe skrypty do zaakceptowania cookies analitycznych. Wyłącz, jeśli zgodą zarządzasz w GTM.',
+            'Banner title' => 'Tytuł banera',
+            'Privacy policy link' => 'Link do polityki prywatności',
+            'Leave empty to use the WordPress privacy page.' => 'Zostaw puste, aby użyć strony prywatności WordPressa.',
+            'Banner text' => 'Treść banera',
+            'Consent version' => 'Wersja zgody',
+            'Change it (e.g. to 2) after changing which cookies you use; every visitor is then asked again.' => 'Zmień (np. na 2) po zmianie używanych cookies; każdy odwiedzający zostanie wtedy zapytany ponownie.',
+            'GTM noscript iframe' => 'GTM noscript iframe',
+            'Adds the <noscript> iframe after <body>. Visitors without JavaScript cannot give consent, so turn it off for strict GDPR setups.' => 'Dodaje iframe <noscript> zaraz po <body>. Odwiedzający bez JavaScriptu nie mogą wyrazić zgody, więc przy rygorystycznym RODO wyłącz.',
+            'Skip tracking for logged-in editors' => 'Pomijaj śledzenie dla zalogowanych redaktorów',
+            'Keeps your own visits out of the statistics.' => 'Twoje wizyty nie zniekształcą statystyk.',
+            'Appearance' => 'Wygląd',
+            'Colors' => 'Kolory',
+            'Primary color' => 'Kolor główny',
+            'Buttons, links, highlights.' => 'Przyciski, linki, wyróżnienia.',
+            'Secondary color' => 'Kolor drugi',
+            'Accent color' => 'Kolor akcentu',
+            'Text color' => 'Kolor tekstu',
+            'Muted text color' => 'Kolor tekstu pomocniczego',
+            'Paragraphs and captions.' => 'Akapity i podpisy.',
+            'Page background' => 'Tło strony',
+            'Surface color' => 'Kolor powierzchni',
+            'Cards and light sections.' => 'Karty i jasne sekcje.',
+            'Border color' => 'Kolor obramowań',
+            'Primary hover color' => 'Kolor główny po najechaniu',
+            'Leave empty to darken the primary color automatically.' => 'Zostaw puste, aby przyciemnić kolor główny automatycznie.',
+            'Typography' => 'Typografia',
+            'Heading font' => 'Czcionka nagłówków',
+            'Body font' => 'Czcionka tekstu',
+            'Base font size (px)' => 'Bazowy rozmiar czcionki (px)',
+            'Host fonts locally' => 'Hostuj czcionki lokalnie',
+            'Downloads the font files once and serves them from your site (no requests to Google, better for GDPR). Falls back to Google Fonts if the download fails.' => 'Pobiera pliki czcionek jednorazowo i serwuje je z Twojej strony (bez zapytań do Google, lepiej pod RODO). Jeśli pobranie się nie uda, używa Google Fonts.',
+            'Logo and header' => 'Logo i nagłówek',
+            'Logo' => 'Logo',
+            'The favicon is set in Appearance > Customize > Site Identity.' => 'Favicon ustawisz w Wygląd > Dostosuj > Tożsamość witryny.',
+            'Logo height (px)' => 'Wysokość logo (px)',
+            'Header behaviour' => 'Zachowanie nagłówka',
+            'Sticky (stays at the top while scrolling)' => 'Przyklejony (zostaje na górze podczas przewijania)',
+            'Static (scrolls away with the page)' => 'Statyczny (przewija się razem ze stroną)',
+            'Transparent at the top of the page' => 'Przezroczysty na górze strony',
+            'Off gives the header a solid background all the time.' => 'Wyłączone daje nagłówkowi stałe, pełne tło.',
+            'Shrink on scroll' => 'Zmniejszaj przy przewijaniu',
+            'Shape' => 'Kształt',
+            'Corner style' => 'Zaokrąglenia',
+            'Rounding of buttons, cards and images.' => 'Zaokrąglenie przycisków, kart i obrazów.',
+            'Sharp' => 'Ostre',
+            'Soft' => 'Delikatne',
+            'Round' => 'Mocno zaokrąglone',
+            'System font' => 'Czcionka systemowa',
+            'Load more button' => 'Przycisk „Załaduj więcej”',
+            'Adds a button that loads the next posts without reloading the page.' => 'Dodaje przycisk doładowujący kolejne wpisy bez przeładowania strony.',
+            'Button label' => 'Etykieta przycisku',
+            'Columns' => 'Kolumny',
+            '1 columns' => '1 kolumna',
+            '2 columns' => '2 kolumny',
+            '3 columns' => '3 kolumny',
+            '4 columns' => '4 kolumny',
+            '5 columns' => '5 kolumn',
+            '6 columns' => '6 kolumn',
+            'Open the first question' => 'Otwórz pierwsze pytanie',
+            'Allow several open at once' => 'Pozwól otwierać kilka naraz',
+            'Output FAQ structured data (SEO)' => 'Dane strukturalne FAQ (SEO)',
+            'Line style' => 'Styl linii',
+            'Solid' => 'Ciągła',
+            'Dashed' => 'Kreskowana',
+            'Dotted' => 'Kropkowana',
+            'Line width' => 'Szerokość linii',
+            'Short' => 'Krótka',
+            'Colour' => 'Kolor',
+            'Light' => 'Jasny',
+            'Primary' => 'Główny',
+            'Dark' => 'Ciemny',
+            'Accent' => 'Akcent',
+            'Thickness (px)' => 'Grubość (px)',
+            'Alignment' => 'Wyrównanie',
+            'Center' => 'Środek',
+            'Show in a rounded box' => 'Pokaż w zaokrąglonym pudełku',
+            'Gap' => 'Odstęp',
+            'Small' => 'Mały',
+            'Large' => 'Duży',
+            'Image ratio' => 'Proporcje obrazka',
+            'Original' => 'Oryginalne',
+            '1:1' => '1:1',
+            '4:3' => '4:3',
+            '16:9' => '16:9',
+            'Item style' => 'Styl elementów',
+            'Plain' => 'Zwykły',
+            'Card' => 'Karta',
+            'Bordered' => 'Z ramką',
+            'Item alignment' => 'Wyrównanie elementów',
+            'Grayscale until hover' => 'Szare do najechania myszką',
+            'XS' => 'XS',
+            'SM' => 'SM',
+            'MD' => 'MD',
+            'LG' => 'LG',
+            'XL' => 'XL',
+            'Image width' => 'Szerokość obrazka',
+            'Half' => 'Połowa',
+            'One third' => 'Jedna trzecia',
+            'Two thirds' => 'Dwie trzecie',
+            'Vertical alignment' => 'Wyrównanie w pionie',
+            'Top' => 'Góra',
+            'Middle' => 'Środek',
+            'Bottom' => 'Dół',
+            'Show image first on mobile' => 'Pokaż obrazek najpierw na mobile',
+            'Number of posts' => 'Liczba wpisów',
+            'Category (optional)' => 'Kategoria (opcjonalnie)',
+            'Show image' => 'Pokaż obrazek',
+            'Show date' => 'Pokaż datę',
+            'Show excerpt' => 'Pokaż zajawkę',
+            'Link to all posts' => 'Link do wszystkich wpisów',
+            'Minimum height' => 'Minimalna wysokość',
+            'Auto' => 'Auto',
+            'Full screen' => 'Pełny ekran',
+            'Background image' => 'Obraz tła',
+            'Overlay darkness (%)' => 'Przyciemnienie tła (%)',
+            'Content width' => 'Szerokość treści',
+            'Full width' => 'Pełna szerokość',
+            'Optional HTML id for anchor links, e.g. contact.' => 'Opcjonalne ID HTML dla linków kotwic, np. kontakt.',
+            'Edit the content of this element directly in the preview.' => 'Treść tego elementu edytujesz bezpośrednio w podglądzie.',
             'Background color' => 'Kolor tła',
             'Select a background color for this section.' => 'Wybierz kolor tła dla tej sekcji.',
             'Block ID' => 'ID bloku',

@@ -1,0 +1,19 @@
+.block-cta {
+  &__inner {
+    max-width: 48rem;
+    margin-inline: auto;
+    text-align: center;
+
+    .wp-block-buttons { justify-content: center; }
+
+    &--left { margin-inline: 0; text-align: left; .wp-block-buttons { justify-content: flex-start; } }
+
+    &--boxed {
+      max-width: none;
+      padding: 3rem 2rem;
+      border-radius: $radius-lg;
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+  }
+}

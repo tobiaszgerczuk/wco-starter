@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/stats",
+  "title": "Stats",
+  "description": "Row of numbers with labels. Edit numbers and labels in the preview.",
+  "category": "wco-blocks",
+  "icon": "chart-bar",
+  "keywords": [
+    "stats",
+    "numbers",
+    "counters"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "stats.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false,
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "wco": {
+    "sectionSettings": true
+  }
+}

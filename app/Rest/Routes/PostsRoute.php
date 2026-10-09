@@ -31,6 +31,10 @@ class PostsRoute extends BaseRoute implements RouteInterface
                     'sanitize_callback' => 'sanitize_key',
                     'default' => 'post',
                 ],
+                'category' => [
+                    'sanitize_callback' => 'absint',
+                    'default' => 0,
+                ],
                 'exclude_ids' => [
                     'sanitize_callback' => [self::class, 'sanitize_ids'],
                     'default' => [],
@@ -53,18 +57,24 @@ class PostsRoute extends BaseRoute implements RouteInterface
         $per_page = max(1, min(24, (int) $request->get_param('per_page')));
         $post_type = sanitize_key((string) $request->get_param('post_type')) ?: 'post';
         $exclude_ids = self::sanitize_ids($request->get_param('exclude_ids'));
+        $category = absint($request->get_param('category'));
         $read_more_label = sanitize_text_field((string) $request->get_param('read_more_label')) ?: 'Read more';
         $no_image_label = sanitize_text_field((string) $request->get_param('no_image_label')) ?: 'No image';
 
-        $payload = Cache::remember(self::cache_key($page, $per_page, $post_type, $exclude_ids, $read_more_label, $no_image_label), 5 * MINUTE_IN_SECONDS, static function () use ($page, $per_page, $post_type, $exclude_ids, $read_more_label, $no_image_label): array {
-            $query = new WP_Query([
+        $payload = Cache::remember(self::cache_key($page, $per_page, $post_type, $exclude_ids, $read_more_label, $no_image_label, $category), 5 * MINUTE_IN_SECONDS, static function () use ($page, $per_page, $post_type, $exclude_ids, $read_more_label, $no_image_label, $category): array {
+            $args = [
                 'post_type' => $post_type,
                 'post_status' => 'publish',
                 'paged' => $page,
                 'posts_per_page' => $per_page,
                 'post__not_in' => $exclude_ids,
                 'ignore_sticky_posts' => true,
-            ]);
+            ];
+            if ($category > 0) {
+                $args['cat'] = $category;
+            }
+
+            $query = new WP_Query($args);
 
             $posts = array_map(
                 static fn (\WP_Post $post): array => self::map_post($post, $read_more_label, $no_image_label),
@@ -110,7 +120,7 @@ class PostsRoute extends BaseRoute implements RouteInterface
         return $mapped_post;
     }
 
-    private static function cache_key(int $page, int $perPage, string $postType, array $excludeIds, string $readMoreLabel, string $noImageLabel): string
+    private static function cache_key(int $page, int $perPage, string $postType, array $excludeIds, string $readMoreLabel, string $noImageLabel, int $category = 0): string
     {
         $payload = [
             'page' => $page,
@@ -119,6 +129,7 @@ class PostsRoute extends BaseRoute implements RouteInterface
             'exclude_ids' => $excludeIds,
             'read_more_label' => $readMoreLabel,
             'no_image_label' => $noImageLabel,
+            'category' => $category,
             'locale' => get_locale(),
         ];
 

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/hero",
+  "title": "Hero",
+  "description": "Hero with text and image, optional background image. Edit text and image in the preview.",
+  "category": "wco-blocks",
+  "icon": "cover-image",
+  "keywords": [
+    "hero",
+    "banner",
+    "header"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "hero.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false,
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "wco": {
+    "sectionSettings": true
+  }
+}

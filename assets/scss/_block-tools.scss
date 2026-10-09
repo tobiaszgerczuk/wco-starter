@@ -1,0 +1,3 @@
+// Injected into every block stylesheet: variables and mixins only, no CSS output.
+@forward "base/variables";
+@forward "base/mixins";

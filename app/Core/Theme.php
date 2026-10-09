@@ -4,6 +4,8 @@ namespace WCO\Starter\Core;
 
 use Timber\Timber;
 use WCO\Starter\Core\Acf;
+use WCO\Starter\Core\Appearance;
+use WCO\Starter\Core\Tracking;
 use WCO\Starter\Core\Assets;
 use WCO\Starter\Core\Media;
 use WCO\Starter\Core\Templating;
@@ -34,6 +36,8 @@ class Theme
 
         // ACF Local JSON
         Acf::boot();
+        Appearance::boot();
+        Tracking::boot();
         add_filter('acf/settings/save_json', [Acf::class, 'save_json']);
         add_filter('acf/settings/load_json', [Acf::class, 'load_json']);
 
@@ -43,21 +47,6 @@ class Theme
 
         // REST API
         RestApi::boot();
-
-        add_action('init', function () {
-            register_post_type('inwestycja', [
-              'labels' => [
-                'name' => 'Inwestycje',
-                'singular_name' => 'Inwestycja',
-              ],
-              'public' => true,
-              'menu_icon' => 'dashicons-location-alt',
-              'supports' => ['title', 'editor', 'thumbnail'],
-              'show_in_rest' => true,
-            ]);
-          });
-          
-          
     }
 
     
@@ -69,6 +58,11 @@ class Theme
         add_theme_support('post-thumbnails');
         add_theme_support('html5', ['search-form', 'gallery', 'caption', 'style', 'script']);
         add_theme_support('wp-block-styles');
+
+        // Theme typography and base styles for the editor canvas only (WordPress scopes the rules
+        // to .editor-styles-wrapper); the admin interface around it keeps its own fonts.
+        add_theme_support('editor-styles');
+        add_editor_style('public/style.css');
         add_theme_support('align-wide');
         add_theme_support('responsive-embeds');
 

@@ -23,8 +23,8 @@ module.exports = (env, argv) => {
     });
   }
 
-  // === ŚCIEŻKA DO _block-base.scss ===
-  const blockBasePath = path.resolve(__dirname, 'assets/scss/_block-base.scss').replace(/\\/g, '/');
+  // === ŚCIEŻKA DO _block-tools.scss (zmienne i mixiny, bez CSS) ===
+  const blockBasePath = path.resolve(__dirname, 'assets/scss/_block-tools.scss').replace(/\\/g, '/');
 
   return {
     entry: {
@@ -33,6 +33,7 @@ module.exports = (env, argv) => {
       admin: './assets/js/admin.js',
       style: './assets/scss/style.scss',
       admin_style: './assets/scss/admin.scss',
+      'blocks/blocks-base': './assets/scss/blocks-base.scss',
       ...blockEntries
     },
 
@@ -64,7 +65,7 @@ module.exports = (env, argv) => {
                   quietDeps: true,
                   silenceDeprecations: ['legacy-js-api']
                 },
-                // DOŁĄCZ _block-base.scss DO KAŻDEGO BLOKU
+                // DOŁĄCZ _block-tools.scss DO KAŻDEGO BLOKU
                 additionalData: (content, loaderContext) => {
                   const { resourcePath } = loaderContext;
                   if (resourcePath.includes('views/blocks/') && resourcePath.endsWith('.scss')) {

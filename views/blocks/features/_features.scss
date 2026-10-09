@@ -1,0 +1,35 @@
+.block-features {
+  &__items {
+    @include inner-layout {
+      @include grid-columns(3);
+
+      > * { margin-block: 0; }
+    }
+
+    @each $n in (2, 3, 4) {
+      &--cols-#{$n} { @include inner-layout { @include grid-columns($n); } }
+    }
+
+    &--center .block-feature-item { text-align: center; .is-icon { margin-inline: auto; } }
+
+    &--card .block-feature-item {
+      padding: 2rem;
+      border-radius: $radius-lg;
+      background: var(--color-surface);
+    }
+
+    &--bordered .block-feature-item {
+      padding: 2rem;
+      border: 1px solid var(--color-border);
+      border-radius: $radius-lg;
+    }
+  }
+}
+
+.block-feature-item {
+  height: 100%;
+
+  .is-icon { width: 3.5rem; margin: 0 0 1rem; img { display: block; width: 100%; height: auto; } }
+  h3 { margin: 0 0 0.5rem; }
+  p { margin: 0 0 0.75rem; }
+}

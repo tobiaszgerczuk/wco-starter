@@ -1,0 +1,6 @@
+<article class="block-pricing-item{{ fields.pricing_item_featured ? ' is-featured' : '' }}">
+  {% if fields.pricing_item_featured %}
+    <span class="block-pricing-item__badge">{{ fields.pricing_item_badge|default('Polecany') }}</span>
+  {% endif %}
+  {{ inner_blocks(inner_template) }}
+</article>

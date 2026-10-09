@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/team-member",
+  "title": "Team Member",
+  "description": "Single team member.",
+  "category": "wco-blocks",
+  "icon": "admin-users",
+  "keywords": [
+    "team",
+    "member"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "team-member.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false
+  },
+  "parent": [
+    "acf/team"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/map",
+  "title": "Map",
+  "description": "Embedded map that loads after a click (privacy friendly).",
+  "category": "wco-blocks",
+  "icon": "location-alt",
+  "keywords": [
+    "map",
+    "location",
+    "google maps"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "map.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false,
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "wco": {
+    "sectionSettings": true
+  }
+}

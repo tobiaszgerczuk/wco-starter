@@ -41,7 +41,7 @@ foreach ($args as $arg) {
     $positional[] = $arg;
 }
 
-$availablePresets = ['basic', 'slider'];
+$availablePresets = ['basic', 'slider', 'content', 'items'];
 if (!in_array($preset, $availablePresets, true)) {
     fwrite(STDERR, "Unsupported preset: {$preset}. Available presets: " . implode(', ', $availablePresets) . "\n");
     exit(1);
@@ -54,6 +54,8 @@ Usage:
 
 Examples:
   php scripts/create-block.php hero-banner "Hero Banner"
+  php scripts/create-block.php promo "Promo" --preset=content    # text/images edited in the preview
+  php scripts/create-block.php team "Team" --preset=items         # parent block + team-item child block
   php scripts/create-block.php testimonials-slider "Testimonials Slider" --preset=slider
   npm run create-block -- hero-banner "Hero Banner"
 
@@ -83,6 +85,9 @@ $fieldPrefix = str_replace('-', '_', $slug);
 $textDomain = extractStyleHeader($themeDir . '/style.css', 'Text Domain') ?? 'wco-starter';
 $timestamp = (string) time();
 
+if (in_array($preset, ['content', 'items'], true)) {
+    $files = build_inner_blocks_files($themeDir, $slug, $title, $icon, $category, $preset, $timestamp);
+} else {
 $files = [
     $blockDir . '/block.json' => build_block_metadata_json($slug, $title, $icon, $category),
     $blockDir . '/' . $slug . '.twig' => build_twig_template($slug, $title, $fieldPrefix, $preset),
@@ -91,6 +96,7 @@ $files = [
     $blockDir . '/' . $slug . '.include.php' => build_include_template($slug),
     $blockAcfJsonPath => build_field_group_json($slug, $title, $fieldPrefix, $icon, $category, $textDomain, $timestamp),
 ];
+}
 
 if (is_dir($blockDir)) {
     fwrite(STDERR, "Block directory already exists: {$blockDir}\n");
@@ -130,7 +136,9 @@ foreach ($files as $filePath => $contents) {
 }
 
 if (!$dryRun) {
-    echo "Next: open ACF Field Groups to adjust fields if needed, then run npm run build.\n";
+    echo in_array($preset, ['content', 'items'], true)
+        ? "Next: run npm run build, then insert the block in the editor. Edit the default template in {$slug}.include.php.\n"
+        : "Next: open ACF Field Groups to adjust fields if needed, then run npm run build.\n";
 }
 
 function build_twig_template(string $slug, string $title, string $fieldPrefix, string $preset): string
@@ -556,4 +564,190 @@ function studly_case(string $slug): string
     );
 
     return implode('', $parts);
+}
+
+/**
+ * Presets "content" and "items": ACF block registered through block.json whose content is made of
+ * native blocks (InnerBlocks) edited directly in the preview. ACF only keeps settings; the shared
+ * "Section settings" group is attached through "wco": {"sectionSettings": true}.
+ *
+ * @return array<string, string> Absolute file path => contents.
+ */
+function build_inner_blocks_files(string $themeDir, string $slug, string $title, string $icon, string $category, string $preset, string $timestamp): array
+{
+    $dir = $themeDir . '/views/blocks/' . $slug;
+    $prefix = str_replace('-', '_', $slug);
+    $isItems = $preset === 'items';
+    $child = $slug . '-item';
+
+    $json = static fn (array $data): string => json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n";
+
+    $blockJson = static fn (string $name, string $label, ?string $parent): array => array_filter([
+        '$schema' => 'https://schemas.wp.org/trunk/block.json',
+        'apiVersion' => 2,
+        'name' => 'acf/' . $name,
+        'title' => $label,
+        'description' => 'Block: ' . $label,
+        'category' => $category,
+        'icon' => $icon,
+        'keywords' => [$name],
+        'acf' => ['mode' => 'preview', 'renderTemplate' => $name . '.include.php'],
+        'supports' => $parent === null
+            ? ['jsx' => true, 'anchor' => false, 'align' => ['full', 'wide']]
+            : ['jsx' => true, 'anchor' => false],
+        'parent' => $parent === null ? null : ['acf/' . $parent],
+        'wco' => $parent === null ? ['sectionSettings' => true] : null,
+    ], static fn ($value) => $value !== null);
+
+    $head = "BlockContext::head_template('{$title}')";
+    $contentTemplate = <<<'PHPT'
+[
+        ['core/paragraph', ['className' => 'is-eyebrow', 'content' => 'Nadtytuł']],
+        ['core/heading', ['level' => 2, 'content' => 'Nagłówek sekcji']],
+        ['core/paragraph', ['content' => 'Tutaj wpisz treść. Edytujesz ją bezpośrednio w podglądzie.']],
+        BlockContext::buttons_template(),
+    ]
+PHPT;
+
+    $parentTemplate = $isItems
+        ? "[\n        {$head},\n        ...array_fill(0, 3, ['acf/{$child}', []]),\n    ]"
+        : $contentTemplate;
+
+    $parentExtra = $isItems
+        ? "\n    'inner_allowed' => ['core/group', 'core/heading', 'core/paragraph', 'acf/{$child}'],"
+        : '';
+
+    $include = static fn (string $name, string $template, string $extra = ''): string => <<<PHP
+<?php
+
+use WCO\\Starter\\Blocks\\BlockContext;
+
+BlockContext::render('{$name}', \$block ?? [], \$content ?? '', \$is_preview ?? false, [
+    'inner_template' => {$template},{$extra}
+]);
+
+PHP;
+
+    $inner = $isItems ? '{{ inner_blocks(inner_template, inner_allowed) }}' : '{{ inner_blocks(inner_template) }}';
+    $parentTwig = <<<TWIG
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-{$slug}__inner">
+      {$inner}
+    </div>
+  </div>
+</section>
+
+TWIG;
+
+    $scss = $isItems
+        ? <<<SCSS
+.block-{$slug} {
+  &__inner {
+    @include inner-layout {
+      @include grid-columns(3);
+
+      > * { margin-block: 0; }
+    }
+  }
+}
+
+.block-{$child} {
+  height: 100%;
+  padding: 2rem;
+  border-radius: \$radius-lg;
+  background: var(--color-surface);
+}
+
+SCSS
+        : <<<SCSS
+.block-{$slug} {
+  &__inner {
+    max-width: 48rem;
+
+    @include inner-layout { > * { margin: 0 0 1rem; } }
+  }
+}
+
+SCSS;
+
+    $group = [
+        'key' => 'group_block_' . $slug,
+        'title' => $title . ' Block',
+        'fields' => [[
+            'key' => 'field_' . $prefix . '_align',
+            'label' => 'Alignment',
+            'name' => $prefix . '_align',
+            'aria-label' => '',
+            'type' => 'select',
+            'instructions' => '',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => ['width' => '', 'class' => '', 'id' => ''],
+            'choices' => ['left' => 'Left', 'center' => 'Center'],
+            'default_value' => 'left',
+            'return_format' => 'value',
+            'multiple' => 0,
+            'allow_null' => 0,
+            'ui' => 0,
+            'ajax' => 0,
+            'placeholder' => '',
+        ]],
+        'location' => [[['param' => 'block', 'operator' => '==', 'value' => 'acf/' . $slug]]],
+        'menu_order' => 0,
+        'position' => 'normal',
+        'style' => 'default',
+        'label_placement' => 'top',
+        'instruction_placement' => 'label',
+        'hide_on_screen' => '',
+        'active' => true,
+        'description' => 'Block-specific settings. Section settings come from the shared group.',
+        'show_in_rest' => 0,
+        'modified' => (int) $timestamp,
+        'wco_metadata' => ['block_name' => $slug, 'icon' => $icon, 'category' => $category, 'text_domain' => 'wco-starter'],
+    ];
+
+    $files = [
+        $dir . '/block.json' => $json($blockJson($slug, $title, null)),
+        $dir . '/' . $slug . '.twig' => $parentTwig,
+        $dir . '/' . $slug . '.include.php' => $include($slug, $parentTemplate, $parentExtra),
+        $dir . '/_' . $slug . '.scss' => $scss,
+        $dir . '/group_' . $slug . '.json' => $json($group),
+    ];
+
+    if ($isItems) {
+        $childDir = $themeDir . '/views/blocks/' . $child;
+        $childTemplate = <<<'PHPT'
+[
+        ['core/heading', ['level' => 3, 'content' => 'Tytuł elementu']],
+        ['core/paragraph', ['content' => 'Opis elementu. Kliknij i edytuj.']],
+    ]
+PHPT;
+        $files[$childDir . '/block.json'] = $json($blockJson($child, $title . ' Item', $slug));
+        $files[$childDir . '/' . $child . '.twig'] = "<div class=\"block-{$child}\">\n  {{ inner_blocks(inner_template) }}\n</div>\n";
+        $files[$childDir . '/' . $child . '.include.php'] = $include($child, $childTemplate);
+        // Without a field group ACF shows a "this block has no editable fields" warning in the sidebar.
+        $childGroup = $group;
+        $childGroup['key'] = 'group_block_' . $child;
+        $childGroup['title'] = $title . ' Item Block';
+        $childGroup['fields'] = [[
+            'key' => 'field_' . str_replace('-', '_', $child) . '_info',
+            'label' => 'Content',
+            'name' => '',
+            'aria-label' => '',
+            'type' => 'message',
+            'instructions' => '',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => ['width' => '', 'class' => '', 'id' => ''],
+            'message' => 'Edit the content of this element directly in the preview.',
+            'new_lines' => 'wpautop',
+            'esc_html' => 0,
+        ]];
+        $childGroup['location'] = [[['param' => 'block', 'operator' => '==', 'value' => 'acf/' . $child]]];
+        $childGroup['wco_metadata']['block_name'] = $child;
+        $files[$childDir . '/group_' . $child . '.json'] = $json($childGroup);
+    }
+
+    return $files;
 }

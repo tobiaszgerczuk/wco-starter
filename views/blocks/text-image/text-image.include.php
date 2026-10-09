@@ -1,18 +1,15 @@
 <?php
 
-use Timber\Timber;
-use WCO\Starter\Blocks\SectionSettings;
+use WCO\Starter\Blocks\BlockContext;
 
-$context = Timber::context();
-$context['fields'] = get_fields() ?: [];
-$context['block'] = $block ?? [];
-$context['is_preview'] = $is_preview ?? false;
-$context['post_id'] = $post_id ?? 0;
-$context['section_classes'] = SectionSettings::build_classes(
-    $context['fields'],
-    ['block-text-image', !empty($context['block']['align']) ? 'align' . $context['block']['align'] : '']
-);
-$context['section_id'] = SectionSettings::section_id($context['fields']);
-$context['section_style'] = SectionSettings::inline_style($context['fields']);
-
-Timber::render('blocks/text-image/text-image.twig', $context);
+BlockContext::render('text-image', $block ?? [], $content ?? '', $is_preview ?? false, [
+    'inner_template' => [
+        ['core/group', ['className' => 'block-text-image__text'], [
+            ['core/paragraph', ['className' => 'is-eyebrow', 'content' => 'Nadtytuł']],
+            ['core/heading', ['level' => 2, 'content' => 'Nagłówek sekcji']],
+            ['core/paragraph', ['content' => 'Tutaj wpisz treść. Możesz dodać kolejne akapity, listy i przyciski.']],
+            BlockContext::buttons_template(),
+        ]],
+        ['core/image', []],
+    ],
+]);

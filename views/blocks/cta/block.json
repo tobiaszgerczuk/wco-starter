@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/cta",
+  "title": "Call to Action",
+  "description": "Heading, text and buttons. Edit directly in the preview.",
+  "category": "wco-blocks",
+  "icon": "megaphone",
+  "keywords": [
+    "cta",
+    "action",
+    "banner"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "cta.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false,
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "wco": {
+    "sectionSettings": true
+  }
+}

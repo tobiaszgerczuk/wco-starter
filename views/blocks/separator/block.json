@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/separator",
+  "title": "Separator",
+  "description": "Horizontal line with style, width and colour options.",
+  "category": "wco-blocks",
+  "icon": "minus",
+  "keywords": [
+    "separator",
+    "line",
+    "divider"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "separator.include.php"
+  },
+  "supports": {
+    "jsx": false,
+    "anchor": false,
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "wco": {
+    "sectionSettings": true
+  }
+}

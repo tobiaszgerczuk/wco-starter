@@ -1,0 +1,24 @@
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-video__head">
+      {{ inner_blocks(inner_template, inner_allowed) }}
+    </div>
+
+    <div class="block-video__player block-video__player--{{ fields.video_ratio|default('16-9') }}"{% if video.provider %} data-video-embed="{{ video.embed }}" data-video-title="{{ video.title }}"{% endif %}>
+      {% if video.provider %}
+        <button type="button" class="block-video__facade" data-video-play aria-label="Odtwórz wideo">
+          {% if fields.video_poster %}
+            {{ wco_image(fields.video_poster, { size: 'large', class: 'block-video__poster' })|raw }}
+          {% endif %}
+          <span class="block-video__play" aria-hidden="true"></span>
+        </button>
+      {% elseif video.file %}
+        <video controls preload="none" playsinline{% if poster_url %} poster="{{ poster_url }}"{% endif %}>
+          <source src="{{ video.file }}">
+        </video>
+      {% elseif is_preview %}
+        <div class="block-video__placeholder">Wklej adres wideo (YouTube, Vimeo lub plik MP4) w ustawieniach bloku.</div>
+      {% endif %}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,46 @@
+.block-hero {
+  position: relative;
+  overflow: hidden;
+
+  &--h-md { min-height: 32rem; }
+  &--h-lg { min-height: 44rem; }
+  &--h-screen { min-height: 100vh; }
+
+  &--h-md, &--h-lg, &--h-screen {
+    display: flex;
+    align-items: center;
+
+    > div { width: 100%; }
+  }
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+
+    img { width: 100%; height: 100%; object-fit: cover; }
+  }
+
+  &__overlay { position: absolute; inset: 0; background: #000; }
+
+  &__inner {
+    position: relative;
+    z-index: 1;
+
+    @include inner-layout {
+      @include grid-columns(2, 3rem);
+      align-items: center;
+
+      > * { margin-block: 0; }
+    }
+
+    &--image-left .wp-block-image { order: -1; }
+  }
+
+  .wp-block-image img { display: block; width: 100%; height: auto; border-radius: $radius-lg; }
+
+  &--has-bg {
+    color: var(--color-white);
+
+    :is(h1, h2, h3, p) { color: inherit; }
+  }
+}

@@ -8,6 +8,9 @@
 				</p>
 				<a href="/polityka-prywatnosci">Polityka prywatności i cookies</a>
 				<a href="/polityka-rodo">Obowiązek informacyjny na podstawie art. 13 RODO</a>
+				{% if consent.enabled %}
+					<a href="#" data-consent-open>Ustawienia cookies</a>
+				{% endif %}
 			</div>
 			<div class="site-footer__flex__right">
 				<p>Powered by

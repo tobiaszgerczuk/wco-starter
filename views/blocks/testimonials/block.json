@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/testimonials",
+  "title": "Testimonials",
+  "description": "Customer quotes. Add, reorder and edit quotes in the preview.",
+  "category": "wco-blocks",
+  "icon": "format-quote",
+  "keywords": [
+    "testimonials",
+    "reviews",
+    "quotes"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "testimonials.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false,
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "wco": {
+    "sectionSettings": true
+  }
+}

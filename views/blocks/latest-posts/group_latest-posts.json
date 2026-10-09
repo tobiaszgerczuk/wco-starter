@@ -1,66 +1,14 @@
 {
-    "ID": 57,
     "key": "group_block_latest-posts",
     "title": "Latest Posts Block",
     "fields": [
         {
-            "key": "field_latest_posts_eyebrow",
-            "label": "Eyebrow",
-            "name": "latest_posts_eyebrow",
-            "aria-label": "",
-            "type": "text",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "50",
-                "class": "",
-                "id": ""
-            },
-            "parent": "group_block_latest-posts",
-            "menu_order": 0
-        },
-        {
-            "key": "field_latest_posts_title",
-            "label": "Title",
-            "name": "latest_posts_title",
-            "aria-label": "",
-            "type": "text",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "50",
-                "class": "",
-                "id": ""
-            },
-            "parent": "group_block_latest-posts",
-            "menu_order": 1
-        },
-        {
-            "key": "field_latest_posts_intro",
-            "label": "Intro",
-            "name": "latest_posts_intro",
-            "aria-label": "",
-            "type": "wysiwyg",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "parent": "group_block_latest-posts",
-            "menu_order": 2,
-            "tabs": "all",
-            "toolbar": "full",
-            "media_upload": 1,
-            "delay": 0
-        },
-        {
-            "key": "field_latest_posts_posts_per_page",
-            "label": "Posts per page",
-            "name": "latest_posts_posts_per_page",
+            "key": "field_latest_posts_count",
+            "label": "Number of posts",
+            "name": "latest_posts_count",
             "aria-label": "",
             "type": "number",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -71,161 +19,164 @@
             "default_value": 3,
             "min": 1,
             "max": 12,
-            "step": 1,
-            "parent": "group_block_latest-posts",
-            "menu_order": 3
+            "step": 1
         },
         {
-            "key": "field_latest_posts_button_label",
+            "key": "field_latest_posts_columns",
+            "label": "Columns",
+            "name": "latest_posts_columns",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "2": "2 columns",
+                "3": "3 columns",
+                "4": "4 columns"
+            },
+            "default_value": "3",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_latest_posts_category",
+            "label": "Category (optional)",
+            "name": "latest_posts_category",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "category",
+            "field_type": "select",
+            "return_format": "id",
+            "allow_null": 1,
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "multiple": 0
+        },
+        {
+            "key": "field_latest_posts_show_image",
+            "label": "Show image",
+            "name": "latest_posts_show_image",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "message": ""
+        },
+        {
+            "key": "field_latest_posts_show_date",
+            "label": "Show date",
+            "name": "latest_posts_show_date",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "message": ""
+        },
+        {
+            "key": "field_latest_posts_show_excerpt",
+            "label": "Show excerpt",
+            "name": "latest_posts_show_excerpt",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "message": ""
+        },
+        {
+            "key": "field_latest_posts_load_more",
+            "label": "Load more button",
+            "name": "latest_posts_load_more",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Adds a button that loads the next posts without reloading the page.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "ui": 1,
+            "message": ""
+        },
+        {
+            "key": "field_latest_posts_load_more_label",
             "label": "Button label",
-            "name": "latest_posts_button_label",
+            "name": "latest_posts_load_more_label",
             "aria-label": "",
             "type": "text",
+            "instructions": "",
             "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "33",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "Load more posts",
-            "parent": "group_block_latest-posts",
-            "menu_order": 4
-        },
-        {
-            "key": "field_latest_posts_loading_label",
-            "label": "Loading label",
-            "name": "latest_posts_loading_label",
-            "aria-label": "",
-            "type": "text",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "33",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "Loading...",
-            "parent": "group_block_latest-posts",
-            "menu_order": 5
-        },
-        {
-            "key": "field_latest_posts_read_more_label",
-            "label": "Read more label",
-            "name": "latest_posts_read_more_label",
-            "aria-label": "",
-            "type": "text",
-            "required": 0,
-            "conditional_logic": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_latest_posts_load_more",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
             "wrapper": {
                 "width": "50",
                 "class": "",
                 "id": ""
             },
-            "default_value": "Read more",
-            "parent": "group_block_latest-posts",
-            "menu_order": 6
-        },
-        {
-            "key": "field_latest_posts_no_image_label",
-            "label": "No image label",
-            "name": "latest_posts_no_image_label",
-            "aria-label": "",
-            "type": "text",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "25",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "No image",
-            "parent": "group_block_latest-posts",
-            "menu_order": 7
-        },
-        {
-            "key": "field_latest_posts_empty_label",
-            "label": "Empty label",
-            "name": "latest_posts_empty_label",
-            "aria-label": "",
-            "type": "text",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "25",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "No posts found.",
-            "parent": "group_block_latest-posts",
-            "menu_order": 8
-        },
-        {
-            "key": "field_latest_posts_section_tab",
-            "label": "Section settings",
-            "name": "",
-            "aria-label": "",
-            "type": "accordion",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "endpoint": 0,
-            "parent": "group_block_latest-posts",
-            "menu_order": 9,
-            "open": 0,
-            "multi_expand": 1
-        },
-        {
-            "key": "field_latest_posts_section_background_color",
-            "label": "Background color",
-            "name": "section_background_color",
-            "aria-label": "",
-            "type": "color_picker",
-            "instructions": "Select a background color for this section.",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "50",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "parent": "group_block_latest-posts",
-            "menu_order": 10,
-            "return_format": "string",
-            "enable_opacity": 0
-        },
-        {
-            "key": "field_latest_posts_block_id",
-            "label": "Block ID",
-            "name": "block_id",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "Optional HTML id attribute for anchor links, e.g. contact-section.",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "50",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
+            "default_value": "Załaduj więcej",
             "maxlength": "",
             "placeholder": "",
             "prepend": "",
-            "append": "",
-            "parent": "group_block_latest-posts"
+            "append": ""
         },
         {
-            "key": "field_latest_posts_spacing_tab",
-            "label": "Spacing settings",
-            "name": "",
+            "key": "field_latest_posts_all_link",
+            "label": "Link to all posts",
+            "name": "latest_posts_all_link",
             "aria-label": "",
-            "type": "accordion",
+            "type": "link",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -234,134 +185,7 @@
                 "class": "",
                 "id": ""
             },
-            "endpoint": 0,
-            "parent": "group_block_latest-posts",
-            "open": 0,
-            "multi_expand": 1
-        },
-        {
-            "key": "field_latest_posts_section_gap_top",
-            "label": "Gap top",
-            "name": "section_gap_top",
-            "aria-label": "",
-            "type": "select",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "50",
-                "class": "",
-                "id": ""
-            },
-            "choices": {
-                "none": "None",
-                "xs": "XS",
-                "sm": "SM",
-                "md": "MD",
-                "lg": "LG",
-                "xl": "XL"
-            },
-            "default_value": "none",
-            "return_format": "value",
-            "multiple": 0,
-            "allow_null": 0,
-            "ui": 0,
-            "ajax": 0,
-            "placeholder": "",
-            "parent": "group_block_latest-posts",
-            "menu_order": 13
-        },
-        {
-            "key": "field_latest_posts_section_gap_bottom",
-            "label": "Gap bottom",
-            "name": "section_gap_bottom",
-            "aria-label": "",
-            "type": "select",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "50",
-                "class": "",
-                "id": ""
-            },
-            "choices": {
-                "none": "None",
-                "xs": "XS",
-                "sm": "SM",
-                "md": "MD",
-                "lg": "LG",
-                "xl": "XL"
-            },
-            "default_value": "none",
-            "return_format": "value",
-            "multiple": 0,
-            "allow_null": 0,
-            "ui": 0,
-            "ajax": 0,
-            "placeholder": "",
-            "parent": "group_block_latest-posts",
-            "menu_order": 14
-        },
-        {
-            "key": "field_latest_posts_section_space_top",
-            "label": "Space top",
-            "name": "section_space_top",
-            "aria-label": "",
-            "type": "select",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "50",
-                "class": "",
-                "id": ""
-            },
-            "choices": {
-                "none": "None",
-                "xs": "XS",
-                "sm": "SM",
-                "md": "MD",
-                "lg": "LG",
-                "xl": "XL"
-            },
-            "default_value": "md",
-            "return_format": "value",
-            "multiple": 0,
-            "allow_null": 0,
-            "ui": 0,
-            "ajax": 0,
-            "placeholder": "",
-            "parent": "group_block_latest-posts",
-            "menu_order": 15
-        },
-        {
-            "key": "field_latest_posts_section_space_bottom",
-            "label": "Space bottom",
-            "name": "section_space_bottom",
-            "aria-label": "",
-            "type": "select",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "50",
-                "class": "",
-                "id": ""
-            },
-            "choices": {
-                "none": "None",
-                "xs": "XS",
-                "sm": "SM",
-                "md": "MD",
-                "lg": "LG",
-                "xl": "XL"
-            },
-            "default_value": "md",
-            "return_format": "value",
-            "multiple": 0,
-            "allow_null": 0,
-            "ui": 0,
-            "ajax": 0,
-            "placeholder": "",
-            "parent": "group_block_latest-posts",
-            "menu_order": 16
+            "return_format": "array"
         }
     ],
     "location": [
@@ -380,15 +204,13 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "Generated for the Latest Posts block.",
+    "description": "",
     "show_in_rest": 0,
-    "display_title": "",
-    "modified": 1772630600,
+    "modified": 1791471863,
     "wco_metadata": {
         "block_name": "latest-posts",
-        "icon": "admin-post",
+        "icon": "",
         "category": "wco-blocks",
         "text_domain": "wco-starter"
-    },
-    "_valid": true
+    }
 }

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/section-heading",
+  "title": "Section Heading",
+  "description": "Eyebrow, heading and lead text. Edit directly in the preview.",
+  "category": "wco-blocks",
+  "icon": "heading",
+  "keywords": [
+    "heading",
+    "title",
+    "section"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "section-heading.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false,
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "wco": {
+    "sectionSettings": true
+  }
+}

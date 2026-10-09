@@ -1,0 +1,39 @@
+// Styles for the native blocks (heading, paragraph, image, group) placed inside theme blocks
+// by their default templates. Shared by the front end and the editor.
+@use "../base/variables" as *;
+@use "../base/mixins" as *;
+
+.is-eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--color-primary);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.is-lead {
+  font-size: 1.125rem;
+  color: var(--color-muted);
+}
+
+// Heading group at the top of grid blocks spans every column.
+.is-span-all {
+  grid-column: 1 / -1;
+  max-width: 48rem;
+  margin-inline: auto;
+  margin-bottom: 1rem;
+  text-align: center;
+
+  > :first-child { margin-top: 0; }
+  > :last-child { margin-bottom: 0; }
+}
+
+// Empty native blocks (a cleared heading or paragraph) should not take up space on the page.
+:is(p, h1, h2, h3, h4, h5, h6):empty:not(.block-editor-rich-text__editable) { display: none; }
+
+.wp-block-image {
+  margin: 0;
+
+  img { max-width: 100%; height: auto; }
+}

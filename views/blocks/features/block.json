@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/features",
+  "title": "Features",
+  "description": "Grid of feature cards. Add, reorder and edit cards in the preview.",
+  "category": "wco-blocks",
+  "icon": "screenoptions",
+  "keywords": [
+    "features",
+    "services",
+    "cards",
+    "grid"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "features.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false,
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "wco": {
+    "sectionSettings": true
+  }
+}

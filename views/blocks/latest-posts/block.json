@@ -1,11 +1,29 @@
 {
-    "title": "Latest Posts",
-    "description": "Latest blog posts block with REST pagination.",
-    "category": "wco-blocks",
-    "icon": "admin-post",
-    "keywords": [
-        "posts",
-        "blog",
-        "news"
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/latest-posts",
+  "title": "Latest Posts",
+  "description": "Newest posts in cards. Edit the heading in the preview; options in the sidebar.",
+  "category": "wco-blocks",
+  "icon": "admin-post",
+  "keywords": [
+    "posts",
+    "blog",
+    "news"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "latest-posts.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false,
+    "align": [
+      "full",
+      "wide"
     ]
+  },
+  "wco": {
+    "sectionSettings": true
+  }
 }

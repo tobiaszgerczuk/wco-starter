@@ -1,9 +1,29 @@
 {
-    "title": "Text image",
-    "description": "Block: Text image",
-    "category": "wco-blocks",
-    "icon": "layout",
-    "keywords": [
-        "text-image"
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/text-image",
+  "title": "Text and Image",
+  "description": "Two columns: text and image. Edit both directly in the preview.",
+  "category": "wco-blocks",
+  "icon": "align-pull-left",
+  "keywords": [
+    "text",
+    "image",
+    "columns"
+  ],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "text-image.include.php"
+  },
+  "supports": {
+    "jsx": true,
+    "anchor": false,
+    "align": [
+      "full",
+      "wide"
     ]
+  },
+  "wco": {
+    "sectionSettings": true
+  }
 }

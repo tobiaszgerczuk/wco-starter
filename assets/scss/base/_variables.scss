@@ -33,9 +33,10 @@ $color-accent: #cdae7f;
 $color-black: #111111;
 $color-white: #ffffff;
 
-$radius-sm: 6px;
-$radius-md: 10px;
-$radius-lg: 16px;
+// Overridden by Theme settings > Appearance > Shape (see app/Core/Appearance.php).
+$radius-sm: var(--radius-sm, 6px);
+$radius-md: var(--radius-md, 10px);
+$radius-lg: var(--radius-lg, 16px);
 
 $transition-fast: 0.2s ease;
 $transition-base: 0.3s ease;
