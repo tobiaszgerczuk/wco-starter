@@ -58,6 +58,11 @@ class Theme
         add_theme_support('post-thumbnails');
         add_theme_support('html5', ['search-form', 'gallery', 'caption', 'style', 'script']);
         add_theme_support('wp-block-styles');
+
+        // Theme typography and base styles for the editor canvas only (WordPress scopes the rules
+        // to .editor-styles-wrapper); the admin interface around it keeps its own fonts.
+        add_theme_support('editor-styles');
+        add_editor_style('public/style.css');
         add_theme_support('align-wide');
         add_theme_support('responsive-embeds');
 

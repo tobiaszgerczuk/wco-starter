@@ -334,11 +334,16 @@ class Registry
             return '';
         }
 
+        // Block styles are also loaded in the editor, i.e. on a whole admin screen. The front-end
+        // stylesheet restyles <body>, headings and links, so it must not be a dependency there:
+        // theme typography reaches the editor canvas through add_editor_style() instead.
+        $dependencies = is_admin() ? [] : ['wco-starter-style'];
+
         if (!wp_style_is($handle, 'registered')) {
             wp_register_style(
                 $handle,
                 get_template_directory_uri() . '/public/blocks/' . $slug . '/' . $slug . '.css',
-                ['wco-starter-style'],
+                $dependencies,
                 filemtime($css_path)
             );
         }

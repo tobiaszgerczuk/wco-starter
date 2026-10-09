@@ -136,7 +136,7 @@ class Appearance
 
     // ------------------------------------------------------------------ CSS output
 
-    public static function css(): string
+    public static function css(bool $editor = false): string
     {
         $s = self::settings();
         $stack = static fn (string $key): string => self::font_stack($key);
@@ -178,7 +178,11 @@ class Appearance
             $declarations .= $name . ':' . $value . ';';
         }
 
-        return ':root,.editor-styles-wrapper,.editor-styles-wrapper [data-type^="acf/"]{' . $declarations . '}';
+        $selector = $editor
+            ? '.editor-styles-wrapper,.editor-styles-wrapper [data-type^="acf/"]'
+            : ':root,.editor-styles-wrapper,.editor-styles-wrapper [data-type^="acf/"]';
+
+        return $selector . '{' . $declarations . '}';
     }
 
     public static function print_variables(): void
@@ -337,7 +341,7 @@ class Appearance
             return;
         }
 
-        $css = self::css();
+        $css = self::css(true);
         $fonts = self::settings()['font_local'] ? self::local_css() : null;
         if ($fonts !== null) {
             $css = $fonts . $css;

@@ -202,6 +202,10 @@ Lokalizacje grupy uzupełnia `Registry::section_settings_locations()`, więc now
 - **`map`**: wpisujesz adres albo własny link osadzenia (Google Maps, OpenStreetMap, Mapy.cz; inne hosty są odrzucane). Mapa wczytuje się po kliknięciu „Wyświetl mapę”, obok jest link „Otwórz w Google Maps”. Wysokość 300–600 px.
 - **`contact`**: dane kontaktowe edytujesz w podglądzie, a formularz to pojedynczy shortcode wklejony w ustawieniach bloku (np. `[contact-form-7 id="123" title="Kontakt"]`). Style CF7 są w `components/_forms.scss`. Blok nie ma własnej obsługi wysyłki, więc potrzebuje wtyczki formularzy.
 
+### Style w edytorze (żeby czcionki motywu nie wchodziły do interfejsu WordPressa)
+
+Style motywu (`public/style.css`: typografia, `body`, nagłówki, linki) trafiają do edytora **tylko do podglądu treści**, przez `add_editor_style()` w `Theme::supports()`; WordPress zawęża je wtedy do `.editor-styles-wrapper`. Arkusze bloków (`public/blocks/<slug>/<slug>.css`) są ładowane także w edytorze, czyli na całym ekranie admina, dlatego `Registry::register_block_style_handle()` nie daje im zależności od `style.css` w panelu (`is_admin()`). Nie dodawaj reguł na `body`, `h1`–`h6`, `a` ani `p` do arkuszy ładowanych w adminie, bo zmienią wygląd panelu.
+
 ### Wzorce (patterns)
 
 Gotowe układy stron są w `patterns/*.php` (`landing`, `about`, `faq`, `blog-intro`, `pricing`, `contact`, `team`) i pojawiają się w edytorze w kategorii **WCO sections**. WordPress cache'uje listę wzorców motywu — po dodaniu pliku wyczyść ją:
