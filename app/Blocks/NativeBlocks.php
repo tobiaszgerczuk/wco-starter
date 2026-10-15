@@ -43,10 +43,11 @@ class NativeBlocks
                 'keywords' => $definition['keywords'],
                 'supports' => $definition['supports'],
                 'attributes' => $definition['attributes'],
+                'parent' => $definition['parent'],
                 'style' => $style,
                 'editor_style' => $style,
                 'render_callback' => static fn (array $attributes = [], string $content = '', $block = null): string => self::render($slug, $attributes, $content),
-            ], static fn ($value) => $value !== ''));
+            ], static fn ($value) => $value !== '' && $value !== null));
         }
     }
 
@@ -76,8 +77,11 @@ class NativeBlocks
                 'attributes' => $definition['attributes'],
                 'panel' => $definition['panel'],
                 'controls' => $definition['controls'],
+                'frame' => $definition['frame'],
                 'sectionSettings' => $definition['sectionSettings'],
-                'template' => $definition['template'],
+                'parent' => $definition['parent'],
+                'template' => $definition['extras']['inner_template'] ?? [],
+                'allowedBlocks' => $definition['extras']['inner_allowed'] ?? [],
             ];
         }
 
@@ -94,10 +98,14 @@ class NativeBlocks
         $fields = array_replace($legacy, array_filter($attributes, static fn ($value) => $value !== null && $value !== ''));
         unset($fields['data']);
 
+        $definition = self::definitions()[$slug];
+        $extra = $definition['extras'];
+        if ($definition['context'] !== null) {
+            $extra = array_replace($extra, (array) ($definition['context'])($fields, $content));
+        }
+
         ob_start();
-        BlockContext::render_fields($slug, $fields, $content, [
-            'align' => $attributes['align'] ?? '',
-        ]);
+        BlockContext::render_fields($slug, $fields, $content, ['align' => $attributes['align'] ?? ''], $extra);
 
         return (string) ob_get_clean();
     }
@@ -124,6 +132,7 @@ class NativeBlocks
             $slug = basename($dir);
             $sectionSettings = !empty($metadata['wco']['sectionSettings']);
             $templateFile = $dir . '/' . $slug . '.template.php';
+            $contextFile = $dir . '/' . $slug . '.context.php';
             $supports = is_array($metadata['supports'] ?? null) ? $metadata['supports'] : [];
             $supports['align'] = $supports['align'] ?? ['full', 'wide'];
 
@@ -143,7 +152,10 @@ class NativeBlocks
                 'panel' => $metadata['wco']['panel'] ?? __('Block settings', 'wco-starter'),
                 'controls' => is_array($metadata['wco']['controls'] ?? null) ? $metadata['wco']['controls'] : [],
                 'sectionSettings' => $sectionSettings,
-                'template' => is_file($templateFile) ? (array) include $templateFile : [],
+                'frame' => is_array($metadata['wco']['frame'] ?? null) ? $metadata['wco']['frame'] : [],
+                'parent' => is_array($metadata['parent'] ?? null) ? $metadata['parent'] : null,
+                'extras' => is_file($templateFile) ? (array) include $templateFile : [],
+                'context' => is_file($contextFile) ? include $contextFile : null,
             ];
         }
 

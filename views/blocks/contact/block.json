@@ -11,19 +11,49 @@
     "form",
     "cf7"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "contact.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Contact",
+    "controls": [
+      {
+        "attr": "contact_form_shortcode",
+        "label": "Shortcode formularza",
+        "type": "text"
+      },
+      {
+        "attr": "contact_form_position",
+        "label": "Pozycja formularza",
+        "type": "select",
+        "options": {
+          "right": "Po prawej",
+          "left": "Po lewej"
+        }
+      }
+    ],
+    "frame": {
+      "inner": "block-contact__inner block-contact__inner--form-{contact_form_position:right}",
+      "head": "block-contact__info",
+      "after": {
+        "class": "block-contact__form",
+        "text": "Formularz (shortcode) pojawi się na stronie."
+      }
+    }
+  },
+  "attributes": {
+    "contact_form_shortcode": {
+      "type": "string",
+      "default": ""
+    },
+    "contact_form_position": {
+      "type": "string",
+      "default": "right"
+    }
   }
 }

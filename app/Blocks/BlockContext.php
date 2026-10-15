@@ -67,10 +67,11 @@ class BlockContext
      *
      * @param array<string, mixed> $fields
      * @param array<string, mixed> $block
+     * @param array<string, mixed> $extra
      */
-    public static function render_fields(string $slug, array $fields, string $content = '', array $block = []): void
+    public static function render_fields(string $slug, array $fields, string $content = '', array $block = [], array $extra = []): void
     {
-        Timber::render("blocks/{$slug}/{$slug}.twig", self::build_from_fields($slug, $fields, $block, $content, false));
+        Timber::render("blocks/{$slug}/{$slug}.twig", self::build_from_fields($slug, $fields, $block, $content, false, $extra));
     }
 
     /**

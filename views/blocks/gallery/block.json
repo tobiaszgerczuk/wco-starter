@@ -11,19 +11,66 @@
     "images",
     "photos"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "gallery.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Gallery",
+    "controls": [
+      {
+        "attr": "gallery_columns",
+        "label": "Kolumny",
+        "type": "select",
+        "options": {
+          "2": "2 kolumny",
+          "3": "3 kolumny",
+          "4": "4 kolumny",
+          "5": "5 kolumn"
+        }
+      },
+      {
+        "attr": "gallery_gap",
+        "label": "Odstęp",
+        "type": "select",
+        "options": {
+          "sm": "Mały",
+          "md": "Średnia",
+          "lg": "Duży"
+        }
+      },
+      {
+        "attr": "gallery_ratio",
+        "label": "Proporcje obrazka",
+        "type": "select",
+        "options": {
+          "auto": "Oryginalne",
+          "1-1": "1:1",
+          "4-3": "4:3",
+          "16-9": "16:9"
+        }
+      }
+    ],
+    "frame": {
+      "inner": "block-gallery__items block-gallery__items--cols-{gallery_columns:3} block-gallery__items--gap-{gallery_gap:md} block-gallery__items--ratio-{gallery_ratio:4-3}"
+    }
+  },
+  "attributes": {
+    "gallery_columns": {
+      "type": "string",
+      "default": "3"
+    },
+    "gallery_gap": {
+      "type": "string",
+      "default": "md"
+    },
+    "gallery_ratio": {
+      "type": "string",
+      "default": "4-3"
+    }
   }
 }

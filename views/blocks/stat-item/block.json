@@ -10,15 +10,18 @@
     "stat",
     "number"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "stat-item.include.php"
-  },
-  "supports": {
-    "jsx": true,
-    "anchor": false
-  },
+  "supports": {},
   "parent": [
     "acf/stats"
-  ]
+  ],
+  "wco": {
+    "native": true,
+    "panel": "Ustawienia: Stat Item",
+    "frame": {
+      "item": {
+        "tag": "div",
+        "class": "block-stat-item"
+      }
+    }
+  }
 }

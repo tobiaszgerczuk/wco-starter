@@ -11,19 +11,49 @@
     "accordion",
     "questions"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "faq.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: FAQ",
+    "controls": [
+      {
+        "attr": "faq_open_first",
+        "label": "Otwórz pierwsze pytanie",
+        "type": "toggle"
+      },
+      {
+        "attr": "faq_allow_multiple",
+        "label": "Pozwól otwierać kilka naraz",
+        "type": "toggle"
+      },
+      {
+        "attr": "faq_schema",
+        "label": "Dane strukturalne FAQ (SEO)",
+        "type": "toggle"
+      }
+    ],
+    "frame": {
+      "inner": "block-faq__list"
+    }
+  },
+  "attributes": {
+    "faq_open_first": {
+      "type": "boolean",
+      "default": false
+    },
+    "faq_allow_multiple": {
+      "type": "boolean",
+      "default": false
+    },
+    "faq_schema": {
+      "type": "boolean",
+      "default": true
+    }
   }
 }

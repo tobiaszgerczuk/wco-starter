@@ -11,19 +11,50 @@
     "people",
     "staff"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "team.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Team",
+    "controls": [
+      {
+        "attr": "team_columns",
+        "label": "Kolumny",
+        "type": "select",
+        "options": {
+          "2": "2 kolumny",
+          "3": "3 kolumny",
+          "4": "4 kolumny"
+        }
+      },
+      {
+        "attr": "team_photo_shape",
+        "label": "Kształt zdjęć",
+        "type": "select",
+        "options": {
+          "round": "Mocno zaokrąglone",
+          "rounded": "Zaokrąglone",
+          "square": "Kwadratowe"
+        }
+      }
+    ],
+    "frame": {
+      "inner": "block-team__items block-team__items--cols-{team_columns:3} block-team__items--photo-{team_photo_shape:round}"
+    }
+  },
+  "attributes": {
+    "team_columns": {
+      "type": "string",
+      "default": "3"
+    },
+    "team_photo_shape": {
+      "type": "string",
+      "default": "round"
+    }
   }
 }

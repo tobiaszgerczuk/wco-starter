@@ -11,19 +11,36 @@
     "title",
     "section"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "section-heading.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Section Heading",
+    "controls": [
+      {
+        "attr": "section_heading_align",
+        "label": "Wyrównanie",
+        "type": "select",
+        "options": {
+          "left": "Po lewej",
+          "center": "Środek",
+          "right": "Po prawej"
+        }
+      }
+    ],
+    "frame": {
+      "inner": "block-section-heading__inner block-section-heading__inner--{section_heading_align:center}"
+    }
+  },
+  "attributes": {
+    "section_heading_align": {
+      "type": "string",
+      "default": "center"
+    }
   }
 }

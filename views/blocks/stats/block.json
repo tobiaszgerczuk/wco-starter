@@ -11,19 +11,36 @@
     "numbers",
     "counters"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "stats.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Stats",
+    "controls": [
+      {
+        "attr": "stats_columns",
+        "label": "Kolumny",
+        "type": "select",
+        "options": {
+          "2": "2 kolumny",
+          "3": "3 kolumny",
+          "4": "4 kolumny"
+        }
+      }
+    ],
+    "frame": {
+      "inner": "block-stats__items block-stats__items--cols-{stats_columns:4}"
+    }
+  },
+  "attributes": {
+    "stats_columns": {
+      "type": "string",
+      "default": "4"
+    }
   }
 }

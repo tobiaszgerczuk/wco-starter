@@ -11,19 +11,36 @@
     "plans",
     "packages"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "pricing.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Pricing",
+    "controls": [
+      {
+        "attr": "pricing_columns",
+        "label": "Kolumny",
+        "type": "select",
+        "options": {
+          "2": "2 kolumny",
+          "3": "3 kolumny",
+          "4": "4 kolumny"
+        }
+      }
+    ],
+    "frame": {
+      "inner": "block-pricing__items block-pricing__items--cols-{pricing_columns:3}"
+    }
+  },
+  "attributes": {
+    "pricing_columns": {
+      "type": "string",
+      "default": "3"
+    }
   }
 }

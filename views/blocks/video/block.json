@@ -11,19 +11,57 @@
     "youtube",
     "vimeo"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "video.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Video",
+    "controls": [
+      {
+        "attr": "video_url",
+        "label": "Adres wideo",
+        "type": "text"
+      },
+      {
+        "attr": "video_poster",
+        "label": "Obraz okładki",
+        "type": "image"
+      },
+      {
+        "attr": "video_ratio",
+        "label": "Proporcje",
+        "type": "select",
+        "options": {
+          "16-9": "16:9",
+          "4-3": "4:3",
+          "1-1": "1:1"
+        }
+      }
+    ],
+    "frame": {
+      "head": "block-video__head",
+      "after": {
+        "class": "block-video__player block-video__player--{video_ratio:16-9}",
+        "text": "Odtwarzacz wideo pojawi się na stronie."
+      }
+    }
+  },
+  "attributes": {
+    "video_url": {
+      "type": "string",
+      "default": ""
+    },
+    "video_poster": {
+      "type": "number"
+    },
+    "video_ratio": {
+      "type": "string",
+      "default": "16-9"
+    }
   }
 }

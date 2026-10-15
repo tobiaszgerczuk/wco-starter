@@ -12,19 +12,63 @@
     "cards",
     "grid"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "features.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Features",
+    "controls": [
+      {
+        "attr": "features_columns",
+        "label": "Kolumny",
+        "type": "select",
+        "options": {
+          "2": "2 kolumny",
+          "3": "3 kolumny",
+          "4": "4 kolumny"
+        }
+      },
+      {
+        "attr": "features_card_style",
+        "label": "Styl elementów",
+        "type": "select",
+        "options": {
+          "plain": "Zwykły",
+          "card": "Karta",
+          "bordered": "Z ramką"
+        }
+      },
+      {
+        "attr": "features_item_align",
+        "label": "Wyrównanie elementów",
+        "type": "select",
+        "options": {
+          "left": "Po lewej",
+          "center": "Środek"
+        }
+      }
+    ],
+    "frame": {
+      "inner": "block-features__items block-features__items--cols-{features_columns:3} block-features__items--{features_card_style:card} block-features__items--{features_item_align:left}"
+    }
+  },
+  "attributes": {
+    "features_columns": {
+      "type": "string",
+      "default": "3"
+    },
+    "features_card_style": {
+      "type": "string",
+      "default": "card"
+    },
+    "features_item_align": {
+      "type": "string",
+      "default": "left"
+    }
   }
 }

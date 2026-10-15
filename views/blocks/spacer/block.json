@@ -1,11 +1,129 @@
 {
-    "title": "Spacer",
-    "description": "Spacing separator block with independent mobile and desktop height.",
-    "category": "wco-blocks",
-    "icon": "minus",
-    "keywords": [
-        "spacer",
-        "space",
-        "separator"
-    ]
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/spacer",
+  "title": "Spacer",
+  "description": "Spacing separator block with independent mobile and desktop height.",
+  "category": "wco-blocks",
+  "icon": "minus",
+  "keywords": [
+    "spacer",
+    "space",
+    "separator"
+  ],
+  "supports": {},
+  "attributes": {
+    "spacer_desktop_mode": {
+      "type": "string",
+      "default": "scale"
+    },
+    "spacer_desktop_size": {
+      "type": "string",
+      "default": "md"
+    },
+    "spacer_desktop_custom": {
+      "type": "number",
+      "default": 0
+    },
+    "spacer_mobile_mode": {
+      "type": "string",
+      "default": "scale"
+    },
+    "spacer_mobile_size": {
+      "type": "string",
+      "default": "sm"
+    },
+    "spacer_mobile_custom": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "wco": {
+    "native": true,
+    "panel": "Ustawienia: Separator",
+    "controls": [
+      {
+        "attr": "spacer_desktop_mode",
+        "label": "Źródło dla desktop",
+        "type": "select",
+        "options": {
+          "scale": "Skala motywu",
+          "custom": "Własna wartość px"
+        }
+      },
+      {
+        "attr": "spacer_desktop_size",
+        "label": "Rozmiar desktop",
+        "showWhen": {
+          "attr": "spacer_desktop_mode",
+          "value": "scale"
+        },
+        "type": "select",
+        "options": {
+          "none": "Brak",
+          "xs": "XS",
+          "sm": "SM",
+          "md": "MD",
+          "lg": "LG",
+          "xl": "XL"
+        }
+      },
+      {
+        "attr": "spacer_desktop_custom",
+        "label": "Własna wartość desktop",
+        "showWhen": {
+          "attr": "spacer_desktop_mode",
+          "value": "custom"
+        },
+        "type": "number",
+        "min": 0,
+        "max": 600
+      },
+      {
+        "attr": "spacer_mobile_mode",
+        "label": "Źródło dla mobile",
+        "type": "select",
+        "options": {
+          "scale": "Skala motywu",
+          "custom": "Własna wartość px"
+        }
+      },
+      {
+        "attr": "spacer_mobile_size",
+        "label": "Rozmiar mobile",
+        "showWhen": {
+          "attr": "spacer_mobile_mode",
+          "value": "scale"
+        },
+        "type": "select",
+        "options": {
+          "none": "Brak",
+          "xs": "XS",
+          "sm": "SM",
+          "md": "MD",
+          "lg": "LG",
+          "xl": "XL"
+        }
+      },
+      {
+        "attr": "spacer_mobile_custom",
+        "label": "Własna wartość mobile",
+        "showWhen": {
+          "attr": "spacer_mobile_mode",
+          "value": "custom"
+        },
+        "type": "number",
+        "min": 0,
+        "max": 600
+      }
+    ],
+    "frame": {
+      "noSection": true,
+      "leaf": {
+        "tag": "div",
+        "class": "block-spacer is-preview",
+        "text": "Odstęp"
+      }
+    }
+  }
 }

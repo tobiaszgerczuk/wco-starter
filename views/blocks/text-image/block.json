@@ -11,19 +11,72 @@
     "image",
     "columns"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "text-image.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Text and Image",
+    "controls": [
+      {
+        "attr": "text_image_image_position",
+        "label": "Pozycja obrazka",
+        "type": "select",
+        "options": {
+          "right": "Po prawej",
+          "left": "Po lewej"
+        }
+      },
+      {
+        "attr": "text_image_image_size",
+        "label": "Szerokość obrazka",
+        "type": "select",
+        "options": {
+          "half": "Połowa",
+          "third": "Jedna trzecia",
+          "two-thirds": "Dwie trzecie"
+        }
+      },
+      {
+        "attr": "text_image_vertical_align",
+        "label": "Wyrównanie w pionie",
+        "type": "select",
+        "options": {
+          "start": "Góra",
+          "center": "Środek",
+          "end": "Dół"
+        }
+      },
+      {
+        "attr": "text_image_reverse_mobile",
+        "label": "Pokaż obrazek najpierw na mobile",
+        "type": "toggle"
+      }
+    ],
+    "frame": {
+      "inner": "block-text-image__inner block-text-image__inner--image-{text_image_image_position:right} block-text-image__inner--size-{text_image_image_size:half} block-text-image__inner--align-{text_image_vertical_align:center}{text_image_reverse_mobile? block-text-image__inner--image-first-mobile}"
+    }
+  },
+  "attributes": {
+    "text_image_image_position": {
+      "type": "string",
+      "default": "right"
+    },
+    "text_image_image_size": {
+      "type": "string",
+      "default": "half"
+    },
+    "text_image_vertical_align": {
+      "type": "string",
+      "default": "center"
+    },
+    "text_image_reverse_mobile": {
+      "type": "boolean",
+      "default": false
+    }
   }
 }

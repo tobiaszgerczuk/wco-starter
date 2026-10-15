@@ -11,19 +11,78 @@
     "line",
     "divider"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "separator.include.php"
-  },
   "supports": {
-    "jsx": false,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Separator",
+    "controls": [
+      {
+        "attr": "separator_line_style",
+        "label": "Styl linii",
+        "type": "select",
+        "options": {
+          "solid": "Ciągła",
+          "dashed": "Kreskowana",
+          "dotted": "Kropkowana"
+        }
+      },
+      {
+        "attr": "separator_line_width",
+        "label": "Szerokość linii",
+        "type": "select",
+        "options": {
+          "full": "Pełna szerokość",
+          "short": "Krótka"
+        }
+      },
+      {
+        "attr": "separator_line_color",
+        "label": "Kolor",
+        "type": "select",
+        "options": {
+          "border": "Jasny",
+          "primary": "Główny",
+          "text": "Ciemny",
+          "accent": "Akcent"
+        }
+      },
+      {
+        "attr": "separator_thickness",
+        "label": "Grubość (px)",
+        "type": "number",
+        "min": 1,
+        "max": 12
+      }
+    ],
+    "frame": {
+      "leaf": {
+        "tag": "hr",
+        "class": "block-separator__line block-separator__line--{separator_line_style:solid} block-separator__line--{separator_line_color:border} block-separator__line--{separator_line_width:full}"
+      }
+    }
+  },
+  "attributes": {
+    "separator_line_style": {
+      "type": "string",
+      "default": "solid"
+    },
+    "separator_line_width": {
+      "type": "string",
+      "default": "full"
+    },
+    "separator_line_color": {
+      "type": "string",
+      "default": "border"
+    },
+    "separator_thickness": {
+      "type": "number",
+      "default": 1
+    }
   }
 }

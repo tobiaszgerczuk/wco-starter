@@ -11,19 +11,59 @@
     "location",
     "google maps"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "map.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Map",
+    "controls": [
+      {
+        "attr": "map_address",
+        "label": "Adres",
+        "type": "text"
+      },
+      {
+        "attr": "map_embed_url",
+        "label": "Własny adres osadzenia (opcjonalnie)",
+        "type": "text"
+      },
+      {
+        "attr": "map_height",
+        "label": "Wysokość mapy (px)",
+        "type": "select",
+        "options": {
+          "300": "300",
+          "400": "400",
+          "500": "500",
+          "600": "600"
+        }
+      }
+    ],
+    "frame": {
+      "head": "block-map__head",
+      "after": {
+        "class": "block-map__frame",
+        "text": "Mapa wczyta się na stronie po kliknięciu."
+      }
+    }
+  },
+  "attributes": {
+    "map_address": {
+      "type": "string",
+      "default": ""
+    },
+    "map_embed_url": {
+      "type": "string",
+      "default": ""
+    },
+    "map_height": {
+      "type": "string",
+      "default": "400"
+    }
   }
 }

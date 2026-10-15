@@ -11,19 +11,35 @@
     "history",
     "steps"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "timeline.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Timeline",
+    "controls": [
+      {
+        "attr": "timeline_layout",
+        "label": "Układ",
+        "type": "select",
+        "options": {
+          "line": "Po jednej stronie",
+          "alternate": "Naprzemiennie"
+        }
+      }
+    ],
+    "frame": {
+      "inner": "block-timeline__items block-timeline__items--{timeline_layout:line}"
+    }
+  },
+  "attributes": {
+    "timeline_layout": {
+      "type": "string",
+      "default": "line"
+    }
   }
 }

@@ -11,19 +11,46 @@
     "clients",
     "partners"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "logos.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Logos",
+    "controls": [
+      {
+        "attr": "logos_columns",
+        "label": "Kolumny",
+        "type": "select",
+        "options": {
+          "3": "3 kolumny",
+          "4": "4 kolumny",
+          "5": "5 kolumn",
+          "6": "6 kolumn"
+        }
+      },
+      {
+        "attr": "logos_grayscale",
+        "label": "Szare do najechania myszką",
+        "type": "toggle"
+      }
+    ],
+    "frame": {
+      "inner": "block-logos__items block-logos__items--cols-{logos_columns:5}{logos_grayscale? block-logos__items--grayscale}"
+    }
+  },
+  "attributes": {
+    "logos_columns": {
+      "type": "string",
+      "default": "5"
+    },
+    "logos_grayscale": {
+      "type": "boolean",
+      "default": true
+    }
   }
 }

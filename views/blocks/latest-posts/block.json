@@ -11,19 +11,117 @@
     "blog",
     "news"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "latest-posts.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Najnowsze wpisy",
+    "controls": [
+      {
+        "attr": "latest_posts_count",
+        "label": "Liczba wpisów",
+        "type": "number",
+        "min": 1,
+        "max": 12
+      },
+      {
+        "attr": "latest_posts_columns",
+        "label": "Kolumny",
+        "type": "select",
+        "options": {
+          "2": "2 kolumny",
+          "3": "3 kolumny",
+          "4": "4 kolumny"
+        }
+      },
+      {
+        "attr": "latest_posts_category",
+        "label": "Kategoria (opcjonalnie)",
+        "type": "category"
+      },
+      {
+        "attr": "latest_posts_show_image",
+        "label": "Pokaż obrazek",
+        "type": "toggle"
+      },
+      {
+        "attr": "latest_posts_show_date",
+        "label": "Pokaż datę",
+        "type": "toggle"
+      },
+      {
+        "attr": "latest_posts_show_excerpt",
+        "label": "Pokaż zajawkę",
+        "type": "toggle"
+      },
+      {
+        "attr": "latest_posts_load_more",
+        "label": "Przycisk „Załaduj więcej”",
+        "type": "toggle"
+      },
+      {
+        "attr": "latest_posts_load_more_label",
+        "label": "Etykieta przycisku",
+        "showWhen": {
+          "attr": "latest_posts_load_more",
+          "value": "1"
+        },
+        "type": "text"
+      },
+      {
+        "attr": "latest_posts_all_link",
+        "label": "Link do wszystkich wpisów",
+        "type": "link"
+      }
+    ],
+    "frame": {
+      "head": "block-latest-posts__head",
+      "after": {
+        "class": "block-latest-posts__list",
+        "text": "Lista najnowszych wpisów pojawi się na stronie."
+      }
+    }
+  },
+  "attributes": {
+    "latest_posts_count": {
+      "type": "number",
+      "default": 3
+    },
+    "latest_posts_columns": {
+      "type": "string",
+      "default": "3"
+    },
+    "latest_posts_category": {
+      "type": "number",
+      "default": 0
+    },
+    "latest_posts_show_image": {
+      "type": "boolean",
+      "default": true
+    },
+    "latest_posts_show_date": {
+      "type": "boolean",
+      "default": true
+    },
+    "latest_posts_show_excerpt": {
+      "type": "boolean",
+      "default": true
+    },
+    "latest_posts_load_more": {
+      "type": "boolean",
+      "default": false
+    },
+    "latest_posts_load_more_label": {
+      "type": "string",
+      "default": "Załaduj więcej"
+    },
+    "latest_posts_all_link": {
+      "type": "object"
+    }
   }
 }

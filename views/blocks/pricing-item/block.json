@@ -10,15 +10,50 @@
     "pricing",
     "plan"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "pricing-item.include.php"
-  },
-  "supports": {
-    "jsx": true,
-    "anchor": false
-  },
+  "supports": {},
   "parent": [
     "acf/pricing"
-  ]
+  ],
+  "attributes": {
+    "pricing_item_featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "pricing_item_badge": {
+      "type": "string",
+      "default": "Polecany"
+    }
+  },
+  "wco": {
+    "native": true,
+    "panel": "Ustawienia: Pricing Plan",
+    "controls": [
+      {
+        "attr": "pricing_item_featured",
+        "label": "Wyróżnij ten pakiet",
+        "type": "toggle"
+      },
+      {
+        "attr": "pricing_item_badge",
+        "label": "Tekst plakietki",
+        "showWhen": {
+          "attr": "pricing_item_featured",
+          "value": "1"
+        },
+        "type": "text"
+      }
+    ],
+    "frame": {
+      "item": {
+        "tag": "article",
+        "class": "block-pricing-item{pricing_item_featured? is-featured}"
+      },
+      "badge": {
+        "class": "block-pricing-item__badge",
+        "attr": "pricing_item_badge",
+        "default": "Polecany",
+        "when": "pricing_item_featured"
+      }
+    }
+  }
 }

@@ -6,7 +6,7 @@
 (() => {
   const { registerBlockType } = window.wp.blocks;
   const { InspectorControls, InnerBlocks, useBlockProps, MediaUpload, MediaUploadCheck } = window.wp.blockEditor;
-  const { PanelBody, SelectControl, TextControl, RangeControl, Button, __experimentalHStack: HStack } = window.wp.components;
+  const { PanelBody, SelectControl, TextControl, RangeControl, ToggleControl, Button, __experimentalHStack: HStack } = window.wp.components;
   const { useSelect } = window.wp.data;
   const { createElement: el } = window.wp.element;
 
@@ -56,8 +56,51 @@
   }
 
   /** Content wrapper shared with the front end (Templating::inner_blocks()), so layout CSS matches. */
-  const innerBlocks = (template) =>
-    el('div', { className: 'acf-innerblocks-container' }, el(InnerBlocks, { template, templateLock: false }));
+  const innerBlocks = (template, allowedBlocks) =>
+    el('div', { className: 'acf-innerblocks-container' }, el(InnerBlocks, { template, allowedBlocks: allowedBlocks && allowedBlocks.length ? allowedBlocks : undefined, templateLock: false }));
+
+  /**
+   * Fills a class template from block.json (wco.frame): `{attr:default}` prints the attribute,
+   * `{attr? extra-class}` prints the extra class when the attribute is truthy.
+   */
+  function fillClasses(pattern, attributes) {
+    return String(pattern || '')
+      .replace(/\{(\w+)\?([^}]*)\}/g, (_, attr, classes) => (attributes[attr] ? classes : ''))
+      .replace(/\{(\w+)(?::([^}]*))?\}/g, (_, attr, fallback) => {
+        const value = attributes[attr];
+        return value === undefined || value === null || value === '' ? fallback || '' : String(value);
+      });
+  }
+
+  const SPACER_SCALE = { none: '0px', xs: 'var(--section-space-xs)', sm: 'var(--section-space-sm)', md: 'var(--section-space-md)', lg: 'var(--section-space-lg)', xl: 'var(--section-space-xl)' };
+
+  function spacerHeight(attributes, device) {
+    const custom = Number(attributes[`spacer_${device}_custom`] || 0);
+    if (attributes[`spacer_${device}_mode`] === 'custom' && custom > 0) {
+      return `${custom}px`;
+    }
+    return SPACER_SCALE[attributes[`spacer_${device}_size`]] || SPACER_SCALE.md;
+  }
+
+  /** Generic editor DOM for blocks described by wco.frame; mirrors the block's Twig structure. */
+  function genericFrame({ config, attributes, containerClass, template, allowedBlocks }) {
+    const frame = config.frame || {};
+    const holder = (children) => el('div', { className: 'acf-innerblocks-container' }, children);
+    const blocks = el(InnerBlocks, { template, allowedBlocks: allowedBlocks.length ? allowedBlocks : undefined, templateLock: false });
+
+    if (frame.leaf) {
+      return el('div', { className: containerClass || undefined }, el(frame.leaf.tag || 'div', { className: fillClasses(frame.leaf.class, attributes) }));
+    }
+
+    const content = [];
+    content.push(frame.head ? el('div', { key: 'head', className: frame.head }, holder(blocks)) : el('div', { key: 'blocks' }, holder(blocks)));
+    if (frame.after) {
+      content.push(el('div', { key: 'after', className: fillClasses(frame.after.class, attributes) }, el('p', { style: { margin: 0, opacity: 0.7 } }, frame.after.text)));
+    }
+
+    const body = frame.inner ? el('div', { className: fillClasses(frame.inner, attributes) }, content) : content;
+    return el('div', { className: containerClass || undefined }, body);
+  }
 
   const FRAMES = {
     hero({ attributes, containerClass, template }) {
@@ -116,6 +159,13 @@
     );
   }
 
+  function CategoryControl({ label, value, onChange }) {
+    const categories = useSelect((select) => select('core').getEntityRecords('taxonomy', 'category', { per_page: 100 }), []);
+    const options = [{ value: 0, label: t('Wszystkie kategorie', 'All categories') }].concat((categories || []).map((c) => ({ value: c.id, label: c.name })));
+
+    return el(SelectControl, { label, value: value || 0, options, __nextHasNoMarginBottom: true, onChange: (next) => onChange(Number(next)) });
+  }
+
   function renderControl(control, attributes, setAttributes) {
     const value = attributes[control.attr];
     const onChange = (next) => setAttributes({ [control.attr]: next });
@@ -124,6 +174,19 @@
     switch (control.type) {
       case 'select':
         return el(SelectControl, { ...common, value, options: toOptions(control.options || {}), onChange });
+      case 'toggle':
+        return el(ToggleControl, { key: control.attr, label: control.label, checked: !!value, __nextHasNoMarginBottom: true, onChange });
+      case 'number':
+        return el(TextControl, { ...common, type: 'number', min: control.min, max: control.max, value: value ?? '', onChange: (next) => onChange(next === '' ? 0 : Number(next)) });
+      case 'category':
+        return el(CategoryControl, { key: control.attr, label: control.label, value, onChange });
+      case 'link':
+        return el(
+          'div',
+          { key: control.attr },
+          el(TextControl, { label: control.label + ' (URL)', value: (value && value.url) || '', __nextHasNoMarginBottom: true, onChange: (url) => onChange(url ? { ...(value || {}), url } : undefined) }),
+          el(TextControl, { label: control.label + ' (' + t('tekst', 'label') + ')', value: (value && value.title) || '', __nextHasNoMarginBottom: true, onChange: (title) => onChange({ ...(value || {}), title }) })
+        );
       case 'range':
         return el(RangeControl, { ...common, value: value ?? control.min ?? 0, min: control.min ?? 0, max: control.max ?? 100, onChange });
       case 'image':
@@ -131,6 +194,44 @@
       default:
         return el(TextControl, { ...common, value: value || '', onChange });
     }
+  }
+
+  function sectionPanels(attributes, setAttributes) {
+    return [
+      el(
+        PanelBody,
+        { key: 'section', title: t('Ustawienia sekcji', 'Section settings'), initialOpen: false },
+        el(TextControl, {
+          label: t('Kolor tła', 'Background color'),
+          help: t('Kolor w formacie #rrggbb. Puste = brak tła.', 'Hex color like #rrggbb. Empty = no background.'),
+          value: attributes.section_background_color || '',
+          onChange: (value) => setAttributes({ section_background_color: value }),
+        }),
+        el(SelectControl, {
+          label: t('Szerokość treści', 'Content width'),
+          value: attributes.container_width,
+          options: WIDTH_OPTIONS,
+          onChange: (value) => setAttributes({ container_width: value }),
+        }),
+        el(TextControl, {
+          label: t('ID bloku (kotwica)', 'Block ID (anchor)'),
+          value: attributes.block_id || '',
+          onChange: (value) => setAttributes({ block_id: value }),
+        })
+      ),
+      el(
+        PanelBody,
+        { key: 'spacing', title: t('Odstępy', 'Spacing'), initialOpen: false },
+        [
+          ['section_gap_top', t('Odstęp zewnętrzny góra', 'Gap top')],
+          ['section_gap_bottom', t('Odstęp zewnętrzny dół', 'Gap bottom')],
+          ['section_space_top', t('Odstęp wewnętrzny góra', 'Space top')],
+          ['section_space_bottom', t('Odstęp wewnętrzny dół', 'Space bottom')],
+        ].map(([attr, label]) =>
+          el(SelectControl, { key: attr, label, value: attributes[attr], options: SCALE_OPTIONS, onChange: (value) => setAttributes({ [attr]: value }) })
+        )
+      ),
+    ];
   }
 
   configs.forEach((config) => {
@@ -145,74 +246,72 @@
       keywords: config.keywords,
       supports: config.supports,
       attributes: config.attributes,
+      parent: config.parent || undefined,
       edit({ attributes, setAttributes }) {
         const section = sectionProps(slug, attributes);
         const extra = FRAME_EXTRA_CLASSES[slug] ? FRAME_EXTRA_CLASSES[slug](attributes).filter(Boolean) : [];
-        const blockProps = useBlockProps({
-          className: [section.className, ...extra].join(' '),
-          style: section.style,
-        });
-        const visible = (control) => !control.showWhen || attributes[control.showWhen];
-
-        return el(
-          'section',
-          blockProps,
-          el(
-            InspectorControls,
-            {},
-            config.controls.length
-              ? el(PanelBody, { title: config.panel, initialOpen: true }, config.controls.filter(visible).map((c) => renderControl(c, attributes, setAttributes)))
-              : null,
-            config.sectionSettings
-              ? el(
-                  PanelBody,
-                  { title: t('Ustawienia sekcji', 'Section settings'), initialOpen: false },
-                  el(TextControl, {
-                    label: t('Kolor tła', 'Background color'),
-                    help: t('Kolor w formacie #rrggbb. Puste = brak tła.', 'Hex color like #rrggbb. Empty = no background.'),
-                    value: attributes.section_background_color || '',
-                    onChange: (value) => setAttributes({ section_background_color: value }),
-                  }),
-                  el(SelectControl, {
-                    label: t('Szerokość treści', 'Content width'),
-                    value: attributes.container_width,
-                    options: WIDTH_OPTIONS,
-                    onChange: (value) => setAttributes({ container_width: value }),
-                  }),
-                  el(TextControl, {
-                    label: t('ID bloku (kotwica)', 'Block ID (anchor)'),
-                    value: attributes.block_id || '',
-                    onChange: (value) => setAttributes({ block_id: value }),
-                  })
-                )
-              : null,
-            config.sectionSettings
-              ? el(
-                  PanelBody,
-                  { title: t('Odstępy', 'Spacing'), initialOpen: false },
-                  [
-                    ['section_gap_top', t('Odstęp zewnętrzny góra', 'Gap top')],
-                    ['section_gap_bottom', t('Odstęp zewnętrzny dół', 'Gap bottom')],
-                    ['section_space_top', t('Odstęp wewnętrzny góra', 'Space top')],
-                    ['section_space_bottom', t('Odstęp wewnętrzny dół', 'Space bottom')],
-                  ].map(([attr, label]) =>
-                    el(SelectControl, {
-                      key: attr,
-                      label,
-                      value: attributes[attr],
-                      options: SCALE_OPTIONS,
-                      onChange: (value) => setAttributes({ [attr]: value }),
-                    })
-                  )
-                )
-              : null
-          ),
-          frame
-            ? frame({ attributes, containerClass: section.containerClass, template: config.template })
-            : el('div', { className: section.containerClass || undefined }, innerBlocks(config.template))
+        const frameConfig = config.frame || {};
+        const isItem = !!frameConfig.item;
+        const isFree = !!frameConfig.noSection;
+        const blockProps = useBlockProps(
+          isItem
+            ? { className: fillClasses(frameConfig.item.class, attributes) }
+            : isFree
+              ? {
+                  className: fillClasses(frameConfig.leaf.class, attributes),
+                  style: { minHeight: spacerHeight(attributes, 'desktop'), textAlign: 'center', fontSize: '12px', background: 'repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0,0,0,.05) 6px, rgba(0,0,0,.05) 12px)' },
+                }
+              : { className: [section.className, ...extra].join(' '), style: section.style }
         );
+        const visible = (control) => {
+          const when = control.showWhen;
+          if (!when) {
+            return true;
+          }
+          if (typeof when === 'string') {
+            return !!attributes[when];
+          }
+          const current = attributes[when.attr];
+          return String(current === true ? 1 : current === false ? 0 : current) === String(when.value);
+        };
+
+        const inspector = el(
+          InspectorControls,
+          {},
+          config.controls.length
+            ? el(PanelBody, { title: config.panel, initialOpen: true }, config.controls.filter(visible).map((c) => renderControl(c, attributes, setAttributes)))
+            : null,
+          config.sectionSettings ? sectionPanels(attributes, setAttributes) : null
+        );
+        const template = config.template || [];
+        const allowedBlocks = config.allowedBlocks || [];
+
+        if (isItem) {
+          const item = frameConfig.item;
+          const badge = frameConfig.badge;
+
+          return el(
+            item.tag || 'div',
+            blockProps,
+            inspector,
+            badge && attributes[badge.when]
+              ? el('span', { className: badge.class }, attributes[badge.attr] || badge.default)
+              : null,
+            innerBlocks(template, allowedBlocks)
+          );
+        }
+
+        if (isFree) {
+          return el('div', blockProps, inspector, frameConfig.leaf.text + ': ' + spacerHeight(attributes, 'desktop') + ' / ' + spacerHeight(attributes, 'mobile'));
+        }
+
+        const sectionBody = frame
+          ? frame({ attributes, containerClass: section.containerClass, template })
+          : genericFrame({ config, attributes, containerClass: section.containerClass, template, allowedBlocks });
+
+        return el('section', blockProps, inspector, sectionBody);
       },
-      save: () => el(InnerBlocks.Content),
+      save: () => (config.frame && config.frame.leaf ? null : el(InnerBlocks.Content)),
     });
   });
 })();

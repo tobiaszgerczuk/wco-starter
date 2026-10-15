@@ -11,19 +11,44 @@
     "action",
     "banner"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "cta.include.php"
-  },
   "supports": {
-    "jsx": true,
-    "anchor": false,
     "align": [
       "full",
       "wide"
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "sectionSettings": true,
+    "native": true,
+    "panel": "Ustawienia: Call to Action",
+    "controls": [
+      {
+        "attr": "cta_align",
+        "label": "Wyrównanie",
+        "type": "select",
+        "options": {
+          "center": "Środek",
+          "left": "Po lewej"
+        }
+      },
+      {
+        "attr": "cta_boxed",
+        "label": "Pokaż w zaokrąglonym pudełku",
+        "type": "toggle"
+      }
+    ],
+    "frame": {
+      "inner": "block-cta__inner block-cta__inner--{cta_align:center}{cta_boxed? block-cta__inner--boxed}"
+    }
+  },
+  "attributes": {
+    "cta_align": {
+      "type": "string",
+      "default": "center"
+    },
+    "cta_boxed": {
+      "type": "boolean",
+      "default": false
+    }
   }
 }
