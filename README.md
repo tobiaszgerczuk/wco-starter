@@ -127,6 +127,22 @@ Po wygenerowaniu: `npm run build`, potem wstaw blok w edytorze (kategoria `WCO B
 - Nazwy bloków mają prefiks `acf/` (np. `acf/hero`) tylko po to, by zapisana już treść nadal się renderowała; treść zapisana przez dawne bloki ACF jest odczytywana z atrybutu `data`.
 - Własny, niestandardowy edytor dla bloku (jak w `testimonials-slider`) dopisujesz w `assets/js/native-blocks.js` w obiekcie `FRAMES`.
 
+## Wariant sklepu (WooCommerce)
+
+Motyw ma gotowy sklep: archiwum produktów (kategorie jako chipy, sortowanie, paginacja), karta produktu, strona produktu (galeria, ocena, warianty, zakładki, produkty powiązane) i wzorzec strony głównej sklepu.
+
+- **Szablony:** `woocommerce/archive-product.php` i `woocommerce/single-product.php` budują kontekst, a HTML jest w `views/woocommerce/*.twig`. Koszyk, zamówienie i moje konto to zwykłe strony z shortcode'ami WooCommerce, ostylowane w `assets/scss/woocommerce/_shop.scss`.
+- **Karta produktu:** `views/modules/product-card.twig` (dane z `Shop::card()`), używana w archiwum, na stronie produktu i w blokach.
+- **Bloki:** `Produkty` (najnowsze, wyróżnione, promocje, bestsellery lub z kategorii) i `Kategorie produktów`.
+- **Wzorzec:** `Shop home` (kategoria wzorców `wco-sections`): hero, kategorie, bestsellery, zalety, promocje, CTA.
+- **Dodawanie do koszyka:** przycisk `.js-add-to-cart` na kartach używa AJAX WooCommerce i mini-koszyka w nagłówku; produkty zmienne i niedostępne prowadzą na stronę produktu.
+
+### Demo z importem
+
+W menu **Ustawienia motywu → Demo sklepu** jednym kliknięciem importujesz: 4 kategorie, 12 produktów z grafikami zastępczymi (część w promocji, jeden niedostępny), stronę główną ze wzorca `Shop home` ustawioną jako główna oraz menu główne. Import jest powtarzalny (pomija istniejące elementy), a wszystko, co utworzył, jest oznaczone meta `_wco_demo`, więc przycisk **Usuń dane demo** cofa import (łącznie z poprzednimi ustawieniami strony głównej), nie ruszając treści dodanych ręcznie.
+
+Z linii poleceń: `wp eval 'wp_set_current_user(1); WCO\Starter\Core\DemoImport::run();'`.
+
 ## Tracking i zgoda na cookies (Ustawienia motywu → Śledzenie, Cookies i zgoda)
 
 Całość obsługuje `app/Core/Tracking.php`; baner to `views/partials/cookie-banner.twig` + `assets/js/modules/consent.js`.

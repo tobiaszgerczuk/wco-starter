@@ -1,21 +1,44 @@
 {% extends "base.twig" %}
 
 {% block content %}
-<section class="single-product container">
-  <div class="single-product__grid">
-    <div class="single-product__gallery">
-      {{ fn('woocommerce_show_product_images') }}
+<section class="single-product section">
+  <div class="container">
+    {% if breadcrumbs %}<div class="shop-breadcrumbs">{{ breadcrumbs }}</div>{% endif %}
+    {% if notices %}<div class="shop-notices">{{ notices }}</div>{% endif %}
+
+    <div id="product-{{ product_id }}" class="{{ product_class }}">
+      <div class="single-product__grid">
+        <div class="single-product__gallery">
+          {% if product.on_sale %}
+            <span class="product-card__badge">{{ product.sale_percent ? '-' ~ product.sale_percent ~ '%' : 'Promocja' }}</span>
+          {% endif %}
+          {{ gallery }}
+        </div>
+
+        <div class="single-product__summary">
+          {% if product.category %}<p class="product-card__category">{{ product.category }}</p>{% endif %}
+          <h1 class="single-product__title">{{ product.title }}</h1>
+          {{ rating }}
+          <div class="single-product__price">{{ product.price_html }}</div>
+          <div class="single-product__excerpt">{{ excerpt }}</div>
+          <div class="single-product__cart">{{ add_to_cart }}</div>
+          <div class="single-product__meta">{{ meta }}</div>
+        </div>
+      </div>
+
+      <div class="single-product__tabs">{{ tabs }}</div>
     </div>
 
-    <div class="single-product__summary">
-      <h1 class="product-title">{{ post.title }}</h1>
-      <div class="product-price">{{ fn('woocommerce_template_single_price') }}</div>
-      <div class="product-desc">{{ fn('the_content') }}</div>
-
-      <form class="product-form js-add-to-cart-form" data-product-id="{{ post.id }}">
-        {{ fn('woocommerce_template_single_add_to_cart') }}
-      </form>
-    </div>
+    {% if related %}
+      <section class="single-product__related">
+        <h2>Zobacz także</h2>
+        <div class="shop-grid">
+          {% for item in related %}
+            {% include 'modules/product-card.twig' with { product: item } only %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
   </div>
 </section>
 {% endblock %}

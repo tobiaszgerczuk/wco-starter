@@ -202,8 +202,8 @@
     );
   }
 
-  function CategoryControl({ label, value, onChange }) {
-    const categories = useSelect((select) => select('core').getEntityRecords('taxonomy', 'category', { per_page: 100 }), []);
+  function CategoryControl({ label, value, onChange, taxonomy }) {
+    const categories = useSelect((select) => select('core').getEntityRecords('taxonomy', taxonomy || 'category', { per_page: 100 }), [taxonomy]);
     const options = [{ value: 0, label: t('Wszystkie kategorie', 'All categories') }].concat((categories || []).map((c) => ({ value: c.id, label: c.name })));
 
     return el(SelectControl, { label, value: value || 0, options, __nextHasNoMarginBottom: true, onChange: (next) => onChange(Number(next)) });
@@ -222,7 +222,8 @@
       case 'number':
         return el(TextControl, { ...common, type: 'number', min: control.min, max: control.max, value: value ?? '', onChange: (next) => onChange(next === '' ? 0 : Number(next)) });
       case 'category':
-        return el(CategoryControl, { key: control.attr, label: control.label, value, onChange });
+      case 'term':
+        return el(CategoryControl, { key: control.attr, label: control.label, value, onChange, taxonomy: control.taxonomy });
       case 'link':
         return el(
           'div',

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/product-categories",
+  "title": "Product categories",
+  "description": "Tiles linking to WooCommerce product categories.",
+  "category": "wco-blocks",
+  "icon": "category",
+  "keywords": [
+    "categories",
+    "shop",
+    "kategorie"
+  ],
+  "supports": {
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "attributes": {
+    "categories_count": {
+      "type": "number",
+      "default": 4
+    },
+    "categories_columns": {
+      "type": "string",
+      "default": "4"
+    }
+  },
+  "wco": {
+    "native": true,
+    "sectionSettings": true,
+    "panel": "Ustawienia: Kategorie produktów",
+    "controls": [
+      {
+        "attr": "categories_count",
+        "type": "number",
+        "label": "Liczba kategorii",
+        "min": 1,
+        "max": 12
+      },
+      {
+        "attr": "categories_columns",
+        "type": "select",
+        "label": "Kolumny",
+        "options": {
+          "2": "2 kolumny",
+          "3": "3 kolumny",
+          "4": "4 kolumny"
+        }
+      }
+    ],
+    "frame": {
+      "head": "block-product-categories__head",
+      "after": {
+        "class": "block-product-categories__grid block-product-categories__grid--cols-{categories_columns:4}",
+        "text": "Kategorie produktów pojawią się na stronie."
+      }
+    }
+  }
+}

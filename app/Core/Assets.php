@@ -70,6 +70,7 @@ class Assets {
             'restUrl' => esc_url_raw(rest_url('wco-starter/v1')),
             'nonce'   => wp_create_nonce('wp_rest'),
             'wooActive' => $wooActive,
+            'addToCartUrl' => $wooActive && class_exists('WC_AJAX') ? esc_url_raw(\WC_AJAX::get_endpoint('add_to_cart')) : null,
             'cartUrl' => $wooActive && function_exists('wc_get_cart_url') ? esc_url_raw(wc_get_cart_url()) : null,
         ]);
     }

@@ -1,0 +1,18 @@
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-product-categories__head">
+      {{ inner_blocks(inner_template, inner_allowed) }}
+    </div>
+    {% if categories %}
+      <div class="block-product-categories__grid block-product-categories__grid--cols-{{ fields.categories_columns|default(4) }}">
+        {% for category in categories %}
+          <a class="category-tile" href="{{ category.url }}">
+            <span class="category-tile__media">{{ category.image }}</span>
+            <span class="category-tile__name">{{ category.name }}</span>
+            <span class="category-tile__count">{{ category.count }} produktów</span>
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>

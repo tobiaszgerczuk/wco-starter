@@ -1,31 +1,41 @@
 {% extends "base.twig" %}
 
 {% block content %}
-<section class="shop-archive container">
-  <header class="shop-header">
-    <h1>{{ title ?: 'Sklep' }}</h1>
-  </header>
+<section class="shop-archive section">
+  <div class="container">
+    <header class="shop-header">
+      <h1 class="shop-header__title">{{ title ?: 'Sklep' }}</h1>
+      {% if description %}
+        <div class="shop-header__description">{{ description }}</div>
+      {% endif %}
+    </header>
 
-  {% if products %}
-    <div class="shop-grid">
-      {% for product in products %}
-        <article class="product-card">
-          <a href="{{ product.link }}" class="product-thumb">
-            <img src="{{ product.thumbnail.src }}" alt="{{ product.title }}">
-          </a>
-          <h2 class="product-title"><a href="{{ product.link }}">{{ product.title }}</a></h2>
-          <div class="product-price">{{ product.price_html|raw }}</div>
+    {% if notices %}<div class="shop-notices">{{ notices }}</div>{% endif %}
 
-          <button
-            class="btn btn--primary js-add-to-cart"
-            data-product-id="{{ product.id }}">
-            Dodaj do koszyka
-          </button>
-        </article>
-      {% endfor %}
+    {% if chips %}
+      <nav class="shop-chips" aria-label="Kategorie produktów">
+        <a class="shop-chip{{ chips|filter(c => c.active)|length ? '' : ' is-active' }}" href="{{ shop_url }}">Wszystko</a>
+        {% for chip in chips %}
+          <a class="shop-chip{{ chip.active ? ' is-active' : '' }}" href="{{ chip.url }}">{{ chip.name }} <span>{{ chip.count }}</span></a>
+        {% endfor %}
+      </nav>
+    {% endif %}
+
+    <div class="shop-toolbar">
+      <div class="shop-toolbar__count">{{ result_count }}</div>
+      <div class="shop-toolbar__ordering">{{ ordering }}</div>
     </div>
-  {% else %}
-    <p class="no-products">Brak produktów w sklepie.</p>
-  {% endif %}
+
+    {% if products %}
+      <div class="shop-grid">
+        {% for product in products %}
+          {% include 'modules/product-card.twig' with { product: product } only %}
+        {% endfor %}
+      </div>
+      <div class="shop-pagination">{{ pagination }}</div>
+    {% else %}
+      <p class="shop-empty">Nie znaleziono produktów. <a href="{{ shop_url }}">Wróć do sklepu</a>.</p>
+    {% endif %}
+  </div>
 </section>
 {% endblock %}

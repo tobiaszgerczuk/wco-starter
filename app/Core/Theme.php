@@ -38,6 +38,8 @@ class Theme
         Settings::boot();
         Appearance::boot();
         Tracking::boot();
+        Shop::boot();
+        DemoImport::boot();
 
         // Blocks
         BlocksRegistry::boot();

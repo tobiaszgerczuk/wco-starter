@@ -1,0 +1,92 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/products",
+  "title": "Products",
+  "description": "Grid of WooCommerce products: latest, featured, on sale, bestselling or from a category.",
+  "category": "wco-blocks",
+  "icon": "cart",
+  "keywords": [
+    "products",
+    "shop",
+    "woocommerce",
+    "produkty"
+  ],
+  "supports": {
+    "align": [
+      "full",
+      "wide"
+    ]
+  },
+  "attributes": {
+    "products_source": {
+      "type": "string",
+      "default": "latest"
+    },
+    "products_category": {
+      "type": "number",
+      "default": 0
+    },
+    "products_count": {
+      "type": "number",
+      "default": 4
+    },
+    "products_columns": {
+      "type": "string",
+      "default": "4"
+    }
+  },
+  "wco": {
+    "native": true,
+    "sectionSettings": true,
+    "panel": "Ustawienia: Produkty",
+    "controls": [
+      {
+        "attr": "products_source",
+        "type": "select",
+        "label": "Źródło produktów",
+        "options": {
+          "latest": "Najnowsze",
+          "featured": "Wyróżnione",
+          "sale": "Promocje",
+          "bestselling": "Bestsellery",
+          "category": "Z kategorii"
+        }
+      },
+      {
+        "attr": "products_category",
+        "type": "term",
+        "taxonomy": "product_cat",
+        "label": "Kategoria",
+        "showWhen": {
+          "attr": "products_source",
+          "value": "category"
+        }
+      },
+      {
+        "attr": "products_count",
+        "type": "number",
+        "label": "Liczba produktów",
+        "min": 1,
+        "max": 24
+      },
+      {
+        "attr": "products_columns",
+        "type": "select",
+        "label": "Kolumny",
+        "options": {
+          "2": "2 kolumny",
+          "3": "3 kolumny",
+          "4": "4 kolumny"
+        }
+      }
+    ],
+    "frame": {
+      "head": "block-products__head",
+      "after": {
+        "class": "block-products__grid block-products__grid--cols-{products_columns:4}",
+        "text": "Produkty ze sklepu pojawią się na stronie."
+      }
+    }
+  }
+}

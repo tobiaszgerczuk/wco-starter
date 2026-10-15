@@ -43,14 +43,19 @@ export default class WcoShop {
       formData.append('product_id', productId);
   
       try {
-        const res = await fetch('/?wc-ajax=add_to_cart', { method: 'POST', body: formData });
-        const text = await res.text();
-        if (text.includes('woocommerce-message')) {
-          this.showNotice('Produkt dodany do koszyka 🎉');
+        const res = await fetch(this.config.addToCartUrl || '/?wc-ajax=add_to_cart', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data && !data.error) {
+          this.showNotice('Produkt dodany do koszyka');
           this.updateMiniCart();
+          this.openCartSidebar();
+        } else if (data && data.product_url) {
+          window.location.href = data.product_url;
+        } else {
+          this.showNotice('Nie udało się dodać produktu');
         }
       } catch {
-        this.showNotice('Błąd przy dodawaniu do koszyka ❌');
+        this.showNotice('Błąd przy dodawaniu do koszyka');
       }
     }
   

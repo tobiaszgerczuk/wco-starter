@@ -1,0 +1,28 @@
+{# Expects `product` from Shop::card(). #}
+<article class="product-card{{ product.on_sale ? ' is-on-sale' : '' }}{{ product.in_stock ? '' : ' is-out-of-stock' }}">
+  <a href="{{ product.url }}" class="product-card__thumb" aria-label="{{ product.title }}">
+    {{ product.image }}
+    {% if product.on_sale %}
+      <span class="product-card__badge">{{ product.sale_percent ? '-' ~ product.sale_percent ~ '%' : 'Promocja' }}</span>
+    {% elseif not product.in_stock %}
+      <span class="product-card__badge product-card__badge--muted">Niedostępny</span>
+    {% endif %}
+  </a>
+  <div class="product-card__body">
+    {% if product.category %}
+      <p class="product-card__category">{{ product.category }}</p>
+    {% endif %}
+    <h3 class="product-card__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+    {% if product.rating_html %}
+      <div class="product-card__rating">{{ product.rating_html }}</div>
+    {% endif %}
+    <div class="product-card__price">{{ product.price_html }}</div>
+  </div>
+  <div class="product-card__actions">
+    {% if product.ajax_add %}
+      <button type="button" class="btn btn--primary js-add-to-cart" data-product-id="{{ product.id }}">Dodaj do koszyka</button>
+    {% else %}
+      <a href="{{ product.cta_url }}" class="btn btn--outline">{{ product.cta_label }}</a>
+    {% endif %}
+  </div>
+</article>

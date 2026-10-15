@@ -1,0 +1,14 @@
+<section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
+  <div{% if container_class %} class="{{ container_class }}"{% endif %}>
+    <div class="block-products__head">
+      {{ inner_blocks(inner_template, inner_allowed) }}
+    </div>
+    {% if products %}
+      <div class="block-products__grid block-products__grid--cols-{{ fields.products_columns|default(4) }}">
+        {% for product in products %}
+          {% include 'modules/product-card.twig' with { product: product } only %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
