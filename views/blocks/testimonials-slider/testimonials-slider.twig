@@ -1,16 +1,16 @@
 <section{% if section_id %} id="{{ section_id }}"{% endif %} class="{{ section_classes }}"{% if section_style %} style="{{ section_style }}"{% endif %}>
   <div class="container">
     {% include 'modules/section-header.twig' with {
-      eyebrow: fields['testimonials_slider_eyebrow'],
-      title: fields['testimonials_slider_title'] ?: 'Testimonials',
-      intro: fields['testimonials_slider_intro'] ?: null,
+      eyebrow: slider_eyebrow,
+      title: slider_title ?: 'Opinie',
+      intro: slider_intro ?: null,
       class: 'block-testimonials-slider__header'
     } only %}
 
-    {% if fields['testimonials_slider_items'] %}
+    {% if slider_items %}
       <div class="block-testimonials-slider__slider swiper js-swiper-testimonials">
         <div class="swiper-wrapper">
-          {% for item in fields['testimonials_slider_items'] %}
+          {% for item in slider_items %}
             <article class="block-testimonials-slider__slide swiper-slide">
               <div class="block-testimonials-slider__card">
                 {% if item.quote %}
@@ -37,8 +37,6 @@
           <button class="block-testimonials-slider__nav block-testimonials-slider__nav--next swiper-button-next" type="button" aria-label="Next slide"></button>
         </div>
       </div>
-    {% elseif is_preview %}
-      <p class="block-testimonials-slider__placeholder">Add testimonials in ACF to preview the slider.</p>
     {% endif %}
   </div>
 </section>

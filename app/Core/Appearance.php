@@ -12,7 +12,6 @@ namespace WCO\Starter\Core;
  */
 class Appearance
 {
-    private const PAGE = 'wco-theme-settings';
     private const PREFIX = 'appearance_';
     private const FONT_OPTION = 'wco_appearance_fonts';
 
@@ -67,10 +66,21 @@ class Appearance
     /** @var array<string, mixed>|null */
     private static ?array $settings = null;
 
+    /** @return array<string, mixed> */
+    public static function defaults(): array
+    {
+        return self::DEFAULTS;
+    }
+
+    /** @return array<string, string> font key => label */
+    public static function font_labels(): array
+    {
+        return array_map(static fn (array $font): string => $font[0], self::FONTS);
+    }
+
     public static function boot(): void
     {
-        add_action('acf/init', [self::class, 'register_fields'], 20);
-        add_action('acf/save_post', [self::class, 'on_save'], 20);
+        add_action('wco_starter_settings_saved', [self::class, 'on_save'], 20);
         add_action('wp_head', [self::class, 'print_head'], 4);
         add_action('wp_head', [self::class, 'print_variables'], 20);
         add_action('enqueue_block_editor_assets', [self::class, 'editor_assets'], 20);
@@ -88,16 +98,14 @@ class Appearance
         }
 
         $settings = self::DEFAULTS;
-        if (function_exists('get_field')) {
-            foreach (self::DEFAULTS as $name => $default) {
-                $value = get_field(self::PREFIX . $name, 'option');
-                if ($value === null || $value === '') {
-                    continue;
-                }
-                $settings[$name] = is_bool($default) ? (bool) $value : $value;
+        foreach (self::DEFAULTS as $name => $default) {
+            $value = Settings::get(self::PREFIX . $name);
+            if ($value === null || $value === '') {
+                continue;
             }
-            $settings['logo_id'] = (int) (get_field(self::PREFIX . 'logo', 'option') ?: 0);
+            $settings[$name] = is_bool($default) ? (bool) $value : $value;
         }
+        $settings['logo_id'] = (int) Settings::get(self::PREFIX . 'logo', 0);
 
         foreach (['color_primary', 'color_primary_hover', 'color_secondary', 'color_accent', 'color_text', 'color_muted', 'color_bg', 'color_surface', 'color_border'] as $name) {
             $settings[$name] = self::color((string) $settings[$name], (string) self::DEFAULTS[$name]);
@@ -320,12 +328,8 @@ class Appearance
     }
 
     /** Rebuilds the font cache right after the settings are saved. */
-    public static function on_save($postId): void
+    public static function on_save(): void
     {
-        if ($postId !== 'options') {
-            return;
-        }
-
         self::$settings = null;
         delete_option(self::FONT_OPTION);
         if (self::settings()['font_local']) {
@@ -381,133 +385,5 @@ class Appearance
         $context['appearance'] = ['logo_id' => self::settings()['logo_id']];
 
         return $context;
-    }
-
-    // ------------------------------------------------------------------ admin fields
-
-    public static function register_fields(): void
-    {
-        if (!function_exists('acf_add_local_field_group')) {
-            return;
-        }
-
-        $field = static fn (string $name, string $label, string $type, array $extra = []): array => array_merge([
-            'key' => 'field_' . self::PREFIX . $name,
-            'label' => $label,
-            'name' => self::PREFIX . $name,
-            'type' => $type,
-            'wrapper' => ['width' => '', 'class' => '', 'id' => ''],
-        ], $extra);
-        $tab = static fn (string $name, string $label): array => [
-            'key' => 'field_' . self::PREFIX . $name . '_tab',
-            'label' => $label,
-            'name' => '',
-            'type' => 'tab',
-            'placement' => 'top',
-            'endpoint' => 0,
-        ];
-        $color = static fn (string $name, string $label, string $instructions = ''): array => $field('color_' . $name, $label, 'color_picker', [
-            'default_value' => self::DEFAULTS['color_' . $name],
-            'enable_opacity' => 0,
-            'return_format' => 'string',
-            'instructions' => $instructions,
-            'wrapper' => ['width' => '33', 'class' => '', 'id' => ''],
-        ]);
-        $fontChoices = array_map(static fn (array $f): string => $f[0], self::FONTS);
-
-        acf_add_local_field_group([
-            'key' => 'group_wco_appearance',
-            'title' => 'Appearance',
-            'fields' => [
-                $tab('colors', 'Colors'),
-                $color('primary', 'Primary color', 'Buttons, links, highlights.'),
-                $color('secondary', 'Secondary color'),
-                $color('accent', 'Accent color'),
-                $color('text', 'Text color'),
-                $color('muted', 'Muted text color', 'Paragraphs and captions.'),
-                $color('bg', 'Page background'),
-                $color('surface', 'Surface color', 'Cards and light sections.'),
-                $color('border', 'Border color'),
-                $field('color_primary_hover', 'Primary hover color', 'color_picker', [
-                    'enable_opacity' => 0,
-                    'return_format' => 'string',
-                    'instructions' => 'Leave empty to darken the primary color automatically.',
-                    'wrapper' => ['width' => '33', 'class' => '', 'id' => ''],
-                ]),
-
-                $tab('typography', 'Typography'),
-                $field('font_heading', 'Heading font', 'select', [
-                    'choices' => $fontChoices,
-                    'default_value' => self::DEFAULTS['font_heading'],
-                    'return_format' => 'value',
-                    'wrapper' => ['width' => '33', 'class' => '', 'id' => ''],
-                ]),
-                $field('font_body', 'Body font', 'select', [
-                    'choices' => $fontChoices,
-                    'default_value' => self::DEFAULTS['font_body'],
-                    'return_format' => 'value',
-                    'wrapper' => ['width' => '33', 'class' => '', 'id' => ''],
-                ]),
-                $field('font_size', 'Base font size (px)', 'number', [
-                    'default_value' => self::DEFAULTS['font_size'],
-                    'min' => 14,
-                    'max' => 20,
-                    'step' => 1,
-                    'wrapper' => ['width' => '33', 'class' => '', 'id' => ''],
-                ]),
-                $field('font_local', 'Host fonts locally', 'true_false', [
-                    'ui' => 1,
-                    'default_value' => 1,
-                    'instructions' => 'Downloads the font files once and serves them from your site (no requests to Google, better for GDPR). Falls back to Google Fonts if the download fails.',
-                ]),
-
-                $tab('logo_header', 'Logo and header'),
-                $field('logo', 'Logo', 'image', [
-                    'return_format' => 'id',
-                    'preview_size' => 'medium',
-                    'library' => 'all',
-                    'instructions' => 'The favicon is set in Appearance > Customize > Site Identity.',
-                    'wrapper' => ['width' => '50', 'class' => '', 'id' => ''],
-                ]),
-                $field('logo_height', 'Logo height (px)', 'number', [
-                    'default_value' => self::DEFAULTS['logo_height'],
-                    'min' => 16,
-                    'max' => 160,
-                    'step' => 1,
-                    'wrapper' => ['width' => '50', 'class' => '', 'id' => ''],
-                ]),
-                $field('header_mode', 'Header behaviour', 'select', [
-                    'choices' => ['fixed' => 'Sticky (stays at the top while scrolling)', 'static' => 'Static (scrolls away with the page)'],
-                    'default_value' => self::DEFAULTS['header_mode'],
-                    'return_format' => 'value',
-                ]),
-                $field('header_transparent', 'Transparent at the top of the page', 'true_false', [
-                    'ui' => 1,
-                    'default_value' => 1,
-                    'instructions' => 'Off gives the header a solid background all the time.',
-                    'wrapper' => ['width' => '50', 'class' => '', 'id' => ''],
-                ]),
-                $field('header_shrink', 'Shrink on scroll', 'true_false', [
-                    'ui' => 1,
-                    'default_value' => 1,
-                    'wrapper' => ['width' => '50', 'class' => '', 'id' => ''],
-                ]),
-
-                $tab('shape', 'Shape'),
-                $field('shape', 'Corner style', 'select', [
-                    'choices' => ['sharp' => 'Sharp', 'soft' => 'Soft', 'default' => 'Default', 'round' => 'Round'],
-                    'default_value' => self::DEFAULTS['shape'],
-                    'return_format' => 'value',
-                    'instructions' => 'Rounding of buttons, cards and images.',
-                ]),
-            ],
-            'location' => [[['param' => 'options_page', 'operator' => '==', 'value' => self::PAGE]]],
-            'menu_order' => -10,
-            'position' => 'normal',
-            'style' => 'default',
-            'label_placement' => 'top',
-            'instruction_placement' => 'label',
-            'active' => true,
-        ]);
     }
 }

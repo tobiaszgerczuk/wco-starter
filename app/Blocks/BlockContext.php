@@ -5,7 +5,7 @@ namespace WCO\Starter\Blocks;
 use Timber\Timber;
 
 /**
- * Builds the Twig context shared by every ACF block render template.
+ * Builds the Twig context shared by every native block render template.
  */
 class BlockContext
 {
@@ -17,16 +17,6 @@ class BlockContext
         'section_space_bottom' => 'md',
         'container_width' => 'default',
     ];
-
-    /**
-     * @param array<string, mixed> $block   ACF block settings and attributes.
-     * @param array<string, mixed> $extra   Extra context values (e.g. inner_template).
-     * @return array<string, mixed>
-     */
-    public static function build(string $slug, array $block, string $content = '', bool $isPreview = false, array $extra = []): array
-    {
-        return self::build_from_fields($slug, get_fields() ?: [], $block, $content, $isPreview, $extra);
-    }
 
     /**
      * Same context as build(), but from already known field values (native blocks pass attributes).
@@ -54,12 +44,6 @@ class BlockContext
         $context['container_class'] = SectionSettings::container_class($fields);
 
         return array_replace($context, $extra);
-    }
-
-    /** Renders `views/blocks/<slug>/<slug>.twig`. Used by every <slug>.include.php. */
-    public static function render(string $slug, array $block, string $content = '', bool $isPreview = false, array $extra = []): void
-    {
-        Timber::render("blocks/{$slug}/{$slug}.twig", self::build($slug, $block, $content, $isPreview, $extra));
     }
 
     /**

@@ -95,7 +95,7 @@ class NativeBlocks
     {
         // Content saved while the block was still an ACF block keeps its values under "data".
         $legacy = is_array($attributes['data'] ?? null) ? $attributes['data'] : [];
-        $fields = array_replace($legacy, array_filter($attributes, static fn ($value) => $value !== null && $value !== ''));
+        $fields = array_replace($legacy, array_filter($attributes, static fn ($value) => $value !== null && $value !== '' && $value !== []));
         unset($fields['data']);
 
         $definition = self::definitions()[$slug];

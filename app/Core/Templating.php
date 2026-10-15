@@ -34,7 +34,7 @@ class Templating
             $context['cart_url'] = function_exists('wc_get_cart_url') ? wc_get_cart_url() : null;
         }
 
-        $context['global_settings'] = Acf::get_global_settings();
+        $context['global_settings'] = Settings::global();
 
         return $context;
     }
@@ -60,8 +60,7 @@ class Templating
 
         $twig->addFunction(new TwigFunction('wco_image', [Media::class, 'image'], ['is_safe' => ['html']]));
 
-        // {{ inner_blocks(template, allowed, lock) }}: editable <InnerBlocks /> in the editor preview,
-        // plain saved content on the front end.
+        // {{ inner_blocks(template, allowed, lock) }}: the saved inner blocks of a native block.
         $twig->addFunction(new TwigFunction('inner_blocks', [self::class, 'inner_blocks'], ['is_safe' => ['html'], 'needs_context' => true]));
         
 
@@ -69,37 +68,17 @@ class Templating
     }
 
     /**
-     * In the editor preview this prints ACF's <InnerBlocks /> tag, which makes the content editable
-     * in place. On the front end it returns the saved inner content in the same
-     * div.acf-innerblocks-container wrapper the editor uses, so front and editor share one DOM
-     * (and one set of layout selectors) without relying on ACF's own tag replacement.
+     * Saved inner blocks wrapped in div.acf-innerblocks-container, the same wrapper the block
+     * editor uses, so front end and editor share one DOM and one set of layout selectors.
+     * The template arguments are kept for the editor (see NativeBlocks) and unused here.
      *
-     * @param array<string, mixed> $context  Twig context (needs is_preview and content).
-     * @param array<int, array>    $template Block template: [[name, attrs, children], ...].
-     * @param string[]             $allowed  Allowed block names (empty = any).
-     * @param string               $lock     '', 'all' or 'insert'.
+     * @param array<string, mixed> $context  Twig context (needs content).
+     * @param array<int, array>|null $template
+     * @param string[]|null $allowed
      */
     public static function inner_blocks(array $context, ?array $template = [], ?array $allowed = [], string $lock = ''): string
     {
-        $template ??= [];
-        $allowed ??= [];
-
-        if (empty($context['is_preview'])) {
-            return '<div class="acf-innerblocks-container">' . ($context['content'] ?? '') . '</div>';
-        }
-
-        $attrs = '';
-        if ($template) {
-            $attrs .= ' template="' . esc_attr(wp_json_encode($template)) . '"';
-        }
-        if ($allowed) {
-            $attrs .= ' allowedBlocks="' . esc_attr(wp_json_encode($allowed)) . '"';
-        }
-        if ($lock !== '') {
-            $attrs .= ' templateLock="' . esc_attr($lock) . '"';
-        }
-
-        return '<InnerBlocks' . $attrs . ' />';
+        return '<div class="acf-innerblocks-container">' . ($context['content'] ?? '') . '</div>';
     }
 
     private static function manifest(): array

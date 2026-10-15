@@ -82,17 +82,6 @@ class Requirements
             ];
         }
 
-        if (!function_exists('acf_register_block_type')) {
-            $acfMessage = class_exists('ACF')
-                ? 'ACF is active, but ACF Pro block API is unavailable. Custom ACF blocks are disabled.'
-                : 'ACF Pro is not active. Custom ACF blocks are disabled.';
-
-            self::$messages[] = [
-                'type' => 'warning',
-                'message' => $acfMessage,
-            ];
-        }
-
         if (!class_exists('WooCommerce')) {
             self::$messages[] = [
                 'type' => 'info',

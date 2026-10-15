@@ -3,7 +3,7 @@
 namespace WCO\Starter\Core;
 
 use Timber\Timber;
-use WCO\Starter\Core\Acf;
+use WCO\Starter\Core\Settings;
 use WCO\Starter\Core\Appearance;
 use WCO\Starter\Core\Tracking;
 use WCO\Starter\Core\Assets;
@@ -34,16 +34,14 @@ class Theme
         // Media helpers / upload support
         Media::boot();
 
-        // ACF Local JSON
-        Acf::boot();
+        // Settings page, appearance and tracking
+        Settings::boot();
         Appearance::boot();
         Tracking::boot();
-        add_filter('acf/settings/save_json', [Acf::class, 'save_json']);
-        add_filter('acf/settings/load_json', [Acf::class, 'load_json']);
 
-        // ACF Blocks
+        // Blocks
         BlocksRegistry::boot();
-        add_action('acf/init', [BlocksRegistry::class, 'register_blocks']);
+        add_action('init', [BlocksRegistry::class, 'register_blocks']);
 
         // REST API
         RestApi::boot();

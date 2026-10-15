@@ -15,12 +15,10 @@ use Timber\Timber;
  */
 class Tracking
 {
-    private const PAGE = 'wco-theme-settings';
     private const COOKIE = 'wco_consent';
 
     public static function boot(): void
     {
-        add_action('acf/init', [self::class, 'register_fields'], 20);
         add_action('wp_head', [self::class, 'print_head'], 2);
         add_action('wp_body_open', [self::class, 'print_noscript'], 1);
         add_action('wp_footer', [self::class, 'print_footer'], 5);
@@ -31,13 +29,7 @@ class Tracking
 
     private static function option(string $name, $default = null)
     {
-        if (!function_exists('get_field')) {
-            return $default;
-        }
-
-        $value = get_field($name, 'option');
-
-        return ($value === null || $value === '') ? $default : $value;
+        return Settings::get($name, $default);
     }
 
     private static function gtm_id(): string
@@ -197,72 +189,5 @@ class Tracking
         $context['consent'] = ['enabled' => self::consent_enabled()];
 
         return $context;
-    }
-
-    // ------------------------------------------------------------------ admin fields
-
-    public static function register_fields(): void
-    {
-        if (!function_exists('acf_add_local_field_group')) {
-            return;
-        }
-
-        $field = static fn (string $name, string $label, string $type, array $extra = []): array => array_merge([
-            'key' => 'field_tracking_' . $name,
-            'label' => $label,
-            'name' => $name,
-            'type' => $type,
-            'wrapper' => ['width' => '', 'class' => '', 'id' => ''],
-        ], $extra);
-
-        acf_add_local_field_group([
-            'key' => 'group_wco_consent',
-            'title' => 'Cookies and consent',
-            'fields' => [
-                $field('consent_enabled', 'Cookie consent banner', 'true_false', [
-                    'ui' => 1,
-                    'default_value' => 1,
-                    'instructions' => 'Shown only when Google Tag Manager, Google Analytics or additional scripts are set. Turns on Google Consent Mode v2 (everything denied until the visitor agrees) and holds back the additional scripts until analytics cookies are accepted. Turn it off if you manage consent inside GTM.',
-                ]),
-                $field('consent_title', 'Banner title', 'text', [
-                    'default_value' => 'Szanujemy Twoją prywatność',
-                    'wrapper' => ['width' => '50', 'class' => '', 'id' => ''],
-                ]),
-                $field('consent_policy_link', 'Privacy policy link', 'link', [
-                    'return_format' => 'array',
-                    'instructions' => 'Leave empty to use the WordPress privacy page.',
-                    'wrapper' => ['width' => '50', 'class' => '', 'id' => ''],
-                ]),
-                $field('consent_text', 'Banner text', 'textarea', [
-                    'rows' => 4,
-                    'new_lines' => '',
-                    'default_value' => 'Używamy plików cookies, aby strona działała poprawnie, oraz — za Twoją zgodą — do analizy ruchu i działań marketingowych. Możesz zaakceptować wszystkie, odrzucić opcjonalne albo wybrać, na co się zgadzasz.',
-                ]),
-                $field('consent_version', 'Consent version', 'text', [
-                    'default_value' => '1',
-                    'instructions' => 'Change it (e.g. to 2) after changing which cookies you use; every visitor is then asked again.',
-                    'wrapper' => ['width' => '33', 'class' => '', 'id' => ''],
-                ]),
-                $field('tracking_noscript', 'GTM noscript iframe', 'true_false', [
-                    'ui' => 1,
-                    'default_value' => 1,
-                    'instructions' => 'Adds the <noscript> iframe after <body>. Visitors without JavaScript cannot give consent, so turn it off for strict GDPR setups.',
-                    'wrapper' => ['width' => '33', 'class' => '', 'id' => ''],
-                ]),
-                $field('tracking_skip_editors', 'Skip tracking for logged-in editors', 'true_false', [
-                    'ui' => 1,
-                    'default_value' => 1,
-                    'instructions' => 'Keeps your own visits out of the statistics.',
-                    'wrapper' => ['width' => '33', 'class' => '', 'id' => ''],
-                ]),
-            ],
-            'location' => [[['param' => 'options_page', 'operator' => '==', 'value' => self::PAGE]]],
-            'menu_order' => -5,
-            'position' => 'normal',
-            'style' => 'default',
-            'label_placement' => 'top',
-            'instruction_placement' => 'label',
-            'active' => true,
-        ]);
     }
 }

@@ -1,11 +1,46 @@
 {
-    "title": "Testimonials Slider",
-    "description": "Testimonials slider block.",
-    "category": "wco-blocks",
-    "icon": "format-quote",
-    "keywords": [
-        "testimonials",
-        "slider",
-        "reviews"
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "acf/testimonials-slider",
+  "title": "Testimonials Slider",
+  "description": "Testimonials slider block.",
+  "category": "wco-blocks",
+  "icon": "format-quote",
+  "keywords": [
+    "testimonials",
+    "slider",
+    "reviews"
+  ],
+  "supports": {
+    "align": [
+      "full",
+      "wide"
     ]
+  },
+  "attributes": {
+    "testimonials_slider_eyebrow": {
+      "type": "string",
+      "default": ""
+    },
+    "testimonials_slider_title": {
+      "type": "string",
+      "default": ""
+    },
+    "testimonials_slider_intro": {
+      "type": "string",
+      "default": ""
+    },
+    "testimonials_slider_items": {
+      "type": "array",
+      "default": []
+    }
+  },
+  "wco": {
+    "native": true,
+    "sectionSettings": true,
+    "panel": "Ustawienia slidera",
+    "frame": {
+      "custom": "testimonials-slider"
+    }
+  }
 }

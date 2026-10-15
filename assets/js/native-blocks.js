@@ -5,7 +5,7 @@
  */
 (() => {
   const { registerBlockType } = window.wp.blocks;
-  const { InspectorControls, InnerBlocks, useBlockProps, MediaUpload, MediaUploadCheck } = window.wp.blockEditor;
+  const { InspectorControls, InnerBlocks, RichText, useBlockProps, MediaUpload, MediaUploadCheck } = window.wp.blockEditor;
   const { PanelBody, SelectControl, TextControl, RangeControl, ToggleControl, Button, __experimentalHStack: HStack } = window.wp.components;
   const { useSelect } = window.wp.data;
   const { createElement: el } = window.wp.element;
@@ -126,6 +126,49 @@
         )
       );
     },
+  };
+
+  FRAMES['testimonials-slider'] = ({ attributes, setAttributes, containerClass }) => {
+    const items = Array.isArray(attributes.testimonials_slider_items) ? attributes.testimonials_slider_items : [];
+    const setItems = (next) => setAttributes({ testimonials_slider_items: next });
+    const patch = (index, change) => setItems(items.map((item, i) => (i === index ? { ...item, ...change } : item)));
+    const text = (tagName, className, value, placeholder, onChange, formats) =>
+      el(RichText, { tagName, className, value: value || '', placeholder, allowedFormats: formats || [], onChange });
+
+    return el(
+      'div',
+      { className: containerClass || 'container' },
+      el(
+        'div',
+        { className: 'section-header block-testimonials-slider__header' },
+        text('p', 'section-header__eyebrow', attributes.testimonials_slider_eyebrow, t('Nadtytuł', 'Eyebrow'), (v) => setAttributes({ testimonials_slider_eyebrow: v })),
+        text('h2', 'section-header__title', attributes.testimonials_slider_title, t('Tytuł sekcji', 'Section title'), (v) => setAttributes({ testimonials_slider_title: v })),
+        text('div', 'section-header__intro', attributes.testimonials_slider_intro, t('Krótki opis', 'Intro'), (v) => setAttributes({ testimonials_slider_intro: v }), ['core/bold', 'core/italic', 'core/link'])
+      ),
+      el(
+        'div',
+        { className: 'block-testimonials-slider__slider', style: { display: 'grid', gap: '24px' } },
+        items.map((item, index) =>
+          el(
+            'article',
+            { key: index, className: 'block-testimonials-slider__slide' },
+            el(
+              'div',
+              { className: 'block-testimonials-slider__card' },
+              text('blockquote', 'block-testimonials-slider__quote', item.quote, t('Treść opinii', 'Quote'), (v) => patch(index, { quote: v }), ['core/bold', 'core/italic']),
+              el(
+                'div',
+                { className: 'block-testimonials-slider__meta' },
+                text('strong', 'block-testimonials-slider__name', item.author_name, t('Imię i nazwisko', 'Name'), (v) => patch(index, { author_name: v })),
+                text('span', 'block-testimonials-slider__role', item.author_role, t('Stanowisko / firma', 'Role'), (v) => patch(index, { author_role: v }))
+              ),
+              el(Button, { variant: 'link', isDestructive: true, onClick: () => setItems(items.filter((_, i) => i !== index)) }, t('Usuń opinię', 'Remove'))
+            )
+          )
+        )
+      ),
+      el(Button, { variant: 'secondary', style: { marginTop: '16px' }, onClick: () => setItems([...items, { quote: '', author_name: '', author_role: '' }]) }, t('Dodaj opinię', 'Add testimonial'))
+    );
   };
 
   const FRAME_EXTRA_CLASSES = {
@@ -306,7 +349,7 @@
         }
 
         const sectionBody = frame
-          ? frame({ attributes, containerClass: section.containerClass, template })
+          ? frame({ attributes, setAttributes, containerClass: section.containerClass, template })
           : genericFrame({ config, attributes, containerClass: section.containerClass, template, allowedBlocks });
 
         return el('section', blockProps, inspector, sectionBody);

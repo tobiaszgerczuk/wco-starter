@@ -13,7 +13,6 @@ class Registry
 
     public static function boot(): void
     {
-        add_filter('acf/load_field_group', [self::class, 'section_settings_locations']);
         Editor::boot();
         NativeBlocks::boot();
 
@@ -29,114 +28,9 @@ class Registry
         // === GUTENBERG EDITOR ASSETS ===
         add_action('enqueue_block_editor_assets', [self::class, 'enqueue_editor_assets']);
 
-        self::register_json_blocks();
         self::register_container_group_block();
         self::register_two_columns_block();
         self::register_two_columns_column_block();
-
-        if (!function_exists('acf_register_block_type')) {
-            return;
-        }
-
-        $blocks_dir = get_template_directory() . '/' . self::VIEWS_DIR . '/' . self::BLOCKS_DIR;
-        if (!is_dir($blocks_dir)) {
-            return;
-        }
-
-        $directories = glob($blocks_dir . '/*', GLOB_ONLYDIR);
-
-        foreach ($directories as $dir) {
-            $slug = basename($dir);
-
-            if (in_array($slug, ['container-group', 'two-columns', 'two-columns-column'], true)) {
-                continue;
-            }
-
-            // Native blocks are registered by NativeBlocks, with or without ACF.
-            if (NativeBlocks::is_native(self::get_block_metadata($dir))) {
-                continue;
-            }
-
-            // Blocks with a "name" in block.json are registered by register_json_blocks().
-            if (self::is_json_block($dir)) {
-                continue;
-            }
-
-            // Sprawdź, czy istnieje .twig
-            $twig_file = $dir . '/' . $slug . '.twig';
-            if (!file_exists($twig_file)) {
-                continue;
-            }
-
-            $args = self::build_block_args($slug, $dir);
-            acf_register_block_type($args);
-        }
-    }
-
-    /**
-     * Registers ACF blocks described by block.json ("name" + "acf" keys). Content lives in
-     * InnerBlocks (edited in the preview); ACF fields only hold settings.
-     */
-    private static function register_json_blocks(): void
-    {
-        $blocks_dir = get_template_directory() . '/' . self::VIEWS_DIR . '/' . self::BLOCKS_DIR;
-
-        foreach (glob($blocks_dir . '/*', GLOB_ONLYDIR) ?: [] as $dir) {
-            if (!self::is_json_block($dir)) {
-                continue;
-            }
-
-            $slug = basename($dir);
-            $args = [];
-            if (self::is_polish_locale()) {
-                // block.json is read directly by WordPress, so hand over the translated labels.
-                $metadata = self::get_block_metadata($dir);
-                foreach (['title', 'description'] as $key) {
-                    if (!empty($metadata[$key])) {
-                        $args[$key] = $metadata[$key];
-                    }
-                }
-            }
-            $style = self::register_block_style_handle($slug);
-            if ($style !== '') {
-                $args['style'] = $style;
-                $args['editor_style'] = $style;
-            }
-
-            register_block_type($dir, $args);
-        }
-    }
-
-    /**
-     * The shared "Section settings" group is attached to every block whose block.json has
-     * "wco": { "sectionSettings": true }, so new blocks never need their own copy of the fields.
-     */
-    public static function section_settings_locations(array $group): array
-    {
-        if (($group['key'] ?? '') !== 'group_section_settings') {
-            return $group;
-        }
-
-        $location = [];
-        $blocks_dir = get_template_directory() . '/' . self::VIEWS_DIR . '/' . self::BLOCKS_DIR;
-
-        foreach (glob($blocks_dir . '/*/block.json') ?: [] as $file) {
-            $metadata = self::get_block_metadata(dirname($file));
-            if (!empty($metadata['wco']['sectionSettings']) && !empty($metadata['name']) && !NativeBlocks::is_native($metadata)) {
-                $location[] = [['param' => 'block', 'operator' => '==', 'value' => $metadata['name']]];
-            }
-        }
-
-        $group['location'] = $location;
-
-        return $group;
-    }
-
-    private static function is_json_block(string $dir): bool
-    {
-        $metadata = self::get_block_metadata($dir);
-
-        return !empty($metadata['name']) && isset($metadata['acf']);
     }
 
     /**
@@ -186,50 +80,6 @@ class Registry
     public static function register_block_category_legacy(array $categories): array
     {
         return self::register_block_category($categories);
-    }
-
-    private static function build_block_args(string $slug, string $dir): array
-    {
-        $title = ucfirst(str_replace(['-', '_'], ' ', $slug));
-        $include_file = $dir . '/' . $slug . '.include.php';
-        $has_include = file_exists($include_file);
-        $metadata = self::get_block_metadata($dir);
-    
-        $args = [
-            'name'        => $slug,
-            'title'       => $metadata['title'] ?? $title,
-            'description' => $metadata['description'] ?? __("Block: {$title}", 'wco-starter'),
-            'category'    => $metadata['category'] ?? self::CATEGORY,
-            'icon'        => $metadata['icon'] ?? 'layout',
-            'keywords'    => $metadata['keywords'] ?? [$slug],
-            'supports'    => isset($metadata['supports']) && is_array($metadata['supports']) ? $metadata['supports'] : ['align' => ['full', 'wide']],
-            'mode'        => is_string($metadata['mode'] ?? null) ? $metadata['mode'] : 'preview',
-        ];
-
-        if (isset($metadata['supports']) && is_array($metadata['supports']) && !isset($metadata['supports']['align'])) {
-            $args['supports']['align'] = ['full', 'wide'];
-        }
-
-        if ($has_include) {
-            $args['render_template'] = self::VIEWS_DIR . '/' . self::BLOCKS_DIR . '/' . $slug . '/' . $slug . '.include.php';
-        } else {
-            $args['render_callback'] = [__CLASS__, 'render_simple_block'];
-            $args['slug'] = $slug;
-        }
-    
-        $css_path = get_template_directory() . "/public/blocks/{$slug}/{$slug}.css";
-        if (file_exists($css_path)) {
-            $args['enqueue_assets'] = function () use ($slug, $css_path) {
-                wp_enqueue_style(
-                    "acf-block-{$slug}",
-                    get_template_directory_uri() . "/public/blocks/{$slug}/{$slug}.css",
-                    [],
-                    filemtime($css_path)
-                );
-            };
-        }
-
-        return $args;
     }
 
     private static function register_container_group_block(): void
@@ -509,18 +359,6 @@ class Registry
         return $translations[$value] ?? $value;
     }
 
-    public static function render_simple_block($block, $content = '', $is_preview = false, $post_id = 0): void
-    {
-        $slug = $block['slug'] ?? str_replace('acf/', '', $block['name']);
-        $context = [
-            'fields'     => get_fields() ?: [],
-            'is_preview' => $is_preview,
-            'block'      => $block,
-        ];
-
-        Timber::render("blocks/{$slug}/{$slug}.twig", $context);
-    }
-
     public static function render_container_group($attributes = [], string $content = '', $block = null): void
     {
         $context = self::build_layout_block_context($attributes, $block, $content, 'block-container-group');
@@ -569,10 +407,6 @@ class Registry
         $context = Timber::context();
         $fields = [];
         $block_attrs = [];
-
-        if (function_exists('get_fields') && is_array($block) && !empty($block['id'])) {
-            $fields = get_fields($block['id']) ?: [];
-        }
 
         if (is_array($block)) {
             $block_attrs = $block['attrs']['data'] ?? [];

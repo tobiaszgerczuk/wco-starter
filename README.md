@@ -2,7 +2,7 @@
 
 Starter motywu WordPress oparty o:
 - Timber + Twig
-- ACF Blocks
+- natywne bloki WordPressa (bez ACF)
 - SCSS + Webpack
 - OOP + PSR-4
 - opcjonalne integracje WooCommerce
@@ -21,8 +21,8 @@ npm run build
 
 Potem w WordPressie:
 - aktywuj motyw
-- upewnij się, że aktywne są `Timber` i `ACF Pro`
-- jeśli używasz bloków ACF, wejdź do edytora i sprawdź kategorię `WCO Blocks`
+- upewnij się, że działa `Timber` (`composer install`)
+- w edytorze sprawdź kategorię `WCO Blocks`
 
 Do pracy developerskiej:
 
@@ -37,11 +37,10 @@ npm run dev
 - Composer
 - Node.js / npm
 - `Timber`
-- `ACF Pro`
 
 Ważne:
 - bez `Timber` motyw nie ruszy
-- bez `ACF Pro` customowe bloki nie będą widoczne w Gutenberg
+- żadne wtyczki poza `Timber` nie są wymagane; motyw nie używa ACF
 - jeśli `WooCommerce` nie jest aktywne, motyw nadal działa, ale bez funkcji sklepowych
 
 ## Pierwsze uruchomienie projektu
@@ -84,68 +83,49 @@ npm run create-block -- hero-banner "Hero Banner"
 
 ## Ustawienia motywu
 
-Jeśli aktywne jest `ACF Pro`, w panelu pojawi się strona:
-- `Ustawienia motywu`, gdy locale strony jest polskie
-- `Theme settings`, gdy locale strony jest inne niż polskie
+Własny panel w menu administratora: **Ustawienia motywu** (zakładki: Wygląd, Śledzenie i zgody, Social i SEO, Banery i CTA, Treści zastępcze). Wartości trafiają do jednej opcji `wco_starter_settings`; każda zakładka zapisuje się osobno. Dostęp: `manage_options`.
 
-Na tej stronie możesz wkleić:
-- własny kod do `<head>`
-- własny kod przed `</body>`
+Wartości zapisane wcześniej przez stronę opcji ACF (`options_<nazwa>`) są nadal odczytywane jako zapas, więc po przejściu ze starszej wersji nic nie znika, dopóki ich nie nadpiszesz.
 
-Ten kod renderuje się automatycznie przez `wp_head` i `wp_footer`.
+Własny kod `<head>` i `</body>` (zakładka Śledzenie i zgody → Skrypty) renderuje się przez `wp_head` i `wp_footer`. Zapis kodu bez filtrowania wymaga uprawnienia `unfiltered_html`.
+
+Pola panelu opisuje jedna tablica w `WCO\Starter\Core\Settings::schema()`. Nowe ustawienie dodajesz tam jednym wpisem (typy: text, url, textarea, code, toggle, select, number, color, image, link) i czytasz przez `Settings::get('nazwa', $default)`.
 
 ## Tworzenie bloków
 
 Nowy blok generujesz komendą:
 
 ```bash
-npm run create-block -- hero-banner "Hero Banner"
+npm run create-block -- promo "Promo"
 ```
 
-Generator tworzy:
+Generator tworzy blok natywny (bez ACF):
 
 ```text
-views/blocks/hero-banner/block.json
-views/blocks/hero-banner/hero-banner.twig
-views/blocks/hero-banner/_hero-banner.scss
-views/blocks/hero-banner/hero-banner.js
-views/blocks/hero-banner/hero-banner.include.php
-views/blocks/hero-banner/group_hero-banner.json
+views/blocks/promo/block.json         # nazwa, ustawienia (wco.controls), ramka edytora (wco.frame)
+views/blocks/promo/promo.twig         # HTML sekcji
+views/blocks/promo/_promo.scss        # style (ładowane tylko dla tego bloku)
+views/blocks/promo/promo.template.php # domyślna treść (inner_template) i dozwolone bloki
 ```
 
-Presety generatora:
+Presety:
 
 ```bash
-npm run create-block -- testimonials-slider "Testimonials Slider" --preset=slider
-npm run create-block -- promo "Promo" --preset=content
-npm run create-block -- team "Team" --preset=items
+npm run create-block -- promo "Promo"                   # sekcja z treścią edytowaną w podglądzie
+npm run create-block -- team "Team" --preset=items      # blok nadrzędny + <slug>-item
 ```
 
-Aktualnie dostępne:
-- `--preset=content` — blok, którego treść (nagłówek, tekst, obraz, przyciski) edytujesz **bezpośrednio w podglądzie** (patrz niżej)
-- `--preset=items` — blok nadrzędny + blok potomny `<slug>-item` (lista kafelków, pytań, opinii…) z przyciskiem „+” w podglądzie
-- `--preset=basic` (domyślny, starszy model: pola w ACF, edycja z panelu bocznym)
-- `--preset=slider` (szkielet pod Swiper Registry)
+Po wygenerowaniu: `npm run build`, potem wstaw blok w edytorze (kategoria `WCO Blocks`).
 
-Po wygenerowaniu:
+### Jak działa blok natywny
 
-```bash
-npm run build
-```
-
-Ważne:
-- blok pojawia się w Gutenberg jako ACF Block
-- kategoria bloków to `WCO Blocks`
-- style bloku ładują się automatycznie tylko dla danego bloku
-- JS bloku ładuje się automatycznie tylko wtedy, gdy blok istnieje w DOM
-- field group zapisuje się jako lokalny JSON w `views/blocks/<slug>/group_<slug>.json` (po zapisie w ACF plik jest automatycznie aktualizowany).
-- generator dodaje też domyślne pola sekcji: `section_background_color`, `section_gap_top`, `section_gap_bottom`, `section_space_top`, `section_space_bottom`
-
-Dry run:
-
-```bash
-npm run create-block -- hero-banner "Hero Banner" --dry-run
-```
+- `block.json` z `"wco": { "native": true }` jest rejestrowany przez `NativeBlocks` — nie trzeba nic dopisywać w PHP.
+- **Ustawienia** to atrybuty bloku (`attributes`), a ich kontrolki w panelu bocznym opisuje `wco.controls` (typy: select, toggle, number, range, text, image, category, link; `showWhen` pokazuje pole warunkowo). `"sectionSettings": true` dodaje wspólne ustawienia sekcji (tło, szerokość, ID, odstępy).
+- **Treść** to InnerBlocks; domyślny układ w `<slug>.template.php` (`inner_template`, `inner_allowed`).
+- **Wygląd w edytorze** opisuje `wco.frame`: `inner` (klasa wrappera, ze składnią `{atrybut:domyślna}` i `{atrybut? klasa}`), `head` + `after` (nagłówek i element dynamiczny), `item` (blok potomny), `leaf` (blok bez treści).
+- **Dane dynamiczne** (zapytania, schema, parsowanie URL) dodajesz w `<slug>.context.php`: zwraca funkcję `fn(array $fields, string $content): array`, której wynik trafia do Twiga.
+- Nazwy bloków mają prefiks `acf/` (np. `acf/hero`) tylko po to, by zapisana już treść nadal się renderowała; treść zapisana przez dawne bloki ACF jest odczytywana z atrybutu `data`.
+- Własny, niestandardowy edytor dla bloku (jak w `testimonials-slider`) dopisujesz w `assets/js/native-blocks.js` w obiekcie `FRAMES`.
 
 ## Tracking i zgoda na cookies (Ustawienia motywu → Śledzenie, Cookies i zgoda)
 
@@ -168,29 +148,29 @@ Zakładki: **Kolory**, **Typografia**, **Logo i nagłówek**, **Kształt**. Cał
 - **Logo i nagłówek**: logo (wysokość ustawiasz osobno), zachowanie nagłówka (przyklejony / statyczny), przezroczysty na górze strony, zmniejszanie przy przewijaniu. Opcje wracają jako klasy `<body>`: `header-static`, `header-solid`, `header-no-shrink` (style w `assets/scss/layout/_header.scss`). Favicon ustawia się natywnie w Wygląd → Dostosuj → Tożsamość witryny.
 - **Kształt**: zaokrąglenia przycisków, kart i obrazów (`--radius-sm/md/lg`). Zmienne SCSS `$radius-*` są teraz zmiennymi CSS z wartością zapasową.
 
-Dodanie nowej opcji: pole w `Appearance::register_fields()`, wartość domyślna w `DEFAULTS`, a zmienną CSS w `Appearance::css()`.
+Dodanie nowej opcji: wpis w `Settings::schema()` (zakładka Wygląd), wartość domyślna w `Appearance::DEFAULTS`, a zmienną CSS w `Appearance::css()`.
 
 ## Bloki z edycją w podglądzie (InnerBlocks)
 
-Domyślny sposób budowania sekcji w tym starterze: **ACF trzyma tylko ustawienia, a treść to zwykłe bloki WP wewnątrz bloku**. Dzięki temu teksty, obrazy i przyciski klikasz i edytujesz bezpośrednio na podglądzie sekcji, bez ołówka i panelu bocznego.
+Domyślny sposób budowania sekcji w tym starterze: **ustawienia to atrybuty bloku, a treść to zwykłe bloki WP wewnątrz bloku**. Dzięki temu teksty, obrazy i przyciski klikasz i edytujesz bezpośrednio na podglądzie sekcji, bez ołówka i panelu bocznego.
 
-- Blok jest rejestrowany przez `block.json` (klucze `name` i `acf`) — `Registry::register_json_blocks()`.
-- Treść startową definiuje szablon w `<slug>.include.php` (`inner_template`): tablica `[nazwa, atrybuty, dzieci]`. Pomocnicze: `BlockContext::head_template()` (nadtytuł + nagłówek + lead), `BlockContext::buttons_template()`.
-- W Twigu wstawiasz `{{ inner_blocks(inner_template) }}` (opcjonalnie `inner_blocks(inner_template, inner_allowed)` — lista dozwolonych bloków). W edytorze funkcja drukuje tag ACF `<InnerBlocks />`, na froncie zwraca zapisaną treść w tym samym `div.acf-innerblocks-container`, którego używa edytor — dzięki temu front i edytor mają identyczny DOM (`.blok > .acf-innerblocks-container > dzieci`).
-- Listy elementów (kafelki, FAQ, opinie, statystyki) to bloki potomne (`"parent": ["acf/features"]` w `block.json`), a nie repeatery ACF — dodajesz, przestawiasz i usuwasz je w podglądzie.
+- Blok jest rejestrowany przez `block.json` (klucze `name` i `wco.native`) — `NativeBlocks::register()`.
+- Treść startową definiuje `<slug>.template.php` (klucz `inner_template`): tablica `[nazwa, atrybuty, dzieci]`. Pomocnicze: `BlockContext::head_template()` (nadtytuł + nagłówek + lead), `BlockContext::buttons_template()`.
+- W Twigu wstawiasz `{{ inner_blocks(inner_template) }}` (opcjonalnie `inner_blocks(inner_template, inner_allowed)` — lista dozwolonych bloków). W edytorze ten sam układ buduje `native-blocks.js` według `wco.frame`, a na froncie funkcja zwraca zapisaną treść w tym samym `div.acf-innerblocks-container`, którego używa edytor — dzięki temu front i edytor mają identyczny DOM (`.blok > .acf-innerblocks-container > dzieci`).
+- Listy elementów (kafelki, FAQ, opinie, statystyki) to bloki potomne (`"parent": ["acf/features"]` w `block.json`), a nie repeatery — dodajesz, przestawiasz i usuwasz je w podglądzie.
 - Układ siatki piszesz mixinem `inner-layout` (celuje w `> .acf-innerblocks-container`), który działa i na froncie, i w edytorze (`@include inner-layout { @include grid-columns(3); }`).
 - Klasy `className` w szablonie (`is-eyebrow`, `is-lead`, `is-span-all`, `is-value` …) są stylowane w `assets/scss/components/_block-content.scss` i w SCSS bloku.
 - Przyciski to natywny `core/button` z wariantami `secondary`, `outline`, `link` (style w `components/_buttons.scss`).
 
 ### Wspólne ustawienia sekcji
 
-Tło, szerokość treści, ID bloku i odstępy to **jedna** grupa ACF: `acf-json/group_section_settings.json`. Dołączasz ją do bloku jedną linijką w `block.json`:
+Tło, szerokość treści, ID bloku i odstępy to **jeden** zestaw atrybutów (`NativeBlocks::SECTION_ATTRIBUTES`) z panelami w `native-blocks.js`. Dołączasz go do bloku jedną linijką w `block.json`:
 
 ```json
 "wco": { "sectionSettings": true }
 ```
 
-Lokalizacje grupy uzupełnia `Registry::section_settings_locations()`, więc nowy blok nie potrzebuje własnej kopii pól. Pola specyficzne dla bloku (kolumny, wyrównanie…) są w `group_<slug>.json` bloku. Wartości domyślne ustawień sekcji są w `BlockContext::SECTION_DEFAULTS` (działają też dla bloków wstawionych ze wzorca).
+Nowy blok nie potrzebuje własnej kopii pól. Pola specyficzne dla bloku (kolumny, wyrównanie…) opisuje `wco.controls` w `block.json`. Wartości domyślne ustawień sekcji są w `BlockContext::SECTION_DEFAULTS` (działają też dla bloków wstawionych ze wzorca).
 
 ### Gotowe sekcje
 
@@ -279,7 +259,7 @@ W starterze są już przygotowane przykładowe bloki (pełna lista nowych sekcji
 - `container-group`
 - `spacer`
 
-`testimonials-slider` jest spięty z registry swiperów i ma już gotowy JS, Twig, SCSS i ACF JSON.
+`testimonials-slider` jest spięty z registry swiperów i ma już gotowy JS, Twig, SCSS i własny edytor opinii (bez ACF).
 `spacer` to prosty separator odstępu z osobnym ustawieniem wysokości dla `desktop` i `mobile`.
 
 ### Spacer
@@ -398,7 +378,7 @@ Ręcznie:
 npm run theme-json:generate
 ```
 
-To działa równolegle z Twig + ACF Blocks i poprawia doświadczenie w edytorze Gutenberg.
+To działa równolegle z Twig + blokami natywnymi i poprawia doświadczenie w edytorze Gutenberg.
 
 ## Requirements check
 
@@ -407,7 +387,6 @@ Wymagania motywu są zebrane centralnie:
 
 Sprawdzane elementy:
 - `Timber` (wymagane, blokujące start)
-- `ACF Pro` (wymagane dla custom blocks, ale nie blokuje całego motywu)
 - `WooCommerce` (opcjonalne, info o wyłączonych funkcjach sklepu)
 
 Notice jest spójny i idzie z jednego miejsca zamiast rozproszonej logiki.
@@ -500,7 +479,7 @@ Semantyka:
 - `section-space-*` = `padding`
 - `section-bg` = tło sekcji
 
-W blokach generowanych przez `create-block` te ustawienia są od razu dostępne w ACF, więc możesz sterować sekcją z poziomu edytora bez ręcznego dopisywania klas.
+W blokach generowanych przez `create-block` te ustawienia są od razu dostępne w panelu bocznym, więc możesz sterować sekcją z poziomu edytora bez ręcznego dopisywania klas.
 
 ## Breakpointy
 
@@ -548,7 +527,7 @@ Co oznaczają:
 - `app/` — PHP, rejestracje, bootstrap, logika motywu
 - `assets/` — źródła SCSS i JS
 - `views/` — Twig i katalogi bloków
-- `views/blocks/<slug>/group_<slug>.json` — lokalne pola ACF dla każdego bloku
+- `views/blocks/<slug>/<slug>.template.php` / `<slug>.context.php` — domyślna treść i dane dynamiczne bloku
 - `scripts/` — komendy pomocnicze startera
 - `public/` — build z webpacka
 
@@ -558,7 +537,7 @@ Co oznaczają:
 2. Uruchom `composer install` i `npm install`.
 3. Uruchom `npm run build` albo `npm run dev`.
 4. Aktywuj motyw.
-5. Sprawdź, czy aktywne są `Timber` i `ACF Pro`.
+5. Sprawdź, czy działa `Timber` (`composer install`).
 6. Twórz bloki przez `npm run create-block`.
 7. Trzymaj style globalne w tokenach, a blokowe obok bloków.
 
@@ -570,7 +549,7 @@ Jeśli coś nie działa:
   uruchom `composer install`
 
 - brak bloków w Gutenberg:
-  sprawdź, czy aktywne jest `ACF Pro`
+  sprawdź, czy blok ma `"wco": { "native": true }` w `block.json`
 
 - brak nowych assetów:
   uruchom `npm run build`
