@@ -11,12 +11,7 @@
     "banner",
     "header"
   ],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "hero.include.php"
-  },
   "supports": {
-    "jsx": true,
     "anchor": false,
     "align": [
       "full",
@@ -24,6 +19,60 @@
     ]
   },
   "wco": {
-    "sectionSettings": true
+    "native": true,
+    "sectionSettings": true,
+    "panel": "Ustawienia hero",
+    "controls": [
+      {
+        "attr": "hero_min_height",
+        "type": "select",
+        "label": "Minimalna wysokość",
+        "options": {
+          "auto": "Auto",
+          "md": "Średnia",
+          "lg": "Duża",
+          "screen": "Pełny ekran"
+        }
+      },
+      {
+        "attr": "hero_image_position",
+        "type": "select",
+        "label": "Pozycja obrazu",
+        "options": {
+          "right": "Po prawej",
+          "left": "Po lewej"
+        }
+      },
+      {
+        "attr": "hero_background_image",
+        "type": "image",
+        "label": "Obraz tła"
+      },
+      {
+        "attr": "hero_overlay",
+        "type": "range",
+        "label": "Przyciemnienie (%)",
+        "min": 0,
+        "max": 90,
+        "showWhen": "hero_background_image"
+      }
+    ]
+  },
+  "attributes": {
+    "hero_min_height": {
+      "type": "string",
+      "default": "auto"
+    },
+    "hero_image_position": {
+      "type": "string",
+      "default": "right"
+    },
+    "hero_background_image": {
+      "type": "number"
+    },
+    "hero_overlay": {
+      "type": "number",
+      "default": 40
+    }
   }
 }

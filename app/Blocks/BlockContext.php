@@ -25,7 +25,20 @@ class BlockContext
      */
     public static function build(string $slug, array $block, string $content = '', bool $isPreview = false, array $extra = []): array
     {
-        $fields = array_replace(self::SECTION_DEFAULTS, array_filter(get_fields() ?: [], static fn ($v) => $v !== null && $v !== ''));
+        return self::build_from_fields($slug, get_fields() ?: [], $block, $content, $isPreview, $extra);
+    }
+
+    /**
+     * Same context as build(), but from already known field values (native blocks pass attributes).
+     *
+     * @param array<string, mixed> $fields
+     * @param array<string, mixed> $block
+     * @param array<string, mixed> $extra
+     * @return array<string, mixed>
+     */
+    public static function build_from_fields(string $slug, array $fields, array $block, string $content = '', bool $isPreview = false, array $extra = []): array
+    {
+        $fields = array_replace(self::SECTION_DEFAULTS, array_filter($fields, static fn ($v) => $v !== null && $v !== ''));
 
         $context = Timber::context();
         $context['fields'] = $fields;
@@ -47,6 +60,17 @@ class BlockContext
     public static function render(string $slug, array $block, string $content = '', bool $isPreview = false, array $extra = []): void
     {
         Timber::render("blocks/{$slug}/{$slug}.twig", self::build($slug, $block, $content, $isPreview, $extra));
+    }
+
+    /**
+     * Renders a native (non-ACF) block: attributes are the fields.
+     *
+     * @param array<string, mixed> $fields
+     * @param array<string, mixed> $block
+     */
+    public static function render_fields(string $slug, array $fields, string $content = '', array $block = []): void
+    {
+        Timber::render("blocks/{$slug}/{$slug}.twig", self::build_from_fields($slug, $fields, $block, $content, false));
     }
 
     /**

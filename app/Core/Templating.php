@@ -79,8 +79,11 @@ class Templating
      * @param string[]             $allowed  Allowed block names (empty = any).
      * @param string               $lock     '', 'all' or 'insert'.
      */
-    public static function inner_blocks(array $context, array $template = [], array $allowed = [], string $lock = ''): string
+    public static function inner_blocks(array $context, ?array $template = [], ?array $allowed = [], string $lock = ''): string
     {
+        $template ??= [];
+        $allowed ??= [];
+
         if (empty($context['is_preview'])) {
             return '<div class="acf-innerblocks-container">' . ($context['content'] ?? '') . '</div>';
         }

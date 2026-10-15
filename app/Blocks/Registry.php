@@ -15,6 +15,7 @@ class Registry
     {
         add_filter('acf/load_field_group', [self::class, 'section_settings_locations']);
         Editor::boot();
+        NativeBlocks::boot();
 
         if (function_exists('get_block_categories')) {
             add_filter('block_categories_all', [self::class, 'register_block_category'], 10, 2);
@@ -48,6 +49,11 @@ class Registry
             $slug = basename($dir);
 
             if (in_array($slug, ['container-group', 'two-columns', 'two-columns-column'], true)) {
+                continue;
+            }
+
+            // Native blocks are registered by NativeBlocks, with or without ACF.
+            if (NativeBlocks::is_native(self::get_block_metadata($dir))) {
                 continue;
             }
 
@@ -116,7 +122,7 @@ class Registry
 
         foreach (glob($blocks_dir . '/*/block.json') ?: [] as $file) {
             $metadata = self::get_block_metadata(dirname($file));
-            if (!empty($metadata['wco']['sectionSettings']) && !empty($metadata['name'])) {
+            if (!empty($metadata['wco']['sectionSettings']) && !empty($metadata['name']) && !NativeBlocks::is_native($metadata)) {
                 $location[] = [['param' => 'block', 'operator' => '==', 'value' => $metadata['name']]];
             }
         }
@@ -153,10 +159,11 @@ class Registry
         wp_enqueue_script(
             'wco-blocks-editor',
             $js_url,
-            ['wp-blocks', 'wp-dom', 'wp-element', 'wp-block-editor', 'wp-components'],
+            ['wp-blocks', 'wp-dom', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data'],
             file_exists($editor_js_path) ? filemtime($editor_js_path) : null,
             true
         );
+        wp_localize_script('wco-blocks-editor', 'wcoNativeBlocks', NativeBlocks::editor_config());
     }
 
     public static function register_block_category(array $categories): array
@@ -325,7 +332,7 @@ class Registry
         return (string) ob_get_clean();
     }
 
-    private static function register_block_style_handle(string $slug): string
+    public static function register_block_style_handle(string $slug): string
     {
         $handle = 'wco-' . $slug;
         $css_path = get_template_directory() . '/public/blocks/' . $slug . '/' . $slug . '.css';
