@@ -159,6 +159,19 @@ Całość obsługuje `app/Core/Tracking.php`; baner to `views/partials/cookie-ba
 - **Baner pokazuje się tylko, gdy coś jest skonfigurowane** (GTM, GA4 lub dodatkowe skrypty). Jeśli zgodą zarządzasz w GTM własnym CMP, wyłącz „Baner zgody na cookies”: wtedy motyw niczego nie blokuje ani nie zmienia.
 - **Ograniczenie**: iframe `<noscript>` nie może przenieść zgody (brak JS), więc przy rygorystycznym RODO wyłącz opcję „GTM noscript iframe”.
 
+## Zabezpieczenie strony hasłem (Ustawienia motywu → Zabezpieczenie strony)
+
+Włączane przełącznikiem, działa jak plik `.htpasswd`: przed załadowaniem jakiejkolwiek strony przeglądarka pyta o nazwę użytkownika i hasło (HTTP Basic Auth). Przydatne na stagingu i przed startem strony. Całość to `app/Core/Protection.php`, bez konfiguracji serwera.
+
+- **Hasło** jest zapisywane wyłącznie jako hash (`password_hash`, w opcji `options_protection_hash`), pole w panelu jest zawsze puste, a puste pole przy zapisie zostawia obecne hasło. Nie da się włączyć zabezpieczenia bez ustawionego hasła (walidacja przy zapisie), a jeśli użytkownik lub hasło zniknie, motyw niczego nie blokuje, żeby nie zamknąć strony na amen.
+- **Co jest chronione:** front, wyszukiwarka, REST API (`/wp-json/`), `admin-ajax.php`, `admin-post.php` i `xmlrpc.php`. Odpowiedź to 401 z `WWW-Authenticate`, `noindex` i `no-store`.
+- **Co zostaje dostępne:** `wp-login.php` i `wp-cron.php` oraz ekrany `wp-admin/` (WordPress i tak wymaga tam logowania), więc administrator nie zablokuje sam siebie.
+- **Zalogowani użytkownicy WordPressa** nie dostają okna hasła (opcja, domyślnie włączona).
+- **Dozwolone adresy IP** pomijają hasło. Porównywany jest tylko `REMOTE_ADDR`, nagłówków `X-Forwarded-For` celowo się nie używa, bo odwiedzający mógłby je podrobić. Za reverse proxy lub CDN (np. Cloudflare) `REMOTE_ADDR` to adres proxy, więc lista IP wtedy nie zadziała tak, jak oczekujesz.
+- **Błędne dane** są opóźniane o 1 s (utrudnia zgadywanie). Nie ma limitu prób ani blokady IP; przy serwisie wystawionym długo w internecie dodaj ograniczanie na poziomie serwera.
+- **Ograniczenie:** cache stron lub CDN, który odpowiada bez uruchamiania WordPressa, omija to zabezpieczenie, bo PHP w ogóle się nie wykonuje. Wtedy hasło trzeba ustawić na serwerze (`.htpasswd`) albo wyłączyć cache dla czasu ochrony.
+- W belce admina widać kłódkę „Strona chroniona hasłem”, gdy zabezpieczenie jest włączone.
+
 ## Panel wyglądu (Ustawienia motywu → Wygląd)
 
 Zakładki: **Kolory**, **Typografia**, **Logo i nagłówek**, **Kształt**. Całość obsługuje `app/Core/Appearance.php`.

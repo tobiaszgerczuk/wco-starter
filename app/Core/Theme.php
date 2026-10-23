@@ -6,6 +6,7 @@ use Timber\Timber;
 use WCO\Starter\Core\Acf;
 use WCO\Starter\Core\Appearance;
 use WCO\Starter\Core\Tracking;
+use WCO\Starter\Core\Protection;
 use WCO\Starter\Core\Assets;
 use WCO\Starter\Core\Media;
 use WCO\Starter\Core\Templating;
@@ -38,6 +39,7 @@ class Theme
         Acf::boot();
         Appearance::boot();
         Tracking::boot();
+        Protection::boot();
         add_filter('acf/settings/save_json', [Acf::class, 'save_json']);
         add_filter('acf/settings/load_json', [Acf::class, 'load_json']);
 
