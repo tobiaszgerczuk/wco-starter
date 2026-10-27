@@ -413,17 +413,14 @@ npm run theme-json:generate
 
 To działa równolegle z Twig + ACF Blocks i poprawia doświadczenie w edytorze Gutenberg.
 
-## Eksport i import bazy
+## Baza danych (eksport / import)
 
-**Ustawienia motywu → Eksport / import bazy** (tylko administrator; na multisite super admin). Działa na samym `$wpdb`, więc nie potrzebuje `mysqldump` ani dostępu do shella (kod w `app/Migration/`).
+**Ustawienia motywu → Baza danych** (kod w `app/DbTools/`, JS w `assets/js/modules/db-tools.js`). Narzędzia są domyślnie wyłączone – włącza je administrator na tej stronie; na stałe blokuje je `define('WCO_DB_TOOLS_OFF', true);` w `wp-config.php`. Działają na `$wpdb`, bez `mysqldump`.
 
-- **Eksport** – plik `.sql` (opcjonalnie `.sql.gz`) z wybranych tabel o prefiksie witryny; transienty są domyślnie pomijane.
-- **Import** – plik `.sql` / `.sql.gz` z polami jak w Better Search Replace: *Szukaj*, *Zamień na* (jedna wartość na linię), ignorowanie wielkości liter, GUID-y, **test (dry run)**. Test wczytuje plik do tabel tymczasowych `wcotmp_*`, pokazuje ile zmian i w których tabelach zostanie wykonanych, po czym je usuwa – prawdziwa baza się nie zmienia. Po wykryciu innego adresu w pliku przycisk wstawia go do pól. Domyślnie przed importem powstaje kopia w `uploads/wco-db-backups/` (zablokowana `.htaccess`), a `siteurl`/`home` zostają takie jak na tej witrynie.
-- **Znajdź i zamień** – to samo na istniejącej bazie, z wyborem tabel.
-
-Zamiana jest bezpieczna dla danych serializowanych (długości stringów są przeliczane), obsługuje też adresy w JSON (`https:\/\/`). Obiekty nieznanych klas są pomijane, tabele bez klucza głównego również.
-
-Import wykonuje tylko białą listę poleceń (`DROP/CREATE TABLE`, `INSERT`, kilka `SET`) i tylko na tabelach z prefiksem witryny; reszta jest pomijana i raportowana. Plik wczytywany jest w jednym żądaniu, więc bardzo duże bazy lepiej importować przez WP-CLI/phpMyAdmin.
+- **Eksport** – cała baza albo tylko treść (bez użytkowników, zamówień, klientów i kluczy płatności).
+- **Import** – plik SQL z opcjami jak w Better Search Replace: pary szukaj/zamień, dane serializowane i adresy w JSON, test (dry run), kopia przed importem, zachowanie bieżącego admina oraz adresu/motywu/wtyczek, mapowanie prefiksu tabel, biała lista poleceń SQL. Praca idzie w krokach przez AJAX z paskiem postępu.
+- **Znajdź i zamień** – osobno, z wyborem tabel i testem.
+- Lista kopii zapasowych z pobieraniem i usuwaniem.
 
 ## Requirements check
 

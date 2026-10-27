@@ -7,7 +7,7 @@ use WCO\Starter\Core\Acf;
 use WCO\Starter\Core\Appearance;
 use WCO\Starter\Core\Tracking;
 use WCO\Starter\Core\Protection;
-use WCO\Starter\Migration\Admin as DatabaseTools;
+use WCO\Starter\DbTools\DatabaseTools;
 use WCO\Starter\Core\Assets;
 use WCO\Starter\Core\Media;
 use WCO\Starter\Core\Templating;
