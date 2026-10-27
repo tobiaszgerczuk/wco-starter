@@ -7,6 +7,7 @@ use WCO\Starter\Core\Acf;
 use WCO\Starter\Core\Appearance;
 use WCO\Starter\Core\Tracking;
 use WCO\Starter\Core\Protection;
+use WCO\Starter\Migration\Admin as DatabaseTools;
 use WCO\Starter\Core\Assets;
 use WCO\Starter\Core\Media;
 use WCO\Starter\Core\Templating;
@@ -40,6 +41,7 @@ class Theme
         Appearance::boot();
         Tracking::boot();
         Protection::boot();
+        DatabaseTools::boot();
         add_filter('acf/settings/save_json', [Acf::class, 'save_json']);
         add_filter('acf/settings/load_json', [Acf::class, 'load_json']);
 
